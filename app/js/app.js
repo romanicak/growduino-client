@@ -61,7 +61,10 @@ app.controller('ChartCtrl', ['$scope', 'Temperature', 'Humidity', 'Lighting', fu
                 text: 'Time'
             }
         },
-        yAxis: [{ title: { text: '°C' }}, { title: { text: 'H?' }}, { title: { text: 'L?' }}],
+        yAxis: [
+            { title: { text: '°C' }},
+            { title: { text: '%' }},
+            { title: { text: 'L?' }}],
         series: []
     });
 
@@ -83,7 +86,7 @@ app.controller('ChartCtrl', ['$scope', 'Temperature', 'Humidity', 'Lighting', fu
 
     Humidity.get(function(d) {
         $scope.loading = false;
-        d.min = d.min.map(function(val) { return val / 10.0; });
+        //d.min = d.min.map(function(val) { return val / 2.56; });
         chart.addSeries({
             name: 'Humidity',
             data: d.min,
@@ -95,9 +98,8 @@ app.controller('ChartCtrl', ['$scope', 'Temperature', 'Humidity', 'Lighting', fu
 
     Lighting.get(function(d) {
         $scope.loading = false;
-        d.min = d.min.map(function(val) { return val / 10.0; });
         chart.addSeries({
-            name: 'Humidity',
+            name: 'Lighting',
             data: d.min,
             yAxis: 2,
             pointStart: pointStart,
