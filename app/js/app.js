@@ -2,9 +2,15 @@ $.ajaxSetup({
     contentType: 'application/json'
 });
 
-var app = angular.module('growduino', []);
+var app = angular.module('growduino', ['ngResource']);
 
-app.controller('NetworkConfigCtrl', ['$scope', function($scope) {
-     $scope.config = {"use_dhcp":0,"mac":"de:ad:be:ef:55:44","ip":"195.113.57.69","netmask":"255.255.255.0","gateway":"195.113.57.254","ntp":"195.113.56.8"};
- }]);
+app.factory('NetworkConfig', ['$resource', function($resource) {
+    return $resource('/config.jso');
+}]);
+
+app.controller('NetworkConfigCtrl', ['$scope', 'NetworkConfig', function($scope, NetworkConfig) {
+    var config = $scope.config = NetworkConfig.get(function() {
+        config.use_dhcp = !!config.use_dhcp; //convert to boolean
+    });
+}]);
 

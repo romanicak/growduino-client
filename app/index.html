@@ -11,6 +11,7 @@
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular-resource.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
     <script src="//code.highcharts.com/highcharts.js"></script>
     <script src="js/app.js"></script>
@@ -27,11 +28,11 @@
 
         <div ng-controller="NetworkConfigCtrl">
             {{ greeting }}
-            <form novalidate class="form-horizontal" name="form">
+            <form novalidate class="form-horizontal" name="form" ng-submit="config.$save()">
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
                         <div class="checkbox">
-                            <label><input type="checkbox" ng-model="config.use_dhcp" ng-true-value="1" ng-false-value="0" /> DHCP</label>
+                            <label><input type="checkbox" ng-model="config.use_dhcp" /> DHCP</label>
                         </div>
                     </div>
                 </div>
