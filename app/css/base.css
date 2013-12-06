@@ -1,13 +1,12 @@
-h1 {
-    color: white;
-    font-weight: bold;
-    /*background-color: #238C47;*/
-    background-color: black;
-    margin: 0;
-    padding: 5px 0;
-    font-size: 26px;
-}
 
 .nav {
     margin: 10px 0 20px 0;
+}
+
+.loading {
+    background: url('../images/loading.gif') center center no-repeat;
+}
+
+.loading > * {
+    visibility: hidden;
 }

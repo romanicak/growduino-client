@@ -2,12 +2,12 @@
 import SimpleHTTPServer
 import urllib, urlparse
 
-RESOURCE_PATH = "../server/resources"
-#RESOURCE_PATH = "http://arduino.natur.cuni.cz"
+#RESOURCE_PATH = "../server/resources"
+RESOURCE_PATH = "http://arduino.natur.cuni.cz"
 
 class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path in ['/config.jso']:
+        if self.path in ['/config.jso'] or self.path.startswith('/sensors/'):
             self.copyfile(urllib.urlopen(RESOURCE_PATH + self.path), self.wfile)
         else:
             return SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)

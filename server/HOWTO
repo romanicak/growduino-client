@@ -1,5 +1,5 @@
 put jso files in /server/resources (or change resource path)
-and run proxy from /app directory:
+and run server from /app directory (listening port 8000)
 
-    $ python ../server/mock.py 8000
+    $ python ../server/proxy.py 8000
 
