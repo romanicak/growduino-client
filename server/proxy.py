@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 import SimpleHTTPServer
-import urllib, urlparse
+import urllib
 
-#RESOURCE_PATH = "../server/resources"
-RESOURCE_PATH = "http://arduino.natur.cuni.cz"
+try:
+    from settings import RESOURCE_PATH
+except ImportError:
+    RESOURCE_PATH = "../server/resources"
+    # or use remote resources eg.
+    # RESOURCE_PATH = "http://growduino-backend"
 
 class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):

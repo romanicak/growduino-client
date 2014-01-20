@@ -1,1 +1,3 @@
 resources
+settings.py
+*.pyc
