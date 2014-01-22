@@ -11,7 +11,8 @@ except ImportError:
 
 class Proxy(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def do_GET(self):
-        if self.path in ['/config.jso'] or self.path.startswith('/sensors/'):
+        path = self.path.lower()
+        if path in ['/config.jso'] or path.startswith('/sensors/') or path.startswith('/data/'):
             self.copyfile(urllib.urlopen(RESOURCE_PATH + self.path), self.wfile)
         else:
             return SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
