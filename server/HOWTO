@@ -1,5 +1,0 @@
-put jso files in /server/resources (or change resource path)
-and run server from /app directory (listening port 8000)
-
-    $ python ../server/proxy.py 8000
-
