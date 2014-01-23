@@ -28,9 +28,20 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
 
     $scope.loading = true;
 
+    // Temperature.getMonth({year: 2013, month: 11}, function(d) {
+    //     console.log(d);
+    //     $scope.loading = false;
+    //     chart.addSeries({
+    //         name: 'Temperature',
+    //         data: d.day,
+    //         yAxis: 0,
+    //         pointStart: pointStart,
+    //         pointInterval: 60 * 1000 * 60 * 24//1 min
+    //     });
+    // });
+
     Temperature.get(function(d) {
         $scope.loading = false;
-        d.min = utils.mapDecimalValues(d.min);
         chart.addSeries({
             name: 'Temperature',
             data: d.min,
@@ -42,7 +53,6 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
 
     Humidity.get(function(d) {
         $scope.loading = false;
-        d.min = utils.mapDecimalValues(d.min);
         chart.addSeries({
             name: 'Humidity',
             data: d.min,
@@ -54,7 +64,6 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
 
     Lighting.get(function(d) {
         $scope.loading = false;
-        d.min = utils.mapPercentValues(d.min);
         chart.addSeries({
             name: 'Lighting',
             data: d.min,
@@ -72,10 +81,13 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         language: 'cs',
         endDate: new Date()
     }).on('changeDate', function(ev){
-        var url = '/DATA/TEMP1/' + utils.formatDate(ev.date, 'yyyy/mm') + '.jso';
-        console.log(url);
-        $.get(url, function(data) {
-            console.log(data);
+        //var url = '/DATA/TEMP1/' + utils.formatDate(ev.date, 'yyyy/mm') + '.jso';
+        console.log({
+            year: utils.formatDate(ev.date, 'yyyy'),
+            month: utils.formatDate(ev.date, 'mm')
         });
+        /*$.get(url, function(data) {
+            console.log(data);
+        });*/
     });
 }]);
