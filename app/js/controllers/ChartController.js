@@ -119,6 +119,7 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         endDate: new Date()
     }).on('changeDate', function(ev){
         ev.date.setHours(0, 0, 0, 0);
+        //console.log(ev.date);
         showMonth(ev.date);
     });
 
@@ -132,6 +133,7 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         endDate: new Date()
     }).on('changeDate', function(ev){
         ev.date.setHours(0, 0, 0, 0);
+        //console.log(ev.date);
         showDay(ev.date);
     });
 
@@ -144,9 +146,14 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         startDate: new Date(2013, 0, 1),
         endDate: new Date()
     }).on('changeDate', function(ev){
-        ev.date.setMinutes(0, 0, 0);
-        showHour(ev.date);
-        //TODO FIX Timezones !!!!
+        //datetime picker returns date with hour in UTC, fix it
+        //must not modify date on event - to not modify picker selection
+        var d = new Date();
+        var time = ev.date.getTime() + ev.date.getTimezoneOffset() * 60 * 1000;
+        d.setTime(time);
+        d.setMinutes(0, 0, 0);
+        //console.log(d);
+        showHour(d);
     });
 
     initChart();
