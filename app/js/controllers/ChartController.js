@@ -51,22 +51,18 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         //chart.showLoading();
     }
 
-    function showRecent() {
+    function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
         cleanChart();
-        var pointStart =  (new Date()).getTime() - 60*1000;
         series.forEach(function(item, i) {
-            chart.series[i].update({
-                data: [],
-                pointStart: pointStart,
-                pointInterval: 1000 * 60 //1 min
-            });
+            var series = chart.series[i];
+            series.setData([]);
+            series.update(seriesOptions);
             q.push(function(done) {
-                item.resource.get(function (data) {
+                item.resource[resourceMethod](queryArgs, function (data) {
                     //chart.hideLoading();
-                    chart.series[i].setData(data.min);
-                    chart.series[i].show();
+                    series.setData(data[dataKey]);
                 }).$promise.finally(function() {
-                    chart.series[i].show();
+                    series.show();
                     done();
                 });
             });
@@ -74,26 +70,42 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
     }
 
     function showMonth(dt) {
-        cleanChart();
-        var args = {
+        show('day', 'getMonth', {
             year: utils.formatDate(dt, 'yyyy'),
             month: utils.formatDate(dt, 'mm')
-        };
-        series.forEach(function(item, i) {
-            chart.series[i].update({
-                data: [],
-                pointStart: dt.getTime(),
-                pointInterval: 1000 * 60 * 60 * 24 //day
-            });
-            q.push(function(done) {
-                item.resource.getMonth(args, function(data) {
-                    //chart.hideLoading();
-                    chart.series[i].setData(data.day);
-                }).$promise.finally(function() {
-                    chart.series[i].show();
-                    done();
-                });
-            });
+        }, {
+            pointStart: dt.getTime(),
+            pointInterval: 1000 * 60 * 60 * 24 //day
+        });
+    }
+
+    function showDay(dt) {
+        show('h', 'getDay', {
+            year: utils.formatDate(dt, 'yyyy'),
+            month: utils.formatDate(dt, 'mm'),
+            day: utils.formatDate(dt, 'dd')
+        }, {
+            pointStart: dt.getTime(),
+            pointInterval: 1000 * 60 * 60  //hour
+        });
+    }
+
+    function showHour(dt) {
+        show('min', 'getHour', {
+            year: utils.formatDate(dt, 'yyyy'),
+            month: utils.formatDate(dt, 'mm'),
+            day: utils.formatDate(dt, 'dd'),
+            hour: utils.formatDate(dt, 'hh')
+        }, {
+            pointStart: dt.getTime(),
+            pointInterval: 1000 * 60 //1 min
+        });
+    }
+
+    function showRecent() {
+        show('min', 'get', {}, {
+            pointStart: (new Date()).getTime() - 60*1000,
+            pointInterval: 1000 * 60 //1 min
         });
     }
 
@@ -106,7 +118,35 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         startDate: new Date(2013, 0, 1),
         endDate: new Date()
     }).on('changeDate', function(ev){
+        ev.date.setHours(0, 0, 0, 0);
         showMonth(ev.date);
+    });
+
+    $('#picker-day').datetimepicker({
+        minView: 3,
+        maxView: 2,
+        startView: 2,
+        format: 'd MM yyyy',
+        language: 'cs',
+        startDate: new Date(2013, 0, 1),
+        endDate: new Date()
+    }).on('changeDate', function(ev){
+        ev.date.setHours(0, 0, 0, 0);
+        showDay(ev.date);
+    });
+
+    $('#picker-hour').datetimepicker({
+        minView: 3,
+        maxView: 1,
+        startView: 1,
+        format: 'd MM yyyy hh:00',
+        language: 'cs',
+        startDate: new Date(2013, 0, 1),
+        endDate: new Date()
+    }).on('changeDate', function(ev){
+        ev.date.setMinutes(0, 0, 0);
+        showHour(ev.date);
+        //TODO FIX Timezones !!!!
     });
 
     initChart();
