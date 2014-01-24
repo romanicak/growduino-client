@@ -1,77 +1,84 @@
 app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lighting', function($scope, Temperature, Humidity, Lighting) {
-    var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'chart',
-            type: 'spline',
-            zoomType: 'x'
-        },
-        title: {
-            text: 'Sensors'
-        },
-        xAxis: {
-            type: 'datetime',
-            maxZoom: 5 * 60 * 1000,
+    var chart;
+    var series = [
+        {name: 'Temperature', resource: Temperature, yAxis: 0},
+        {name: 'Humidity', resource: Humidity, yAxis: 1},
+        {name: 'Lighting', resource: Lighting, yAxis: 1},
+    ];
+
+    function initChart() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'chart',
+                type: 'spline',
+                zoomType: 'x'
+            },
             title: {
-                text: 'Time'
-            }
-        },
-        yAxis: [
-            { title: { text: '°C' }},
-            { title: { text: '%' }, min: 0},
-            //{ title: { text: '% (Humidity)' }},
-            //{ title: { text: '% (Lighting)' }}
-        ],
-        series: []
-    });
-
-    var pointStart =  (new Date()).getTime() - 60*1000;
-
-    $scope.loading = true;
-
-    // Temperature.getMonth({year: 2013, month: 11}, function(d) {
-    //     console.log(d);
-    //     $scope.loading = false;
-    //     chart.addSeries({
-    //         name: 'Temperature',
-    //         data: d.day,
-    //         yAxis: 0,
-    //         pointStart: pointStart,
-    //         pointInterval: 60 * 1000 * 60 * 24//1 min
-    //     });
-    // });
-
-    Temperature.get(function(d) {
-        $scope.loading = false;
-        chart.addSeries({
-            name: 'Temperature',
-            data: d.min,
-            yAxis: 0,
-            pointStart: pointStart,
-            pointInterval: 60 * 1000 //1 min
+                text: 'Sensors'
+            },
+            xAxis: {
+                type: 'datetime',
+                maxZoom: 5 * 60 * 1000,
+                title: {
+                    text: 'Time'
+                }
+            },
+            yAxis: [
+                { title: { text: '°C' }},
+                { title: { text: '%' }, min: 0},
+                //{ title: { text: '% (Humidity)' }},
+                //{ title: { text: '% (Lighting)' }}
+            ],
+            series: []
         });
-    });
+    }
 
-    Humidity.get(function(d) {
-        $scope.loading = false;
-        chart.addSeries({
-            name: 'Humidity',
-            data: d.min,
-            yAxis: 1,
-            pointStart: pointStart,
-            pointInterval: 60 * 1000 //1 min
-        });
-    });
+    function cleanChart() {
+        //TODO use series.setData insead !!!
+        while (chart.series.length > 0) {
+            chart.series[0].remove(chart.series.length == 1);
+        }
+    }
 
-    Lighting.get(function(d) {
-        $scope.loading = false;
-        chart.addSeries({
-            name: 'Lighting',
-            data: d.min,
-            yAxis: 1,
-            pointStart: pointStart,
-            pointInterval: 60 * 1000 //1 min
+    function showRecent() {
+        //$scope.loading = true;
+        cleanChart();
+        var pointStart =  (new Date()).getTime() - 60*1000;
+        series.forEach(function(item) {
+            item.resource.get(function(data) {
+                $scope.loading = false;
+                chart.addSeries({
+                    name: item.name,
+                    data: data.min,
+                    yAxis: item.yAxis,
+                    pointStart: pointStart,
+                    pointInterval: 1000 * 60 //1 min
+                });
+            });
         });
-    });
+    }
+
+    function showMonth(dt) {
+        //$scope.loading = true;
+        cleanChart();
+        var args = {
+            year: utils.formatDate(dt, 'yyyy'),
+            month: utils.formatDate(dt, 'mm')
+        };
+        series.forEach(function(item) {
+            item.resource.getMonth(args, function(data) {
+                $scope.loading = false;
+                chart.addSeries({
+                    name: item.name,
+                    data: data.day,
+                    yAxis: item.yAxis,
+                    pointStart: dt.getTime(),
+                    pointInterval: 1000 * 60 * 60 * 24 //day
+                });
+            });
+        });
+    }
+
 
     $('#picker-month').datetimepicker({
         minView: 3,
@@ -79,15 +86,12 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         startView: 3,
         format: 'MM yyyy',
         language: 'cs',
+        //startDate: new Date()
         endDate: new Date()
     }).on('changeDate', function(ev){
-        //var url = '/DATA/TEMP1/' + utils.formatDate(ev.date, 'yyyy/mm') + '.jso';
-        console.log({
-            year: utils.formatDate(ev.date, 'yyyy'),
-            month: utils.formatDate(ev.date, 'mm')
-        });
-        /*$.get(url, function(data) {
-            console.log(data);
-        });*/
+        showMonth(ev.date);
     });
+
+    initChart();
+    showRecent();
 }]);

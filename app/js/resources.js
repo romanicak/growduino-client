@@ -6,19 +6,24 @@ app.factory('NetworkConfig', ['$resource', function($resource) {
 
 app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, $http) {
     return function(name, mapFn) {
+        var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
+            if ($.isArray(data.day)) {
+                data.day = mapFn(utils.fixNull(data.day));
+            }
+            if ($.isArray(data.min)) {
+                data.min = mapFn(utils.fixNull(data.min));
+            }
+            return data;
+        }]);
         return $resource('/sensors/'+name+'.jso', {}, {
+            get: {
+                method: 'GET',
+                transformResponse: transformers
+            },
             getMonth: {
                 method: 'GET',
                 url: '/DATA/'+name.toUpperCase()+'/:year/:month.JSO',
-                transformResponse: $http.defaults.transformResponse.concat([function(data, headersGetter) {
-                    if ($.isArray(data.day)) {
-                        data.day = mapFn(utils.fixNull(data.day));
-                    }
-                    if ($.isArray(data.min)) {
-                        data.min = mapFn(utils.fixNull(data.min));
-                    }
-                    return data;
-                }])
+                transformResponse: transformers
             }
         });
     };
