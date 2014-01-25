@@ -50,4 +50,19 @@ app.factory('Lighting', ['sensorResourceFactory', function(sensorResourceFactory
     return sensorResourceFactory('light', utils.mapPercentValues);
 }]);
 
+
+app.factory('Relay', ['$resource', '$http', function($resource, $http) {
+    var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
+        data.currentState = data.min[data.min.length - 1];
+        return data;
+    }]);
+    return $resource('/sensors/outputs.jso', {}, {
+        get: {
+            method: 'GET',
+            transformResponse: transformers
+        },
+    });
+}]);
+
+
 })();

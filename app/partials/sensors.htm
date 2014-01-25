@@ -1,23 +1,30 @@
-<div id="chart"></div>
+<div ng-controller="RelayController">
+  Relays:
+  <span ng-repeat="relay in relays">
+      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ $index }}</span>
+  </span>
+</div>
 
+<hr>
 
-<form class="form-inline" role="form">
-    <div class="btn-group">
-        <button type="button" class="btn btn-info" ng-click="shiftDateUnit(-1)"><span class="glyphicon glyphicon-backward"></span></button>
-        <button type="button" class="btn btn-info" ng-click="shiftDateUnit(1)"><span class="glyphicon glyphicon-forward"></span></button>
-    </div>
+<div ng-controller="ChartController">
+    <div id="chart"></div>
 
-    <div class="btn-group">
-        <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'M')}" ng-click="changeZoom('M')">Month</button>
-        <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'D')}" ng-click="changeZoom('D')">Day</button>
-        <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'H')}" ng-click="changeZoom('H')">Hour</button>
-    </div>
+    <form class="form-inline" role="form">
+        <div class="btn-group">
+            <button type="button" class="btn btn-info" ng-click="shiftDateUnit(-1)"><span class="glyphicon glyphicon-backward"></span></button>
+            <button type="button" class="btn btn-info" ng-click="shiftDateUnit(1)"><span class="glyphicon glyphicon-forward"></span></button>
+        </div>
 
-    <input type="text" class="form-control" id="picker-date" />
-</form>
+        <div class="btn-group">
+            <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'M')}" ng-click="changeZoom('M')">Month</button>
+            <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'D')}" ng-click="changeZoom('D')">Day</button>
+            <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'H')}" ng-click="changeZoom('H')">Hour</button>
+        </div>
 
-<br>
-{{ date.toString() }}
+        <input type="text" class="form-control" id="picker-date" />
+    </form>
 
-
-
+    <br>
+    {{ date.toString() }}
+</div>
