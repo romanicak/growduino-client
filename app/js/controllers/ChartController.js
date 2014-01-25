@@ -5,6 +5,34 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         {name: 'Humidity', resource: Humidity, yAxis: 1},
         {name: 'Lighting', resource: Lighting, yAxis: 1},
     ];
+
+    var zoomTypes = {
+        'H': {
+            dataKey: 'min',
+            resourceMethod: 'getHour',
+            dateComponents: {year: 'yyyy', month: 'mm', day: 'dd', hour: 'hh'},
+            pointInterval: 1000 * 60, //1 min
+            pickerMaxView: 1,
+            pickerFormat: 'd MM yyyy hh:00'
+        },
+        'D': {
+            dataKey: 'h',
+            resourceMethod: 'getDay',
+            dateComponents: {year: 'yyyy', month: 'mm', day: 'dd'},
+            pointInterval: 1000 * 60 * 60,  //hour
+            pickerMaxView: 2,
+            pickerFormat: 'd MM yyyy'
+        },
+        'M': {
+            dataKey: 'day',
+            resourceMethod: 'getMonth',
+            dateComponents: {year: 'yyyy', month: 'mm'},
+            pointInterval: 1000 * 60 * 60 * 24, //day
+            pickerMaxView: 3,
+            pickerFormat: 'MM yyyy'
+        }
+    };
+
     var q = async.queue(function(task, done) {
         task(done);
     }, 1);
@@ -69,36 +97,17 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         });
     }
 
-    function showMonth(dt) {
-        show('day', 'getMonth', {
-            year: utils.formatDate(dt, 'yyyy'),
-            month: utils.formatDate(dt, 'mm')
-        }, {
-            pointStart: dt.getTime(),
-            pointInterval: 1000 * 60 * 60 * 24 //day
-        });
-    }
+    function redraw() {
+        zt = zoomTypes[$scope.zoom];
 
-    function showDay(dt) {
-        show('h', 'getDay', {
-            year: utils.formatDate(dt, 'yyyy'),
-            month: utils.formatDate(dt, 'mm'),
-            day: utils.formatDate(dt, 'dd')
-        }, {
-            pointStart: dt.getTime(),
-            pointInterval: 1000 * 60 * 60  //hour
-        });
-    }
+        args = {};
+        for (var arg in zt.dateComponents) {
+            args[arg] = utils.formatDate($scope.date, zt.dateComponents[arg]);
+        }
 
-    function showHour(dt) {
-        show('min', 'getHour', {
-            year: utils.formatDate(dt, 'yyyy'),
-            month: utils.formatDate(dt, 'mm'),
-            day: utils.formatDate(dt, 'dd'),
-            hour: utils.formatDate(dt, 'hh')
-        }, {
-            pointStart: dt.getTime(),
-            pointInterval: 1000 * 60 //1 min
+        show(zt.dataKey, zt.resourceMethod, args, {
+            pointStart: $scope.date.getTime(),
+            pointInterval: zt.pointInterval
         });
     }
 
@@ -109,53 +118,84 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         });
     }
 
-    $('#picker-month').datetimepicker({
-        minView: 3,
-        maxView: 3,
-        startView: 3,
-        format: 'MM yyyy',
-        language: 'cs',
-        startDate: new Date(2013, 0, 1),
-        endDate: new Date()
-    }).on('changeDate', function(ev){
-        ev.date.setHours(0, 0, 0, 0);
-        //console.log(ev.date);
-        showMonth(ev.date);
-    });
+    function fillDateInput() {
+        var label = utils.formatDate($scope.date, zoomTypes[$scope.zoom].pickerFormat);
+        $('#picker-date').val(label);
+    }
 
-    $('#picker-day').datetimepicker({
-        minView: 3,
-        maxView: 2,
-        startView: 2,
-        format: 'd MM yyyy',
-        language: 'cs',
-        startDate: new Date(2013, 0, 1),
-        endDate: new Date()
-    }).on('changeDate', function(ev){
-        ev.date.setHours(0, 0, 0, 0);
-        //console.log(ev.date);
-        showDay(ev.date);
-    });
 
-    $('#picker-hour').datetimepicker({
-        minView: 3,
-        maxView: 1,
-        startView: 1,
-        format: 'd MM yyyy hh:00',
-        language: 'cs',
-        startDate: new Date(2013, 0, 1),
-        endDate: new Date()
-    }).on('changeDate', function(ev){
-        //datetime picker returns date with hour in UTC, fix it
-        //must not modify date on event - to not modify picker selection
-        var d = new Date();
-        var time = ev.date.getTime() + ev.date.getTimezoneOffset() * 60 * 1000;
-        d.setTime(time);
-        d.setMinutes(0, 0, 0);
-        //console.log(d);
-        showHour(d);
-    });
+    function setupPicker() {
+        zt = zoomTypes[$scope.zoom];
+        $('#picker-date').datetimepicker('remove');
+
+        // var initialDate = new Date();
+        // var time =  $scope.date.getTime() - $scope.date.getTimezoneOffset() * 60 * 1000;
+        // initialDate.setTime(time);
+
+        $('#picker-date').datetimepicker({
+            minView: 3,
+            maxView: zt.pickerMaxView,
+            startView: zt.pickerMaxView,
+            format: zt.pickerFormat,
+            language: 'cs',
+            startDate: new Date(2013, 0, 1),
+            endDate: new Date(),
+            initialDate: $scope.date
+        }).on('changeDate', function(ev){
+            if ($scope.zoom == 'H') {
+                //datetime picker returns date with hour in UTC, fix it
+                var time = ev.date.getTime() + ev.date.getTimezoneOffset() * 60 * 1000;
+                $scope.date.setTime(time);
+                $scope.date.setMinutes(0, 0, 0);
+            } else {
+                $scope.date.setTime(ev.date.getTime());
+                $scope.date.setHours(0, 0, 0, 0);
+            }
+            redraw();
+        });
+    }
+
+    $scope.changeZoom = function(zoom) {
+        $scope.zoom = zoom;
+
+        switch ($scope.zoom) {
+            case 'M':
+                $scope.date.setDate(1);
+                $scope.date.setHours(0, 0, 0, 0);
+                break;
+            case 'D':
+                $scope.date.setHours(0, 0, 0, 0);
+                break;
+        }
+        redraw();
+        setupPicker();
+        fillDateInput();
+    };
+
+    $scope.shiftDateUnit = function(offset) {
+        switch ($scope.zoom) {
+            case 'M':
+                 $scope.date.setMonth($scope.date.getMonth() + offset);
+                 break;
+            case 'D':
+                 $scope.date.setDate($scope.date.getDate() + offset);
+                 break;
+            case 'H':
+                 $scope.date.setHours($scope.date.getHours() + offset);
+                 break;
+        }
+        redraw();
+        fillDateInput();
+    };
+
+    $scope.zoom = 'H';
+    $scope.date = new Date();
+    $scope.date.setMinutes(0, 0, 0);
 
     initChart();
     showRecent();
+    setupPicker();
+    fillDateInput();
+
+    //TODO drill down
 }]);

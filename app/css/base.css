@@ -10,3 +10,7 @@
 .loading > * {
     visibility: hidden;
 }
+
+#picker-date {
+    width: 300px;
+}

@@ -24,8 +24,12 @@ utils.mapPercentValues = function(values) {
 
 utils.formatDate = function(date, fmt) {
     //using parser in Bootstrap Datetime Picker
-    var g =$.fn.datetimepicker.DPGlobal;
-    return g.formatDate(date, g.parseFormat(fmt, 'standard'), 'cs', 'standard');
+    var g = $.fn.datetimepicker.DPGlobal;
+
+    var utcDate = new Date();
+    var time = date.getTime() - date.getTimezoneOffset() * 60 * 1000;
+    utcDate.setTime(time);
+    return g.formatDate(utcDate, g.parseFormat(fmt, 'standard'), 'cs', 'standard');
 };
 
 })();

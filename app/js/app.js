@@ -21,7 +21,7 @@ var app = window.app = angular.module('growduino', ['ngResource', 'ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/', {
-            templateUrl: 'partials/home.htm',
+            templateUrl: 'partials/sensors.htm',
             controller: 'ChartController'
         }).
         when('/network', {
