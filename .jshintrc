@@ -1,0 +1,6 @@
+{
+    "curly": false,
+    "globals": {
+        "jQuery": true
+    }
+}

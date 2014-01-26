@@ -6,9 +6,9 @@ $.ajaxSetup({
 
 Highcharts.setOptions({
     lang: {
-        months: $.fn.datetimepicker.dates['cs'].months,
-        shortMonths: $.fn.datetimepicker.dates['cs'].monthsShort,
-        weekdays: $.fn.datetimepicker.dates['cs'].days
+        months: $.fn.datetimepicker.dates.cs.months,
+        shortMonths: $.fn.datetimepicker.dates.cs.monthsShort,
+        weekdays: $.fn.datetimepicker.dates.cs.days
     },
     global: {
         useUTC: false
