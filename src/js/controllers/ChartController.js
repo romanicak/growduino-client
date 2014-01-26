@@ -13,7 +13,7 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
             dateComponents: {year: 'yyyy', month: 'mm', day: 'dd', hour: 'hh'},
             pointInterval: 1000 * 60, //1 min
             pickerMaxView: 1,
-            pickerFormat: 'd MM yyyy hh:00'
+            pickerFormat: 'd. MM yyyy hh:ii'
         },
         'D': {
             dataKey: 'h',
@@ -21,7 +21,7 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
             dateComponents: {year: 'yyyy', month: 'mm', day: 'dd'},
             pointInterval: 1000 * 60 * 60,  //hour
             pickerMaxView: 2,
-            pickerFormat: 'd MM yyyy'
+            pickerFormat: 'd. MM yyyy'
         },
         'M': {
             dataKey: 'day',
@@ -45,7 +45,10 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
                 zoomType: 'x'
             },
             title: {
-                text: 'Sensors'
+                text: 'Sensors',
+                style: {
+                   display: 'none'
+                }
             },
             xAxis: {
                 type: 'datetime',
@@ -118,12 +121,6 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         });
     }
 
-    function fillDateInput() {
-        var label = utils.formatDate($scope.date, zoomTypes[$scope.zoom].pickerFormat);
-        $('#picker-date').val(label);
-    }
-
-
     function setupPicker() {
         zt = zoomTypes[$scope.zoom];
         $('#picker-date').datetimepicker('remove');
@@ -169,33 +166,47 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         }
         redraw();
         setupPicker();
-        fillDateInput();
     };
 
     $scope.shiftDateUnit = function(offset) {
+        var d = new Date();
+        d.setTime($scope.date.getTime());
         switch ($scope.zoom) {
             case 'M':
-                 $scope.date.setMonth($scope.date.getMonth() + offset);
-                 break;
+                d.setMonth(d.getMonth() + offset);
+                break;
             case 'D':
-                 $scope.date.setDate($scope.date.getDate() + offset);
-                 break;
+                d.setDate(d.getDate() + offset);
+                break;
             case 'H':
-                 $scope.date.setHours($scope.date.getHours() + offset);
-                 break;
+                if ($scope.isCurrent) {
+                    d.setMinutes(0, 0, 0);
+                } else {
+                    d.setHours(d.getHours() + offset);
+                }
+                break;
         }
-        redraw();
-        fillDateInput();
+        if (d <= new Date()) {
+            $scope.isCurrent = false;
+            $scope.date = d;
+            redraw();
+        }
     };
 
     $scope.zoom = 'H';
     $scope.date = new Date();
-    $scope.date.setMinutes(0, 0, 0);
+    $scope.date.setHours($scope.date.getHours() - 1);
+    $scope.isCurrent = true;
+
+    $scope.$watch(function() {
+        return $scope.date ? $scope.date.getTime() : null;
+    }, function() {
+        $scope.formattedDate = utils.formatDate($scope.date, zoomTypes[$scope.zoom].pickerFormat);
+    });
 
     initChart();
     showRecent();
     setupPicker();
-    fillDateInput();
 
     //TODO drill down
 }]);

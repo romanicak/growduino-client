@@ -11,6 +11,15 @@
     visibility: hidden;
 }
 
-#picker-date {
-    width: 300px;
+.relay-panel {
+    margin-bottom: 40px;
+}
+
+.chart-controls .btn-group {
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.chart-controls #picker-date {
+    margin-right: 8px;
 }
