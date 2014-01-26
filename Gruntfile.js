@@ -26,28 +26,28 @@ grunt.initConfig({
     },
     clean: {
         dist: {
-            src: [ 'dist' ]
+            src: ['dist']
         },
         tmp: {
             src: ['.tmp']
         }
     },
     copy: {
-        dist: {
+        images: {
             cwd: 'src',
-            src: [ 'images/*', 'partials/*'],
+            src: ['images/*'],
             dest: 'dist',
             expand: true
         },
-        htmltmp: {
+        index: {
             cwd: 'src',
-            src: [ 'index.html' ],
+            src: ['index.html'],
             dest: '.tmp',
             expand: true
         }
     },
     htmlmin: {
-        dist: {
+        index: {
             options: {
                 collapseBooleanAttributes:      true,
                 collapseWhitespace:             true,
@@ -71,13 +71,22 @@ grunt.initConfig({
     },
     ngtemplates:  {
         dist:        {
-            src:      'src/partials/**/*.html',
+            cwd:      'src',
+            src:      'partials/**/*.html',
             dest:     '.tmp/template.js',
             options:  {
-                usemin: 'dist/js/minified.js'
+                module: 'growduino',
+                usemin: 'dist/js/minified.js',
+                htmlmin: {
+                    collapseBooleanAttributes:      true,
+                    collapseWhitespace:             false,
+                    removeComments:                 true,
+                    removeScriptTypeAttributes:     true,
+                    removeStyleLinkTypeAttributes:  true
+                }
             }
+        }
     }
-}
 });
 
 // Load the Grunt plugins.
@@ -93,9 +102,11 @@ grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-angular-templates');
 grunt.loadNpmTasks('grunt-usemin');
 
-// Register the default tasks.
 grunt.registerTask('default', ['watch']);
-//grunt.registerTask('dist', ['clean', 'copy', 'htmlmin', 'cssmin', 'uglify']);
-grunt.registerTask('dist', ['clean:dist', 'copy', 'useminPrepare', /*'ngtemplates',*/ 'concat', 'cssmin', 'uglify', 'usemin', 'htmlmin', 'clean:tmp']);
+grunt.registerTask('distUsemin', ['watch']);
+grunt.registerTask('dist', [
+    'clean:dist', 'copy', 'useminPrepare', 'ngtemplates', 'concat', 'cssmin', 'uglify', 'usemin',
+    'htmlmin:index', 'clean:tmp'
+]);
 
 };
