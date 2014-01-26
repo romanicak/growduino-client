@@ -1,7 +1,7 @@
 <div ng-controller="RelayController">
   Relays:
   <span ng-repeat="relay in relays">
-      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ $index }}</span>
+      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">Output {{ $index }}</span>
   </span>
 </div>
 
