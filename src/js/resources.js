@@ -9,6 +9,12 @@ app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, 
         var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
             ['day', 'h', 'min'].forEach(function(key) {
                 if ($.isArray(data[key])) {
+                    //invalid backend data temporary fix
+                    data[key] = data[key].map(function(item) {
+                        if (item && item > 25000) return item - 32768;
+                        return item;
+                    });
+                    //end of fix
                     data[key] = mapFn(utils.fixNull(data[key]));
                 }
             });

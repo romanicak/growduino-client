@@ -32,4 +32,17 @@ utils.formatDate = function(date, fmt) {
     return g.formatDate(utcDate, g.parseFormat(fmt, 'standard'), 'cs', 'standard');
 };
 
+utils.daysInMonth = function daysInMonth(month, year) {
+    return new Date(year, month+1, 0).getDate();
+};
+
+utils.arrayPad = function(arr, size, value) {
+    var missing = size - arr.length;
+    var a = arr.slice();
+    while (missing-- > 0) {
+        a.push(value);
+    }
+    return a;
+  };
+
 })();

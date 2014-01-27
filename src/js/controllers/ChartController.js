@@ -63,36 +63,61 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
                 //{ title: { text: '% (Humidity)' }},
                 //{ title: { text: '% (Lighting)' }}
             ],
-            series: []
+            series: [],
+            // drilldown: {
+            //     series: []
+            // },
+
         });
         series.forEach(function(s) {
             chart.addSeries({
                 name: s.name,
-                yAxis: s.yAxis
+                yAxis: s.yAxis,
+                events: {
+                    click: function(ev) {
+                        if ($scope.zoom === 'H') return;
+                        $scope.date = new Date(ev.point.x);
+                        $scope.changeZoom($scope.zoom === 'M' ? 'D' : 'H');
+                    }
+                }
             });
         });
         cleanChart();
     }
 
     function cleanChart() {
+        q.tasks.splice(0, q.tasks.length);
         chart.series.forEach(function(s) {
             s.hide();
         });
-        q.tasks.splice(0, q.tasks.length);
-        //chart.showLoading();
+    }
+
+    function pad(data) {
+        if ($scope.zoom == 'H') {
+            return utils.arrayPad(data, 60, null);
+        }
+        if ($scope.zoom == 'D') {
+            return utils.arrayPad(data, 24, null);
+        }
+        if ($scope.zoom == 'M') {
+            return utils.arrayPad(data, utils.daysInMonth($scope.date.getMonth(), $scope.date.getYear()), null);
+        }
     }
 
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
         cleanChart();
+        chart.showLoading('Loading…');
         series.forEach(function(item, i) {
             var series = chart.series[i];
             series.setData([]);
-            series.update(seriesOptions);
+            series.update($.extend({
+                cursor: $scope.zoom === 'H' ? 'default': 'pointer'
+            }, seriesOptions));
             q.push(function(done) {
                 item.resource[resourceMethod](queryArgs, function (data) {
-                    //chart.hideLoading();
-                    series.setData(data[dataKey]);
+                    series.setData(pad(data[dataKey]));
                 }).$promise.finally(function() {
+                    chart.hideLoading();
                     series.show();
                     done();
                 });
@@ -114,9 +139,9 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         });
     }
 
-    function showRecent() {
+    function showLastHour() {
         show('min', 'get', {}, {
-            pointStart: (new Date()).getTime() - 60*1000,
+            pointStart: (new Date()).getTime(),
             pointInterval: 1000 * 60 //1 min
         });
     }
@@ -168,10 +193,10 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         setupPicker();
     };
 
-    $scope.shiftDateUnit = function(offset) {
+    function shiftByUnit(dt, zoom, trimHourOnly, offset) {
         var d = new Date();
-        d.setTime($scope.date.getTime());
-        switch ($scope.zoom) {
+        d.setTime(dt.getTime());
+        switch (zoom) {
             case 'M':
                 d.setMonth(d.getMonth() + offset);
                 break;
@@ -179,13 +204,18 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
                 d.setDate(d.getDate() + offset);
                 break;
             case 'H':
-                if ($scope.isCurrent) {
+                if (trimHourOnly) {
                     d.setMinutes(0, 0, 0);
                 } else {
                     d.setHours(d.getHours() + offset);
                 }
                 break;
         }
+        return d;
+    }
+
+    $scope.shiftDateUnit = function(offset) {
+        var d = shiftByUnit($scope.date, $scope.zoom, $scope.isCurrent, offset);
         if (d <= new Date()) {
             $scope.isCurrent = false;
             $scope.date = d;
@@ -193,20 +223,27 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
         }
     };
 
+    $scope.showRecent = function() {
+        $scope.date = new Date();
+        if ($scope.zoom === 'H') {
+            $scope.date.setHours($scope.date.getHours() - 1);
+            $scope.isCurrent = true;
+            showLastHour();
+        } else {
+            //call change zoom to align date
+            $scope.changeZoom($scope.zoom);
+        }
+    };
+
     $scope.zoom = 'H';
-    $scope.date = new Date();
-    $scope.date.setHours($scope.date.getHours() - 1);
-    $scope.isCurrent = true;
-
-    $scope.$watch(function() {
-        return $scope.date ? $scope.date.getTime() : null;
-    }, function() {
-        $scope.formattedDate = utils.formatDate($scope.date, zoomTypes[$scope.zoom].pickerFormat);
-    });
-
     initChart();
-    showRecent();
+    $scope.showRecent();
     setupPicker();
 
-    //TODO drill down
+    $scope.$watch(function() {
+        return $scope.zoom + '-' + $scope.date.getTime();
+    }, function() {
+        $scope.formattedDate = utils.formatDate($scope.date, zoomTypes[$scope.zoom].pickerFormat);
+        $scope.forwardAllowed = !$scope.isCurrent && shiftByUnit($scope.date, $scope.zoom, false, 1) <= new Date();
+    });
 }]);

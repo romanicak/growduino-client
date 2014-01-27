@@ -19,13 +19,15 @@
         </div>
 
         <div class="btn-group">
-            <button type="button" class="btn btn-info" ng-click="shiftDateUnit(-1)"><span class="glyphicon glyphicon-backward"></span></button>
-            <button type="button" class="btn btn-info" ng-click="shiftDateUnit(1)"><span class="glyphicon glyphicon-forward"></span></button>
+            <button title="Select date" type="button" class="btn btn-info" id="picker-date"><span class="glyphicon glyphicon-calendar"></span></button>
+            <button title="Show recent data" type="button" class="btn btn-info" ng-click="showRecent()"><span class="glyphicon glyphicon-home"></span></button>
         </div>
 
-        <a href="" class="btn btn-info" id="picker-date"><span class="glyphicon glyphicon-calendar"></span></a>
+        <div class="btn-group">
+            <button title="Previous" type="button" class="btn btn-info" ng-click="shiftDateUnit(-1)"><span class="glyphicon glyphicon-backward"></span></button>
+            <button title="Next" type="button" class="btn btn-info" ng-click="shiftDateUnit(1)" ng-disabled="!forwardAllowed"><span class="glyphicon glyphicon-forward"></span></button>
+        </div>
 
         <span class="selected-date">{{ formattedDate }}</span>
     </form>
-    <br>
 </div>
