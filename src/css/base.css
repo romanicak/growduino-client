@@ -1,3 +1,6 @@
+a[ng-click] {
+    cursor: pointer;
+}
 
 .nav {
     margin: 10px 0 20px 0;
@@ -18,4 +21,18 @@
 .chart-controls .btn-group {
     margin-right: 8px;
     display: inline-block;
+}
+
+
+.triggers-form .form-control {
+    width: 90px;
+}
+
+.triggers-form .timer-line, .triggers-form .sentinel-line {
+    display: block;
+    margin-bottom: 4px;
+}
+
+.sentinel-line[disabled] {
+    color: gray;
 }

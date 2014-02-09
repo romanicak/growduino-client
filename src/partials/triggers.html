@@ -1,0 +1,52 @@
+<form novalidate class="form-inline triggers-form"  name="form">
+
+<div class="panel panel-default" ng-repeat="timer in timers">
+  <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
+  <div class="panel-body" ng-controller="TimerController">
+        <div class="form-group timer-line" ng-repeat="range in timer">
+            from
+            <input type="text" class="form-control" ng-model="range.since" />
+            to
+            <input type="text" class="form-control" ng-model="range.until"/>
+            <a ng-click="removeRange($index)"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+        <div class="form-group timer-line">
+            <a ng-click="addRange()"><span class="glyphicon glyphicon-plus"></span> add</a>
+        </div>
+  </div>
+</div>
+
+
+
+
+<div class="panel panel-default">
+  <div class="panel-heading"><b>Sentinels</b></div>
+  <div class="panel-body">
+    <fieldset class="form-group sentinel-line" ng-disabled="!temp.active">
+            Keep <b>temperature</b> between
+            <input type="text" class="form-control" ng-model="temp.from" />&nbsp;°C
+            and
+            <input type="text" class="form-control" ng-model="temp.to" />&nbsp;°C
+            <a ng-click="disableTemperature()"><span ng-class="{glyphicon: true, 'glyphicon-ban-circle': temp.active, 'glyphicon-ok-circle': !temp.active}"></span></a>
+    </fieldset>
+    <fieldset class="form-group sentinel-line" ng-disabled="!humidity.active">
+            Keep <b>humidity</b> between
+
+            <input type="text" class="form-control" ng-model="humidity.from" />&nbsp;%
+            and
+            <input type="text" class="form-control" ng-model="humidity.to" />&nbsp;%
+            <a ng-click="disableHumidity()"><span ng-class="{glyphicon: true, 'glyphicon-ban-circle': humidity.active, 'glyphicon-ok-circle': !humidity.active}"></span></a>
+    </fieldset>
+    <fieldset class="form-group sentinel-line" ng-disabled="!fan.active">
+            Enable <b>fan</b> every
+            <input type="text" class="form-control" ng-model="fan.after"/> minutes
+            of inactivity for
+            <input type="text" class="form-control" ng-model="fan.duration"/> minutes.
+
+            <a ng-click="disableFanInterval()"><span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fan.active, 'glyphicon-ok-circle': !fan.active}"></span></a>
+    </fieldset>
+</div>
+
+
+
+</form>

@@ -32,6 +32,7 @@
     <script src="js/controllers/ChartController.js"></script>
     <script src="js/controllers/NetworkConfigController.js"></script>
     <script src="js/controllers/RelayController.js"></script>
+    <script src="js/controllers/TriggersController.js"></script>
     <!-- endbuild -->
 </head>
 <body ng-app="growduino">
@@ -39,6 +40,7 @@
     <div class="container">
         <ul class="nav nav-pills" ng-controller="NavigationController">
             <li ng-class="{ active: isActive('/')}"><a href="#">Sensors</a></li>
+            <li ng-class="{ active: isActive('/triggers')}"><a href="#/triggers">Triggers</a></li>
             <li ng-class="{ active: isActive('/network')}"><a href="#/network">Network</a></li>
         </ul>
 

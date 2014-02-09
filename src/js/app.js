@@ -17,11 +17,23 @@ Highcharts.setOptions({
 
 var app = window.app = angular.module('growduino', ['ngResource', 'ngRoute']);
 
+app.constant('OUTPUTS', [
+    'Timer 1',
+    'Timer 2',
+    'Pump',
+    'Fan',
+    'Humidifier',
+    'Heating'
+]);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/', {
             templateUrl: 'partials/sensors.html'
+        }).
+        when('/triggers', {
+            templateUrl: 'partials/triggers.html',
+            controller: 'TriggersController'
         }).
         when('/network', {
             templateUrl: 'partials/network.html',

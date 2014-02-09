@@ -3,7 +3,7 @@
   <div class="panel-heading">Relays</div>
   <div class="panel-body">
     <span ng-repeat="relay in relays">
-      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">Output {{ $index }}</span>
+      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ relay.name }}</span>
     </span>
   </div>
 </div>
