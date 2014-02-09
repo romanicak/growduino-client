@@ -1,4 +1,4 @@
-<form novalidate class="form-inline triggers-form"  name="form">
+<form novalidate ng-class="{'form-inline': true, 'triggers-form': true, saving: saving}"  name="form" ng-submit="saveTriggers()">
 
 <div class="panel panel-default" ng-repeat="timer in timers">
   <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
@@ -16,37 +16,36 @@
   </div>
 </div>
 
-
-
-
 <div class="panel panel-default">
   <div class="panel-heading"><b>Sentinels</b></div>
   <div class="panel-body">
-    <fieldset class="form-group sentinel-line" ng-disabled="!temp.active">
-            Keep <b>temperature</b> between
-            <input type="text" class="form-control" ng-model="temp.from" />&nbsp;°C
+    <div class="form-group sentinel-line" ng-repeat="range in rangeSentinels">
+        <fieldset ng-disabled="!range.active">
+            Keep <b>{{ range.name }}</b> between
+            <input type="text" class="form-control" ng-model="range.from" />&nbsp;{{ range.unit }}
             and
-            <input type="text" class="form-control" ng-model="temp.to" />&nbsp;°C
-            <a ng-click="disableTemperature()"><span ng-class="{glyphicon: true, 'glyphicon-ban-circle': temp.active, 'glyphicon-ok-circle': !temp.active}"></span></a>
-    </fieldset>
-    <fieldset class="form-group sentinel-line" ng-disabled="!humidity.active">
-            Keep <b>humidity</b> between
-
-            <input type="text" class="form-control" ng-model="humidity.from" />&nbsp;%
-            and
-            <input type="text" class="form-control" ng-model="humidity.to" />&nbsp;%
-            <a ng-click="disableHumidity()"><span ng-class="{glyphicon: true, 'glyphicon-ban-circle': humidity.active, 'glyphicon-ok-circle': !humidity.active}"></span></a>
-    </fieldset>
+            <input type="text" class="form-control" ng-model="range.to" />&nbsp;{{ range.unit }}
+            <a ng-click="toggleSentinel(range)">
+                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': range.active, 'glyphicon-ok-circle': !range.active}"></span>
+            </a>
+        </fieldset>
+    </div>
     <fieldset class="form-group sentinel-line" ng-disabled="!fan.active">
             Enable <b>fan</b> every
             <input type="text" class="form-control" ng-model="fan.after"/> minutes
             of inactivity for
             <input type="text" class="form-control" ng-model="fan.duration"/> minutes.
 
-            <a ng-click="disableFanInterval()"><span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fan.active, 'glyphicon-ok-circle': !fan.active}"></span></a>
+            <a ng-click="toggleSentinel(fan)">
+                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fan.active, 'glyphicon-ok-circle': !fan.active}"></span>
+            </a>
     </fieldset>
+  </div>
 </div>
 
-
+<div class="form-group">
+    <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
+    <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
+</div>
 
 </form>

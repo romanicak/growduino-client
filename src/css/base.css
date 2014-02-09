@@ -24,6 +24,10 @@ a[ng-click] {
 }
 
 
+.triggers-form.saving .panel {
+    opacity: 0.4;
+}
+
 .triggers-form .form-control {
     width: 90px;
 }
