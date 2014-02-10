@@ -14,5 +14,11 @@
     "grunt-usemin": "~2.0.2",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-angular-templates": "~0.5.1"
+  },
+  "dependencies": {
+    "http": "0.0.0",
+    "http-proxy": "~1.0.2",
+    "node-static": "~0.7.3",
+    "connect": "~2.12.0"
   }
 }

@@ -59,7 +59,10 @@ app.factory('Lighting', ['sensorResourceFactory', function(sensorResourceFactory
 
 app.factory('Relay', ['$resource', '$http', function($resource, $http) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
-        data.currentState = data.min[data.min.length - 1];
+        for (var ts in data.state) {
+            //console.log(ts);
+            data.currentState = data.state[ts];
+        }
         return data;
     }]);
     return $resource('/sensors/outputs.jso', {}, {
