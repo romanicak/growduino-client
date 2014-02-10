@@ -1,4 +1,4 @@
-<form novalidate ng-class="{'form-inline': true, 'triggers-form': true, saving: saving}"  name="form" ng-submit="saveTriggers()">
+<form novalidate ng-class="{'form-inline': true, 'triggers-form': true, saving: saving, loading: loading}"  name="form" ng-submit="saveTriggers()">
 
 <div class="panel panel-default" ng-repeat="timer in timers">
   <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
