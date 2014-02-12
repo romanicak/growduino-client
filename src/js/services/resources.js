@@ -56,7 +56,6 @@ app.factory('Lighting', ['sensorResourceFactory', function(sensorResourceFactory
     return sensorResourceFactory('light', utils.mapPercentValues);
 }]);
 
-
 app.factory('Relay', ['$resource', '$http', function($resource, $http) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
         for (var ts in data.state) {
@@ -71,6 +70,42 @@ app.factory('Relay', ['$resource', '$http', function($resource, $http) {
             transformResponse: transformers
         },
     });
+}]);
+
+app.factory('Triggers', ['$http', 'MAX_TRIGGER', function($http, MAX_TRIGGER) {
+    return {
+        loadAll: function(success) {
+            var triggers = [];
+            var q = async.queue(function(index, done) {
+                $http.get('/triggers/'+index+'.jso').success(function(data) {
+                    console.log('trigger #'+index+' loaded', data);
+                    data.index = index;
+                    triggers.push(data);
+                }).finally(done);
+            }, 1);
+            q.drain = function() {
+                success(triggers);
+            };
+
+            for (var i = 0; i < MAX_TRIGGER; i++) {
+                q.push(i);
+            }
+        },
+        save: function(triggers, success)  {
+            var q = async.queue(function(trigger, done) {
+                var index = trigger.index;
+                delete trigger.index;
+                console.log('Trigger #'+index+' saved', trigger);
+                $http.post('/triggers/'+index+'.jso', trigger).finally(done);
+            }, 1);
+            q.drain = function() {
+                success();
+            };
+            triggers.forEach(function(trigger) {
+                q.push(trigger);
+            });
+        }
+    };
 }]);
 
 

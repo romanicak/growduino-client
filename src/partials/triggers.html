@@ -17,27 +17,43 @@
 </div>
 
 <div class="panel panel-default">
-  <div class="panel-heading"><b>Sentinels</b></div>
+  <div class="panel-heading"><b>Fan</b> triggers</div>
   <div class="panel-body">
-    <div class="form-group sentinel-line" ng-repeat="range in rangeSentinels">
-        <fieldset ng-disabled="!range.active">
-            Keep <b>{{ range.name }}</b> between
-            <input type="text" class="form-control" ng-model="range.from" />&nbsp;{{ range.unit }}
-            and
-            <input type="text" class="form-control" ng-model="range.to" />&nbsp;{{ range.unit }}
-            <a ng-click="toggleSentinel(range)">
-                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': range.active, 'glyphicon-ok-circle': !range.active}"></span>
-            </a>
-        </fieldset>
-    </div>
-    <fieldset class="form-group sentinel-line" ng-disabled="!fan.active">
-            Enable <b>fan</b> every
-            <input type="text" class="form-control" ng-model="fan.after"/> minutes
-            of inactivity for
-            <input type="text" class="form-control" ng-model="fan.duration"/> minutes.
 
-            <a ng-click="toggleSentinel(fan)">
-                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fan.active, 'glyphicon-ok-circle': !fan.active}"></span>
+    <fieldset class="form-group sentinel-line" ng-disabled="!temperatureOptimal.active">
+        Keep <b>Temperature</b> between
+        <input type="text" class="form-control" ng-model="temperatureOptimal.from" />&nbsp;°C
+        and
+        <input type="text" class="form-control" ng-model="temperatureOptimal.to" />&nbsp;°C
+        <a ng-click="toggleSentinel(temperatureOptimal)">
+            <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': temperatureOptimal.active, 'glyphicon-ok-circle': !temperatureOptimal.active}"></span>
+        </a>
+    </fieldset>
+    <fieldset class="form-group sentinel-line" ng-disabled="!humidityOptimal.active">
+        Keep <b>Humidity</b> between
+        <input type="text" class="form-control" ng-model="humidityOptimal.from" />&nbsp;%
+        and
+        <input type="text" class="form-control" ng-model="humidityOptimal.to" />&nbsp;%
+        <a ng-click="toggleSentinel(humidityOptimal)">
+            <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': humidityOptimal.active, 'glyphicon-ok-circle': !humidityOptimal.active}"></span>
+        </a>
+    </fieldset>
+
+    <fieldset class="form-group sentinel-line" ng-disabled="!fanInterval.active">
+            Enable <b>fan</b> every
+            <input type="text" class="form-control" ng-model="fanInterval.after"/> minutes
+            of inactivity for
+            <input type="text" class="form-control" ng-model="fanInterval.duration"/> minutes.
+
+            <a ng-click="toggleSentinel(fanInterval)">
+                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
+            </a>
+    </fieldset>
+    <fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
+            Don't turn on <b>fan</b> when temperature is below
+            <input type="text" class="form-control" ng-model="fanCritical.temperature"/> °C
+            <a ng-click="toggleSentinel(fanCritical)">
+                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
             </a>
     </fieldset>
   </div>
