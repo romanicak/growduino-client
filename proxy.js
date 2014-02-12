@@ -4,40 +4,41 @@ var http = require('http'),
 
 var connect = require('connect');
 var bodyParser = connect.bodyParser();
+var request = require('request');
 
-var TARGET = 'arduino.natur.cuni.cz';
-// var TARGET = http://78.108.106.180;
+//var TARGET = 'arduino.natur.cuni.cz';
+var TARGET = '78.108.106.180';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
 var staticServer = new nodeStatic.Server('./src');
 
 function proxyPost(req, res) {
     bodyParser(req, res, function() {
-        var rr = http.request({
-            host: TARGET,
-            path: req.url,
-        }, function(remoteResp) {
-            var str = '';
-            remoteResp.on('data', function (chunk) {
-                str += chunk;
-            });
-            remoteResp.on('end', function () {
-                for (var header in remoteResp.headers) {
-                    res.setHeader(header, remoteResp.headers[header]);
-                }
-                res.statusCode = 200;
-                res.write(str);
-                res.end();
-            });
-
+        request({
+            method: 'POST',
+            url: 'http://'+TARGET+req.url,
+            json: req.body,
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Origin': 'http://'+TARGET,
+                'Referer': 'http://'+TARGET+'/'
+            }
+        }, function (error, response, body) {
+            res.statusCode = 200;
+            res.end();
         });
-        rr.write(""+req.body);
-        rr.end();
     });
 }
 
 var server = require('http').createServer(function(req, res) {
     //console.log(req.url);
+    if (req.method == 'OPTIONS') {
+        res.statisCode = 200;
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.end();
+        return;
+    }
+
     if (req.url.match(/^\/(sensors|triggers|DATA|config.jso)/)) {
         if (req.method == 'POST') {
             proxyPost(req, res);
