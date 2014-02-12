@@ -1,5 +1,7 @@
 (function() {
 
+//TODO angular module
+
 var utils = window.utils = {};
 
 utils.fixNull = function(values) {
@@ -43,6 +45,17 @@ utils.arrayPad = function(arr, size, value) {
         a.push(value);
     }
     return a;
-  };
+};
+
+utils.timeToMinutes = function(val) {
+    var t = val.split(':');
+    return parseInt(t[0], 10)*60+parseInt(t[1], 10);
+};
+
+utils.minutesToTime = function(val) {
+    var h = parseInt(val / 60, 10), m = val % 60;
+    //TODO padstr fn
+    return (h < 10 ? '0': '') + h + ":" + (m < 10 ? '0' : '') + m;
+};
 
 })();

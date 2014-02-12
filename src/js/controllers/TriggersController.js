@@ -11,8 +11,6 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
 
     $scope.timers = [[], []];
 
-    var DISABLED_TRIGGER = {t_since:-1, t_until:-1, on_value:-256, off_value:-512, sensor:-1, output:-1};
-
     //TODO delete, keep only in transofrmer service
     var FAN_OUTPUT = 3,
         SENSOR_TEMP = 0,
@@ -25,9 +23,8 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
     });
     $scope.loading = true;
 
-    function timeToMinutes(val) {
-        var t = val.split(':');
-        return parseInt(t[0], 10)*60+parseInt(t[1], 10);
+    function createDisabledTrigger() {
+        return {t_since:-1, t_until:-1, on_value: "<-256", off_value:">-512", sensor:-1, output:-1};
     }
 
     function serializeTriggers() {
@@ -41,24 +38,18 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
             }
         });
 
-        //TODO as transformer
         $scope.timers.forEach(function(ranges, output) {
             ranges.forEach(function(range) {
-                if (range.since === range.until) return;
-                triggers.push({
-                    t_since: timeToMinutes(range.since),
-                    t_until: timeToMinutes(range.until),
-                    on_value:"-256",
-                    off_value:"-512",
-                    sensor: -1,
-                    output: output
-                });
+                var trigger = triggerTransformer.pack(range);
+                trigger.output = output;
+                triggers.push(trigger);
             });
         });
 
         for (var i = triggers.length; i < MAX_TRIGGER; i++) {
-            triggers.push(DISABLED_TRIGGER);
+            triggers.push(createDisabledTrigger());
         }
+
         triggers.forEach(function(trigger, i) {
             trigger.index = i;
         });
@@ -69,14 +60,6 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
     $scope.toggleSentinel = function(sentinel) {
         sentinel.active = !sentinel.active;
     };
-
-    function handleTriggerLoad(t) {
-        u = triggerTransformer.unpack(t);
-        if (u) {
-            $scope[u.triggerClass] = u;
-            return;
-        }
-    }
 
     $scope.saveTriggers = function() {
         if ($scope.saving) return;
@@ -91,20 +74,25 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
 
     Triggers.loadAll(function(triggers) {
         triggers.forEach(function(trigger) {
-            handleTriggerLoad(trigger);
+            u = triggerTransformer.unpack(trigger);
+            if (u) {
+                if (u.triggerClass === 'timer') {
+                    $scope.timers[u.trigger.output].push(u);
+                } else {
+                    $scope[u.triggerClass] = u;
+                }
+                return;
+            }
         });
         $scope.loading = false;
     });
 }]);
 
-app.controller('TimerController', ['$scope', function($scope) {
+app.controller('TimerController', ['$scope', 'triggerTransformer', function($scope, triggerTransformer) {
     var ranges = $scope.$parent.timer;
 
     $scope.addRange = function() {
-        ranges.push({
-            since: '00:00',
-            until: '00:00'
-        });
+        ranges.push(triggerTransformer.createEmpty('timer'));
     };
 
     $scope.removeRange = function(idx) {

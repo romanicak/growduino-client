@@ -13,6 +13,7 @@ function sensorRangeUnpack(sensor, t) {
             };
         }
     }
+    return null;
 }
 
 function sensorRangePack(sensor, u) {
@@ -25,6 +26,17 @@ function sensorRangeCreateEmpty() {
     return {from: null, to: null};
 }
 
+function createSensorTransformer(sensor) {
+    return {
+        unpack: function(t) {
+            return sensorRangeUnpack(sensor, t);
+        },
+        pack: function(u) {
+            sensorRangePack(sensor, u);
+        },
+        createEmpty: sensorRangeCreateEmpty
+    };
+}
 
 var transformers = {
     'fanCritical': {
@@ -34,6 +46,7 @@ var transformers = {
                     temperature: parseInt(t.off_value.substring(1), 10) / 10
                 };
             }
+            return null;
         },
         pack: function(u) {
             var val = parseInt(u.temperature * 10, 10);
@@ -51,6 +64,7 @@ var transformers = {
                     after: parseInt(t.on_value.substring(1), 10)
                 };
             }
+            return null;
         },
         pack: function(u) {
             return {t_since: -1, t_until: 0, on_value: "T"+fan.after, off_value:"T"+fan.duration, sensor:-1, output: FAN_OUTPUT};
@@ -59,23 +73,30 @@ var transformers = {
             return { duration: null, after: null };
         }
     },
-    'humidityOptimal': {
+    'humidityOptimal': createSensorTransformer(SENSOR_HUMIDITY),
+    'temperatureOptimal': createSensorTransformer(SENSOR_TEMP),
+    'timer': {
         unpack: function(t) {
-            return sensorRangeUnpack(SENSOR_HUMIDITY, t);
+            if (t.t_since !== -1 && t.t_until !== -1 && t.on_value === ">-256" && t.off_value === "<-512" && t.sensor === -1) {
+                return {
+                    since: utils.minutesToTime(t.t_since),
+                    until: utils.minutesToTime(t.t_until),
+                };
+            }
+            return null;
         },
         pack: function(u) {
-            sensorRangePack(SENSOR_HUMIDITY, u);
+            return {
+                t_since: utils.timeToMinutes(u.since),
+                t_until: utils.timeToMinutes(u.until),
+                on_value: ">-256",
+                off_value: "<-512",
+                sensor: -1
+            };
         },
-        createEmpty: sensorRangeCreateEmpty
-    },
-    'temperatureOptimal': {
-        unpack: function(t) {
-            return sensorRangeUnpack(SENSOR_TEMP, t);
-        },
-        pack: function(u) {
-            sensorRangePack(SENSOR_TEMP, u);
-        },
-        createEmpty: sensorRangeCreateEmpty
+        createEmpty: function() {
+            return { since: '00:00', until: '00:00'};
+        }
     }
 };
 
@@ -83,7 +104,9 @@ app.factory('triggerTransformer', function() {
     return {
         createEmpty: function(triggerClass) {
             u = transformers[triggerClass].createEmpty();
-            u.active = false;
+            if (triggerClass != 'timer') {
+                u.active = false;
+            }
             u.triggerClass = triggerClass;
             return u;
         },
@@ -97,9 +120,10 @@ app.factory('triggerTransformer', function() {
                     return u;
                 }
             }
+            return null;
         },
         pack: function(obj) {
-            if (!obj.active) return null;
+            if (obj.active === false) return null; //can be undefined
             return transformers[obj.triggerClass].pack(obj);
         }
     };

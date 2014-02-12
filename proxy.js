@@ -6,8 +6,8 @@ var connect = require('connect');
 var bodyParser = connect.bodyParser();
 var request = require('request');
 
-//var TARGET = 'arduino.natur.cuni.cz';
-var TARGET = '78.108.106.180';
+var TARGET = 'arduino.natur.cuni.cz';
+//var TARGET = '78.108.106.180';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
 var staticServer = new nodeStatic.Server('./src');
