@@ -84,6 +84,16 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
                 return;
             }
         });
+        $scope.timers.forEach(function(ranges) {
+            ranges.sort(function(a, b) {
+                if (a.since != b.since) {
+                    return utils.timeToMinutes(a.since) - utils.timeToMinutes(b.since);
+                } else {
+                    return utils.timeToMinutes(a.until) - utils.timeToMinutes(b.until);
+                }
+
+            });
+        });
         $scope.loading = false;
     });
 }]);

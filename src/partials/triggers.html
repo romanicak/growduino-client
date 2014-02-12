@@ -1,19 +1,27 @@
 <form novalidate ng-class="{'form-inline': true, 'triggers-form': true, saving: saving, loading: loading}"  name="form" ng-submit="saveTriggers()">
 
-<div class="panel panel-default" ng-repeat="timer in timers">
-  <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
-  <div class="panel-body" ng-controller="TimerController">
-        <div class="form-group timer-line" ng-repeat="range in timer">
-            from
-            <input type="text" class="form-control" ng-model="range.since" />
-            to
-            <input type="text" class="form-control" ng-model="range.until"/>
-            <a ng-click="removeRange($index)"><span class="glyphicon glyphicon-remove"></span></a>
+<div class="row">
+    <div class="col-sm-6" ng-repeat="timer in timers">
+        <div class="panel panel-default" >
+          <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
+          <div class="panel-body" ng-controller="TimerController">
+                <div class="timer-line" ng-repeat="range in timer">
+                    from
+                    <div class="form-group" bs-has-error>
+                        <input type="text" class="form-control" ng-model="range.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                    </div>
+                    to
+                    <div class="form-group" bs-has-error>
+                        <input type="text" class="form-control" ng-model="range.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                    </div>
+                    <a ng-click="removeRange($index)"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+                <div class="form-group timer-line">
+                    <a ng-click="addRange()"><span class="glyphicon glyphicon-plus"></span> add</a>
+                </div>
+          </div>
         </div>
-        <div class="form-group timer-line">
-            <a ng-click="addRange()"><span class="glyphicon glyphicon-plus"></span> add</a>
-        </div>
-  </div>
+    </div>
 </div>
 
 <div class="panel panel-default">
@@ -22,18 +30,26 @@
 
     <fieldset class="form-group sentinel-line" ng-disabled="!temperatureOptimal.active">
         Keep <b>Temperature</b> between
-        <input type="text" class="form-control" ng-model="temperatureOptimal.from" />&nbsp;°C
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="temperatureOptimal.from" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+        </div>
         and
-        <input type="text" class="form-control" ng-model="temperatureOptimal.to" />&nbsp;°C
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="temperatureOptimal.to" />&nbsp;°C
+        </div>
         <a ng-click="toggleSentinel(temperatureOptimal)">
             <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': temperatureOptimal.active, 'glyphicon-ok-circle': !temperatureOptimal.active}"></span>
         </a>
     </fieldset>
     <fieldset class="form-group sentinel-line" ng-disabled="!humidityOptimal.active">
         Keep <b>Humidity</b> between
-        <input type="text" class="form-control" ng-model="humidityOptimal.from" />&nbsp;%
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="humidityOptimal.from" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
         and
-        <input type="text" class="form-control" ng-model="humidityOptimal.to" />&nbsp;%
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="humidityOptimal.to" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
         <a ng-click="toggleSentinel(humidityOptimal)">
             <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': humidityOptimal.active, 'glyphicon-ok-circle': !humidityOptimal.active}"></span>
         </a>
@@ -41,9 +57,13 @@
 
     <fieldset class="form-group sentinel-line" ng-disabled="!fanInterval.active">
             Enable <b>fan</b> every
-            <input type="text" class="form-control" ng-model="fanInterval.after"/> minutes
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="fanInterval.after" ng-pattern="/^\d+$/"/> minutes
+            </div>
             of inactivity for
-            <input type="text" class="form-control" ng-model="fanInterval.duration"/> minutes.
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="fanInterval.duration" ng-pattern="/^\d+$/"/> minutes.
+            </div>
 
             <a ng-click="toggleSentinel(fanInterval)">
                 <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
@@ -51,7 +71,9 @@
     </fieldset>
     <fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
             Don't turn on <b>fan</b> when temperature is below
-            <input type="text" class="form-control" ng-model="fanCritical.temperature"/> °C
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="fanCritical.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
+            </div>
             <a ng-click="toggleSentinel(fanCritical)">
                 <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
             </a>
