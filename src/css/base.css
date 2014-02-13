@@ -36,6 +36,10 @@ a[ng-click] {
     margin-bottom: 4px;
 }
 
+.timer-line fieldset[disabled] .form-control {
+    text-decoration: line-through;
+}
+
 .sentinel-line[disabled] {
     color: gray;
 }

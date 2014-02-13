@@ -15,15 +15,19 @@
           <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
           <div class="panel-body" ng-controller="TimerController">
                 <div class="timer-line" ng-repeat="range in timer">
-                    from
-                    <div class="form-group" bs-has-error>
-                        <input type="text" class="form-control" ng-model="range.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
-                    </div>
-                    to
-                    <div class="form-group" bs-has-error>
-                        <input type="text" class="form-control" ng-model="range.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-                    </div>
-                    <a ng-click="removeRange($index)"><span class="glyphicon glyphicon-remove"></span></a>
+                    <fieldset ng-disabled="!range.active">
+                        from
+                        <div class="form-group" bs-has-error>
+                            <input type="text" class="form-control" ng-model="range.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                        </div>
+                        to
+                        <div class="form-group" bs-has-error>
+                            <input type="text" class="form-control" ng-model="range.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                        </div>
+                        <a ng-click="toggleRange($index)">
+                            <span class="glyphicon" ng-class="{'glyphicon-remove': range.active, 'glyphicon-arrow-left': !range.active}"></span>
+                        </a>
+                    </fieldset>
                 </div>
                 <div class="form-group timer-line">
                     <a ng-click="addRange()"><span class="glyphicon glyphicon-plus"></span> add</a>
@@ -47,7 +51,7 @@
             <input type="text" class="form-control" ng-model="temperatureOptimal.to" />&nbsp;°C
         </div>
         <a ng-click="toggleSentinel(temperatureOptimal)">
-            <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': temperatureOptimal.active, 'glyphicon-ok-circle': !temperatureOptimal.active}"></span>
+            <span class="glyphicon" ng-class="{'glyphicon-ban-circle': temperatureOptimal.active, 'glyphicon-ok-circle': !temperatureOptimal.active}"></span>
         </a>
     </fieldset>
     <fieldset class="form-group sentinel-line" ng-disabled="!humidityOptimal.active">
@@ -60,7 +64,7 @@
             <input type="text" class="form-control" ng-model="humidityOptimal.to" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
         </div>
         <a ng-click="toggleSentinel(humidityOptimal)">
-            <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': humidityOptimal.active, 'glyphicon-ok-circle': !humidityOptimal.active}"></span>
+            <span class="glyphicon", ng-class="{'glyphicon-ban-circle': humidityOptimal.active, 'glyphicon-ok-circle': !humidityOptimal.active}"></span>
         </a>
     </fieldset>
 
@@ -75,7 +79,7 @@
             </div>
 
             <a ng-click="toggleSentinel(fanInterval)">
-                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
+                <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
             </a>
     </fieldset>
     <fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
@@ -84,7 +88,7 @@
                 <input type="text" class="form-control" ng-model="fanCritical.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
             </div>
             <a ng-click="toggleSentinel(fanCritical)">
-                <span ng-class="{glyphicon: true, 'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
+                <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
             </a>
     </fieldset>
   </div>

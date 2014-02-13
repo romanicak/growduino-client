@@ -104,9 +104,7 @@ app.factory('triggerTransformer', function() {
     return {
         createEmpty: function(triggerClass) {
             u = transformers[triggerClass].createEmpty();
-            if (triggerClass != 'timer') {
-                u.active = false;
-            }
+            u.active = triggerClass == 'timer';
             u.triggerClass = triggerClass;
             return u;
         },
@@ -123,7 +121,7 @@ app.factory('triggerTransformer', function() {
             return null;
         },
         pack: function(obj) {
-            if (obj.active === false) return null; //can be undefined
+            if (!obj.active) return null;
             return transformers[obj.triggerClass].pack(obj);
         }
     };

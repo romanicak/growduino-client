@@ -38,8 +38,10 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
         $scope.timers.forEach(function(ranges, output) {
             ranges.forEach(function(range) {
                 var trigger = triggerTransformer.pack(range);
-                trigger.output = output;
-                triggers.push(trigger);
+                if (trigger) {
+                    trigger.output = output;
+                    triggers.push(trigger);
+                }
             });
         });
 
@@ -70,7 +72,8 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
     };
 
     SensorStatus.get(function(data) {
-        $scope.triggerCount = data.triggers;
+        //$scope.triggerCount = data.triggers;
+        $scope.triggerCount = 8; //debug
 
         Triggers.loadAll($scope.triggerCount,
             function(trigger) {
@@ -110,7 +113,11 @@ app.controller('TimerController', ['$scope', 'triggerTransformer', function($sco
         ranges.push(triggerTransformer.createEmpty('timer'));
     };
 
-    $scope.removeRange = function(idx) {
-        ranges.splice(idx, 1);
+    $scope.toggleRange = function(idx) {
+        if (ranges[idx].trigger) {
+            ranges[idx].active = !ranges[idx].active;
+        } else {
+            ranges.splice(idx, 1);
+        }
     };
 }]);
