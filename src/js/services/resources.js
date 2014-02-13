@@ -95,9 +95,12 @@ app.factory('Triggers', ['$http', function($http) {
             }
         },
         save: function(triggers, success)  {
+            if (!triggers.length) {
+                success();
+                return;
+            }
             var q = async.queue(function(trigger, done) {
                 var index = trigger.index;
-                delete trigger.index;
                 console.log('Trigger #'+index+' saved', trigger);
                 $http.post('/triggers/'+index+'.jso', trigger).finally(done);
             }, 1);

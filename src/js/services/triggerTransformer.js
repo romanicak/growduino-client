@@ -81,6 +81,7 @@ var transformers = {
                 return {
                     since: utils.minutesToTime(t.t_since),
                     until: utils.minutesToTime(t.t_until),
+                    output: t.output
                 };
             }
             return null;
@@ -91,7 +92,8 @@ var transformers = {
                 t_until: utils.timeToMinutes(u.until),
                 on_value: ">-256",
                 off_value: "<-512",
-                sensor: -1
+                sensor: -1,
+                output: u.output,
             };
         },
         createEmpty: function() {

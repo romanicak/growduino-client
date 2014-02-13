@@ -20,40 +20,62 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0;
 
-    function createDisabledTrigger() {
-        return {t_since:-1, t_until:-1, on_value: "<-256", off_value:">-512", sensor:-1, output:-1};
+    function createDisabledTrigger(index) {
+        return {t_since:-1, t_until:-1, on_value: "<-256", off_value:">-512", sensor:-1, output:-1, index: index};
     }
 
     function serializeTriggers() {
-        //todo magic constants for outputs
-        var triggers = [];
+        var modified = [], deleted = [], created = [];
 
-        FAN_TRIGGERS.forEach(function(key) {
-            var trigger = triggerTransformer.pack($scope[key]);
-            if (trigger) {
-                triggers.push(trigger);
-            }
-        });
-
-        $scope.timers.forEach(function(ranges, output) {
-            ranges.forEach(function(range) {
-                var trigger = triggerTransformer.pack(range);
+        function pack(u) {
+            var trigger = triggerTransformer.pack(u);
+            if (!u.trigger) {
                 if (trigger) {
-                    trigger.output = output;
-                    triggers.push(trigger);
+                    created.push(trigger);
                 }
-            });
-        });
-
-        for (var i = triggers.length; i < $scope.triggerCount; i++) {
-            triggers.push(createDisabledTrigger());
+            } else {
+                if (trigger) {
+                    trigger.index = u.trigger.index;
+                    if (!utils.deepCompare(u.trigger, trigger)) {
+                        modified.push(trigger);
+                    }
+                } else {
+                    deleted.push(u.trigger);
+                }
+            }
         }
 
-        triggers.forEach(function(trigger, i) {
-            trigger.index = i;
+        function getUnusedId() {
+            for (var i = 0; i < $scope.triggerCount; i++) {
+                var used = false;
+                for (var j = 0; j < modified.length; j++) {
+                    if (modified[j].index == i) {
+                        used = true;
+                        break;
+                    }
+                }
+                if (!used) return i;
+            }
+        }
+
+        FAN_TRIGGERS.forEach(function(key) {
+            pack($scope[key]);
+        });
+        $scope.timers.forEach(function(ranges, output) {
+            ranges.forEach(pack);
         });
 
-        return triggers;
+        while (created.length) {
+            var t = created.pop();
+            t.index = deleted.length ? deleted.pop().index : getUnusedId();
+            modified.push(t);
+        }
+
+        while (deleted.length) {
+            modified.push(createDisabledTrigger(deleted.pop().index));
+        }
+
+        return modified;
     }
 
     $scope.toggleSentinel = function(sentinel) {
@@ -64,16 +86,22 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
         if ($scope.saving) return;
         $scope.saving = true;
 
-        var triggers = serializeTriggers();
-
-        Triggers.save(triggers, function() {
+        Triggers.save(serializeTriggers(), function() {
+            //remove objects marked for delete
+            $scope.timers.forEach(function(ranges, output) {
+                for (var i = 0; i < ranges.length; i++) {
+                    if (!ranges[i].active) {
+                        ranges.splice(i, 1);
+                    }
+                }
+            });
             $scope.saving = false;
         });
     };
 
     SensorStatus.get(function(data) {
-        //$scope.triggerCount = data.triggers;
-        $scope.triggerCount = 8; //debug
+        $scope.triggerCount = data.triggers;
+        //$scope.triggerCount = 8; //debug
 
         Triggers.loadAll($scope.triggerCount,
             function(trigger) {
@@ -110,7 +138,9 @@ app.controller('TimerController', ['$scope', 'triggerTransformer', function($sco
     var ranges = $scope.$parent.timer;
 
     $scope.addRange = function() {
-        ranges.push(triggerTransformer.createEmpty('timer'));
+        var u = triggerTransformer.createEmpty('timer');
+        u.output = $scope.$parent.$index;
+        ranges.push(u);
     };
 
     $scope.toggleRange = function(idx) {
