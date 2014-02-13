@@ -1,4 +1,13 @@
-<form novalidate ng-class="{'form-inline': true, 'triggers-form': true, saving: saving, loading: loading}"  name="form" ng-submit="saveTriggers()">
+<div ng-show="loading">
+    <i class="progress-title">Loading triggers <span ng-show="triggerCount">{{loadingStep}}/{{triggerCount}}</span></i>
+    <div class="progress progress-striped" x>
+      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{loadingStep}}" aria-valuemin="0" aria-valuemax="{{triggerCount}}"
+        style="width: {{loadingPercent}}%;">
+      </div>
+    </div>
+</div>
+
+<form novalidate class="form-inline triggers-form" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveTriggers()">
 
 <div class="row">
     <div class="col-sm-6" ng-repeat="timer in timers">

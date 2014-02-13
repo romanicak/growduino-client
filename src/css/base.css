@@ -23,7 +23,6 @@ a[ng-click] {
     display: inline-block;
 }
 
-
 .triggers-form.saving .panel {
     opacity: 0.4;
 }
@@ -39,4 +38,9 @@ a[ng-click] {
 
 .sentinel-line[disabled] {
     color: gray;
+}
+
+.progress-title {
+    display: block;
+    margin-bottom: 5px;
 }

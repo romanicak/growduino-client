@@ -25,7 +25,6 @@ app.constant('OUTPUTS', [
     'Humidifier',
     'Heating'
 ]);
-app.constant('MAX_TRIGGER', 10);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.

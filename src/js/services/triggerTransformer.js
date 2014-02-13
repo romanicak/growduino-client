@@ -32,7 +32,7 @@ function createSensorTransformer(sensor) {
             return sensorRangeUnpack(sensor, t);
         },
         pack: function(u) {
-            sensorRangePack(sensor, u);
+            return sensorRangePack(sensor, u);
         },
         createEmpty: sensorRangeCreateEmpty
     };

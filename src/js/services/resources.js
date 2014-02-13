@@ -1,5 +1,9 @@
 (function() {
 
+app.factory('SensorStatus', ['$resource', function($resource) {
+    return $resource('/sensors/status.jso');
+}]);
+
 app.factory('NetworkConfig', ['$resource', function($resource) {
     return $resource('/config.jso');
 }]);
@@ -72,22 +76,21 @@ app.factory('Relay', ['$resource', '$http', function($resource, $http) {
     });
 }]);
 
-app.factory('Triggers', ['$http', 'MAX_TRIGGER', function($http, MAX_TRIGGER) {
+app.factory('Triggers', ['$http', function($http) {
     return {
-        loadAll: function(success) {
-            var triggers = [];
+        loadAll: function(triggerCount, triggerLoaded, success) {
             var q = async.queue(function(index, done) {
                 $http.get('/triggers/'+index+'.jso').success(function(data) {
                     console.log('trigger #'+index+' loaded', data);
                     data.index = index;
-                    triggers.push(data);
+                    triggerLoaded(data);
                 }).finally(done);
             }, 1);
             q.drain = function() {
-                success(triggers);
+                success();
             };
 
-            for (var i = 0; i < MAX_TRIGGER; i++) {
+            for (var i = 0; i < triggerCount; i++) {
                 q.push(i);
             }
         },

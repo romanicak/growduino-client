@@ -7,14 +7,9 @@ ultrasound
 Dallas one wire devices
 */
 
-app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTransformer', 'MAX_TRIGGER', function($scope, $http, Triggers, triggerTransformer, MAX_TRIGGER) {
+app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTransformer', 'SensorStatus', function($scope, $http, Triggers, triggerTransformer, SensorStatus) {
 
     $scope.timers = [[], []];
-
-    //TODO delete, keep only in transofrmer service
-    var FAN_OUTPUT = 3,
-        SENSOR_TEMP = 0,
-        SENSOR_HUMIDITY = 1;
 
     var FAN_TRIGGERS = ['temperatureOptimal', 'humidityOptimal', 'fanInterval', 'fanCritical'];
 
@@ -22,6 +17,8 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
         $scope[key] = triggerTransformer.createEmpty(key);
     });
     $scope.loading = true;
+    $scope.loadingStep = 0;
+    $scope.loadingPercent = 0;
 
     function createDisabledTrigger() {
         return {t_since:-1, t_until:-1, on_value: "<-256", off_value:">-512", sensor:-1, output:-1};
@@ -46,7 +43,7 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
             });
         });
 
-        for (var i = triggers.length; i < MAX_TRIGGER; i++) {
+        for (var i = triggers.length; i < $scope.triggerCount; i++) {
             triggers.push(createDisabledTrigger());
         }
 
@@ -72,29 +69,37 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
         });
     };
 
-    Triggers.loadAll(function(triggers) {
-        triggers.forEach(function(trigger) {
-            u = triggerTransformer.unpack(trigger);
-            if (u) {
-                if (u.triggerClass === 'timer') {
-                    $scope.timers[u.trigger.output].push(u);
-                } else {
-                    $scope[u.triggerClass] = u;
-                }
-                return;
-            }
-        });
-        $scope.timers.forEach(function(ranges) {
-            ranges.sort(function(a, b) {
-                if (a.since != b.since) {
-                    return utils.timeToMinutes(a.since) - utils.timeToMinutes(b.since);
-                } else {
-                    return utils.timeToMinutes(a.until) - utils.timeToMinutes(b.until);
-                }
+    SensorStatus.get(function(data) {
+        $scope.triggerCount = data.triggers;
 
-            });
-        });
-        $scope.loading = false;
+        Triggers.loadAll($scope.triggerCount,
+            function(trigger) {
+                $scope.loadingStep += 1;
+                $scope.loadingPercent = parseInt($scope.loadingStep / $scope.triggerCount * 100, 10);
+                u = triggerTransformer.unpack(trigger);
+                if (u) {
+                    if (u.triggerClass === 'timer') {
+                        $scope.timers[u.trigger.output].push(u);
+                    } else {
+                        $scope[u.triggerClass] = u;
+                    }
+                    return;
+                }
+            }, function() {
+                $scope.loadingPercent = 100;
+                $scope.timers.forEach(function(ranges) {
+                    ranges.sort(function(a, b) {
+                        if (a.since != b.since) {
+                            return utils.timeToMinutes(a.since) - utils.timeToMinutes(b.since);
+                        } else {
+                            return utils.timeToMinutes(a.until) - utils.timeToMinutes(b.until);
+                        }
+
+                    });
+                });
+                $scope.loading = false;
+            }
+        );
     });
 }]);
 
