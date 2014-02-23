@@ -48,16 +48,60 @@ app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, 
     };
 }]);
 
-app.factory('Temperature', ['sensorResourceFactory', function(sensorResourceFactory) {
-    return sensorResourceFactory('temp1', utils.mapDecimalValues);
-}]);
+app.factory('SensorHistory', ['sensorResourceFactory', '$q', function(sensorResourceFactory, $q) {
+    var sensors = [
+        {name: 'Humidity', mapFn: utils.mapDecimalValues},
+        {name: 'Temp1', mapFn: utils.mapDecimalValues},
+        {name: 'Light', mapFn: utils.mapPercentValues},
+        {name: 'Usnd', mapFn: utils.mapDecimalValues},
+        {name: 'Temp2', mapFn: utils.mapDecimalValues},
+        {name: 'Temp3', mapFn: utils.mapDecimalValues}
+    ];
 
-app.factory('Humidity', ['sensorResourceFactory', function(sensorResourceFactory) {
-    return sensorResourceFactory('humidity', utils.mapDecimalValues);
-}]);
+    sensors.forEach(function(sensor) {
+        sensor.resource = sensorResourceFactory(sensor.name, sensor.mapFn);
+    });
 
-app.factory('Lighting', ['sensorResourceFactory', function(sensorResourceFactory) {
-    return sensorResourceFactory('light', utils.mapPercentValues);
+    function load(resourceMethod, queryArgs) {
+        var d = $q.defer();
+        var result = { $promise: d.promise }; //use resoure like result
+        var queue = async.queue(function(sensor, done) {
+            sensor.resource[resourceMethod](queryArgs, function(data) {
+                result[sensor.name] = data;
+                d.notify(sensor.name);
+            }).$promise.finally(function() {
+                done();
+            });
+        }, 1);
+
+        queue.drain = function() {
+            d.resolve(result);
+        };
+
+        sensors.forEach(function(sensor) {
+            queue.push(sensor);
+        });
+
+        result.stop = function() {
+            queue.tasks.splice(0, queue.tasks.length);
+        }
+        return result;
+    }
+
+    return {
+        get: function() {
+            return load('get', {});
+        },
+        getMonth: function(queryArgs) {
+            return load('getMonth', queryArgs);
+        },
+        getDay: function(queryArgs) {
+            return load('getDay', queryArgs);
+        },
+        getHour: function(queryArgs) {
+            return load('getHour', queryArgs);
+        }
+    };
 }]);
 
 app.factory('Relay', ['$resource', '$http', function($resource, $http) {

@@ -1,9 +1,9 @@
-app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lighting', function($scope, Temperature, Humidity, Lighting) {
+app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, SensorHistory) {
     var chart;
     var series = [
-        {name: 'Temperature', resource: Temperature, yAxis: 0},
-        {name: 'Humidity', resource: Humidity, yAxis: 1},
-        {name: 'Lighting', resource: Lighting, yAxis: 1},
+        {name: 'Temperature', resource: 'Temp1', yAxis: 0},
+        {name: 'Humidity', resource: 'Humidity', yAxis: 1},
+        {name: 'Lighting', resource: 'Light', yAxis: 1},
     ];
 
     var zoomTypes = {
@@ -32,10 +32,6 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
             pickerFormat: 'MM yyyy'
         }
     };
-
-    var q = async.queue(function(task, done) {
-        task(done);
-    }, 1);
 
     function initChart() {
         chart = new Highcharts.Chart({
@@ -86,7 +82,8 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
     }
 
     function cleanChart() {
-        q.tasks.splice(0, q.tasks.length);
+        //q.tasks.splice(0, q.tasks.length);
+        //TODO call stop
         chart.series.forEach(function(s) {
             s.hide();
         });
@@ -107,21 +104,28 @@ app.controller('ChartController', ['$scope', 'Temperature', 'Humidity', 'Lightin
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
         cleanChart();
         chart.showLoading('Loading…');
+
         series.forEach(function(item, i) {
-            var series = chart.series[i];
-            series.setData([]);
-            series.update($.extend({
+            var chartSeries = chart.series[i];
+            chartSeries.setData([]);
+            chartSeries.update($.extend({
                 cursor: $scope.zoom === 'H' ? 'default': 'pointer'
             }, seriesOptions));
-            q.push(function(done) {
-                item.resource[resourceMethod](queryArgs, function (data) {
-                    series.setData(pad(data[dataKey]));
-                }).$promise.finally(function() {
-                    chart.hideLoading();
-                    series.show();
-                    done();
-                });
-            });
+        });
+
+        var sh = SensorHistory[resourceMethod](queryArgs);
+        sh.$promise.then(null, null, function(sensor) {
+            var data = sh[sensor],
+                chartSeries = null;
+            for (var i = 0; i < series.length; i++) {
+                if (series[i].resource == sensor) {
+                    chartSeries = chart.series[i];
+                    break;
+                }
+            }
+            chartSeries.setData(pad(data[dataKey]));
+            chart.hideLoading();
+            chartSeries.show();
         });
     }
 
