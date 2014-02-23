@@ -1,9 +1,39 @@
 app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, SensorHistory) {
-    var chart;
-    var series = [
-        {name: 'Temperature', resource: 'Temp1', yAxis: 0},
-        {name: 'Humidity', resource: 'Humidity', yAxis: 1},
-        {name: 'Lighting', resource: 'Light', yAxis: 1},
+    var charts = [];
+    var chartDefs = [
+        {
+            element: 'chart-huteli',
+            series: [
+                {name: 'Temperature', resource: 'Temp1', yAxis: 0},
+                {name: 'Humidity', resource: 'Humidity', yAxis: 1},
+                {name: 'Lighting', resource: 'Light', yAxis: 1},
+            ],
+            yAxis: [
+                { title: { text: '°C' }},
+                { title: { text: '%' }, min: 0},
+                //{ title: { text: '% (Humidity)' }},
+                //{ title: { text: '% (Lighting)' }}
+            ]
+        },
+        {
+            element: 'chart-usnd',
+            series: [
+                {name: 'Ultrasound', resource: 'Usnd', yAxis: 0}
+            ],
+            yAxis: [
+                { title: { text: 'usnd' }},
+            ]
+        },
+        {
+            element: 'chart-temp23',
+            series: [
+                {name: 'Temperature 1', resource: 'Temp2', yAxis: 0},
+                {name: 'Temperature 2', resource: 'Temp3', yAxis: 0},
+            ],
+            yAxis: [
+                { title: { text: '°C' }}
+            ]
+        }
     ];
 
     var zoomTypes = {
@@ -33,59 +63,55 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
         }
     };
 
-    function initChart() {
-        chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'chart',
-                type: 'spline',
-                zoomType: 'x'
-            },
-            title: {
-                text: 'Sensors',
-                style: {
-                   display: 'none'
-                }
-            },
-            xAxis: {
-                type: 'datetime',
-                maxZoom: 5 * 60 * 1000,
+    function initCharts() {
+        chartDefs.forEach(function(chartDef, i) {
+            charts[i] = new Highcharts.Chart({
+                chart: {
+                    renderTo: chartDef.element,
+                    type: 'spline',
+                    zoomType: 'x'
+                },
                 title: {
-                    text: 'Time'
-                }
-            },
-            yAxis: [
-                { title: { text: '°C' }},
-                { title: { text: '%' }, min: 0},
-                //{ title: { text: '% (Humidity)' }},
-                //{ title: { text: '% (Lighting)' }}
-            ],
-            series: [],
-            // drilldown: {
-            //     series: []
-            // },
+                    text: 'Sensors',
+                    style: { display: 'none' }
+                },
+                xAxis: {
+                    type: 'datetime',
+                    maxZoom: 5 * 60 * 1000,
+                    title: {
+                        text: 'Time'
+                    }
+                },
+                yAxis: chartDef.yAxis,
+                series: []
+            });
+
+            chartDef.series.forEach(function(s) {
+                charts[i].addSeries({
+                    name: s.name,
+                    yAxis: s.yAxis,
+                    events: {
+                        click: function(ev) {
+                            if ($scope.zoom === 'H') return;
+                            $scope.date = new Date(ev.point.x);
+                            $scope.changeZoom($scope.zoom === 'M' ? 'D' : 'H');
+                        }
+                    }
+                });
+            });
 
         });
-        series.forEach(function(s) {
-            chart.addSeries({
-                name: s.name,
-                yAxis: s.yAxis,
-                events: {
-                    click: function(ev) {
-                        if ($scope.zoom === 'H') return;
-                        $scope.date = new Date(ev.point.x);
-                        $scope.changeZoom($scope.zoom === 'M' ? 'D' : 'H');
-                    }
-                }
-            });
-        });
-        cleanChart();
+
+        cleanCharts();
     }
 
-    function cleanChart() {
+    function cleanCharts() {
         //q.tasks.splice(0, q.tasks.length);
         //TODO call stop
-        chart.series.forEach(function(s) {
-            s.hide();
+        charts.forEach(function(chart) {
+            chart.series.forEach(function(s) {
+                s.hide();
+            });
         });
     }
 
@@ -102,30 +128,40 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
     }
 
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
-        cleanChart();
-        chart.showLoading('Loading…');
-
-        series.forEach(function(item, i) {
-            var chartSeries = chart.series[i];
-            chartSeries.setData([]);
-            chartSeries.update($.extend({
-                cursor: $scope.zoom === 'H' ? 'default': 'pointer'
-            }, seriesOptions));
+        cleanCharts();
+        charts.forEach(function(chart) {
+            chart.showLoading('Loading…');
+            chart.series.forEach(function(chartSeries) {
+                chartSeries.setData([]);
+                chartSeries.update($.extend({
+                    cursor: $scope.zoom === 'H' ? 'default': 'pointer'
+                }, seriesOptions));
+            });
         });
 
         var sh = SensorHistory[resourceMethod](queryArgs);
         sh.$promise.then(null, null, function(sensor) {
             var data = sh[sensor],
+                chart = null,
                 chartSeries = null;
-            for (var i = 0; i < series.length; i++) {
-                if (series[i].resource == sensor) {
-                    chartSeries = chart.series[i];
-                    break;
+
+            chloop:
+            for (var ci = 0; ci < charts.length; ci++) {
+                for (var i = 0; i < chartDefs[ci].series.length; i++) {
+                    if (chartDefs[ci].series[i].resource === sensor) {
+                        chart = charts[ci];
+                        chartSeries = chart.series[i];
+                        break chloop;
+                    }
                 }
             }
-            chartSeries.setData(pad(data[dataKey]));
-            chart.hideLoading();
-            chartSeries.show();
+            if (chartSeries == null) {
+                console.warn('No series for ' + sensor);
+            } else {
+                chartSeries.setData(pad(data[dataKey]));
+                chart.hideLoading();
+                chartSeries.show();
+            }
         });
     }
 
@@ -240,7 +276,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
     };
 
     $scope.zoom = 'H';
-    initChart();
+    initCharts();
     $scope.showRecent();
     setupPicker();
 

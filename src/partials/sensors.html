@@ -9,8 +9,6 @@
 </div>
 
 <div ng-controller="ChartController">
-
-    <div id="chart"></div>
     <form class="chart-controls form-inline" role="form">
         <div class="btn-group">
             <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'M')}" ng-click="changeZoom('M')">Month</button>
@@ -30,4 +28,8 @@
 
         <span class="selected-date">{{ formattedDate }}</span>
     </form>
+
+    <div id="chart-huteli"></div>
+    <div id="chart-temp23"></div>
+    <div id="chart-usnd"></div>
 </div>
