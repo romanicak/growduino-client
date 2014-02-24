@@ -30,7 +30,7 @@
             Relay is permanently disabled.
         </div>
         <div class="form-group" ng-hide="relay.off || relay.manualOn">
-            <div ng-if="relay.index == 3" ng-include="'/partials/fan.html'"></div>
+            <div ng-if="relay.index == 3" ng-include="'partials/fan.html'"></div>
 
             <div class="timer-line" ng-repeat="range in relay.intervals">
                 <fieldset ng-disabled="!range.active">

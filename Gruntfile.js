@@ -50,7 +50,7 @@ grunt.initConfig({
         index: {
             options: {
                 collapseBooleanAttributes:      true,
-                collapseWhitespace:             true,
+                collapseWhitespace:             false,
                 removeComments:                 true,
                 removeScriptTypeAttributes:     true,
                 removeStyleLinkTypeAttributes:  true
