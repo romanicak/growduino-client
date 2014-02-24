@@ -1,8 +1,8 @@
 (function() {
 
 var FAN_OUTPUT = 3,
-    SENSOR_TEMP = 0,
-    SENSOR_HUMIDITY = 1;
+    SENSOR_TEMP = 1,
+    SENSOR_HUMIDITY = 0;
 
 function sensorRangeUnpack(sensor, t) {
     if (sensor == t.sensor && (t.t_since == -1 && t.t_until === 0)) {
@@ -117,6 +117,7 @@ app.factory('triggerTransformer', function() {
                     u.active = true;
                     u.triggerClass = key;
                     u.trigger = trigger;
+                    console.log('trigger #'+trigger.index+' recognized: ' + key);
                     return u;
                 }
             }

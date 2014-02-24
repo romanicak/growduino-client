@@ -127,6 +127,10 @@ app.factory('Relay', ['$resource', '$http', function($resource, $http) {
 app.factory('Triggers', ['$http', function($http) {
     return {
         loadAll: function(triggerCount, triggerLoaded, success) {
+            //dbg no load
+            // success();
+            // return;
+
             var q = async.queue(function(index, done) {
                 $http.get('/triggers/'+index+'.jso').success(function(data) {
                     console.log('trigger #'+index+' loaded', data);

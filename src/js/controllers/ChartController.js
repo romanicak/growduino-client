@@ -27,8 +27,8 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
         {
             element: 'chart-temp23',
             series: [
-                {name: 'Temperature 1', resource: 'Temp2', yAxis: 0},
-                {name: 'Temperature 2', resource: 'Temp3', yAxis: 0},
+                {name: 'Temperature 2', resource: 'Temp2', yAxis: 0},
+                {name: 'Temperature 3', resource: 'Temp3', yAxis: 0},
             ],
             yAxis: [
                 { title: { text: '°C' }, minRange: 5}

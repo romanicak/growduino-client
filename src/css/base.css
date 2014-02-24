@@ -23,9 +23,7 @@ a[ng-click] {
     visibility: hidden;
 }
 
-.relay-panel {
-    margin-bottom: 40px;
-}
+/* Charts */
 
 .chart-controls {
     margin-bottom: 5px;
@@ -35,6 +33,18 @@ a[ng-click] {
     margin-right: 8px;
     display: inline-block;
 }
+
+.chart {
+    height: 290px;
+}
+
+/* Triggers */
+
+.progress-title {
+    display: block;
+    margin-bottom: 5px;
+}
+
 
 .triggers-form.saving .panel {
     opacity: 0.4;
@@ -57,12 +67,31 @@ a[ng-click] {
     color: gray;
 }
 
-.progress-title {
-    display: block;
+.row.relay {
+    margin-top: 20px;
+}
+
+.relay-header {
+    text-align: right;
+    padding: 2px 20px 2px 0;
+}
+
+.relay-body {
+    border-left: 1px solid gray;
+    min-height: 95px;
+}
+
+.relay-header .name {
+    font-size: 24px;
+    /*font-weight: bold;*/
+    text-transform: uppercase;
+}
+
+.relay-header .number {
+    font-style: italic;
     margin-bottom: 5px;
 }
 
-.chart {
-    height: 290px;
+.relay-save {
+    margin-top: 20px;
 }
-

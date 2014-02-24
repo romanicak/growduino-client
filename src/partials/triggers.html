@@ -9,95 +9,40 @@
 
 <form novalidate class="form-inline triggers-form" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveTriggers()">
 
-<div class="row">
-    <div class="col-sm-6" ng-repeat="timer in timers">
-        <div class="panel panel-default" >
-          <div class="panel-heading"><b>Timer {{$index + 1}}</b></div>
-          <div class="panel-body" ng-controller="TimerController">
-                <div class="timer-line" ng-repeat="range in timer">
-                    <fieldset ng-disabled="!range.active">
-                        from
-                        <div class="form-group" bs-has-error>
-                            <input type="text" class="form-control" ng-model="range.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
-                        </div>
-                        to
-                        <div class="form-group" bs-has-error>
-                            <input type="text" class="form-control" ng-model="range.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-                        </div>
-                        <a ng-click="toggleRange($index)">
-                            <span class="glyphicon" ng-class="{'glyphicon-remove': range.active, 'glyphicon-arrow-left': !range.active}"></span>
-                        </a>
-                    </fieldset>
-                </div>
-                <div class="form-group timer-line">
-                    <a ng-click="addRange()"><span class="glyphicon glyphicon-plus"></span> add</a>
-                </div>
-          </div>
+<div class="row relay" ng-repeat="relay in relays">
+    <div class="col-sm-3 relay-header">
+        <div class="name">{{relay.name}}</div>
+        <div class="number">relay {{$index}}</div>
+        <button type="button" class="btn btn-info btn-xs">Manual on</button>
+        <button type="button" class="btn btn-info btn-xs">Disable</button>
+    </div>
+    <div class="col-sm-9 relay-body">
+        <div class="form-group timer-line">
+            <div ng-if="relay.index == 3" ng-include="'/partials/fan.html'"></div>
+
+            <div class="timer-line" ng-repeat="range in relay.intervals">
+                <fieldset ng-disabled="!range.active">
+                    Turn on from
+                    <div class="form-group" bs-has-error>
+                        <input type="text" class="form-control" ng-model="range.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                    </div>
+                    to
+                    <div class="form-group" bs-has-error>
+                        <input type="text" class="form-control" ng-model="range.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                    </div>
+                    <a ng-click="toggleInterval(relay, $index)">
+                        <span class="glyphicon" ng-class="{'glyphicon-remove': range.active, 'glyphicon-arrow-left': !range.active}"></span>
+                    </a>
+                </fieldset>
+            </div>
+            <a ng-click="addInterval(relay)"><span class="glyphicon glyphicon-plus"></span> add interval</a>
         </div>
     </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-heading"><b>Fan</b> triggers</div>
-  <div class="panel-body">
-
-    <fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
-            Don't turn on <b>fan</b> when temperature is below
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="fanCritical.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
-            </div>
-            <a ng-click="toggleSentinel(fanCritical)">
-                <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
-            </a>
-    </fieldset>
-    <fieldset class="form-group sentinel-line" ng-disabled="!temperatureOptimal.active">
-        Keep <b>Temperature</b> between
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="temperatureOptimal.from" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-        </div>
-        and
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="temperatureOptimal.to" />&nbsp;°C
-        </div>
-        <a ng-click="toggleSentinel(temperatureOptimal)">
-            <span class="glyphicon" ng-class="{'glyphicon-ban-circle': temperatureOptimal.active, 'glyphicon-ok-circle': !temperatureOptimal.active}"></span>
-        </a>
-    </fieldset>
-    <fieldset class="form-group sentinel-line" ng-disabled="!humidityOptimal.active">
-        Keep <b>Humidity</b> between
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="humidityOptimal.from" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-        </div>
-        and
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="humidityOptimal.to" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-        </div>
-        <a ng-click="toggleSentinel(humidityOptimal)">
-            <span class="glyphicon", ng-class="{'glyphicon-ban-circle': humidityOptimal.active, 'glyphicon-ok-circle': !humidityOptimal.active}"></span>
-        </a>
-    </fieldset>
-
-    <fieldset class="form-group sentinel-line" ng-disabled="!fanInterval.active">
-            Enable <b>fan</b> every
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="fanInterval.after" ng-pattern="/^\d+$/"/> minutes
-            </div>
-            of inactivity for
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="fanInterval.duration" ng-pattern="/^\d+$/"/> minutes.
-            </div>
-
-            <a ng-click="toggleSentinel(fanInterval)">
-                <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
-            </a>
-    </fieldset>
-
-  </div>
+<div class="row relay-save">
+    <div class="col-sm-offset-3 col-sm-9 form-group">
+        <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
+    </div>
 </div>
-
-<div class="form-group">
-    <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
-    <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
-</div>
-
-</form>
