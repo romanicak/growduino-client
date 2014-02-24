@@ -106,9 +106,13 @@ app.factory('SensorHistory', ['sensorResourceFactory', '$q', function(sensorReso
 
 app.factory('Relay', ['$resource', '$http', function($resource, $http) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
+        data = {"name":"outputs","state":{"1393166052":1,"1393166109":0,"1393166229":8,"1393168569":0,"1393169109":8,"1393171329":0,"1393171449":8,"1393171509":0,"1393171809":8,"1393171869":0,"1393171929":8}};
+        var last = -1;
         for (var ts in data.state) {
-            //console.log(ts);
-            data.currentState = data.state[ts];
+            if (ts > last) {
+                last = ts;
+                data.currentState = data.state[ts];
+            }
         }
         return data;
     }]);

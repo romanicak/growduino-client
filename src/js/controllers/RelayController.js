@@ -4,7 +4,6 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
         // nMask must be between -2147483648 and 2147483647
         if (nMask > 0x7fffffff || nMask < -0x80000000) { throw new TypeError("arrayFromMask - out of range"); }
         for (var nShifted = nMask, aFromMask = []; nShifted; aFromMask.push(Boolean(nShifted & 1)), nShifted >>>= 1);
-        aFromMask.reverse(); //mask sent reversed from backend
         return aFromMask;
     }
 
@@ -14,7 +13,7 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
         OUTPUTS.forEach(function(name, i) {
             $scope.relays.push({
                 name: name,
-                state: states[i]
+                state: states.length > i ? states[i] : false
             });
         });
     });
