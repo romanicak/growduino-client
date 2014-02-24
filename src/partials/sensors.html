@@ -1,12 +1,6 @@
 
-<div class="panel panel-default relay-panel" ng-controller="RelayController">
-  <div class="panel-heading">Relays</div>
-  <div class="panel-body">
-    <span ng-repeat="relay in relays">
-      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ relay.name }}</span>
-    </span>
-  </div>
-</div>
+
+
 
 <div ng-controller="ChartController">
     <form class="chart-controls form-inline" role="form">
@@ -29,7 +23,7 @@
         <span class="selected-date">{{ formattedDate }}</span>
     </form>
 
-    <div id="chart-huteli"></div>
-    <div id="chart-temp23"></div>
-    <div id="chart-usnd"></div>
+    <div class="chart" id="chart-huteli"></div>
+    <div class="chart" id="chart-temp23"></div>
+    <div class="chart" id="chart-usnd"></div>
 </div>

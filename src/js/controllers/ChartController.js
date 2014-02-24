@@ -9,8 +9,8 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
                 {name: 'Lighting', resource: 'Light', yAxis: 1},
             ],
             yAxis: [
-                { title: { text: '°C' }},
-                { title: { text: '%' }, min: 0},
+                { title: { text: '°C' }, minRange: 5},
+                { title: { text: '%' }, min: 0, minRange: 5},
                 //{ title: { text: '% (Humidity)' }},
                 //{ title: { text: '% (Lighting)' }}
             ]
@@ -21,7 +21,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
                 {name: 'Ultrasound', resource: 'Usnd', yAxis: 0}
             ],
             yAxis: [
-                { title: { text: 'usnd' }},
+                { title: { text: 'usnd' }, min: 0, minRange: 5},
             ]
         },
         {
@@ -31,7 +31,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
                 {name: 'Temperature 2', resource: 'Temp3', yAxis: 0},
             ],
             yAxis: [
-                { title: { text: '°C' }}
+                { title: { text: '°C' }, minRange: 5}
             ]
         }
     ];
@@ -63,7 +63,12 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
         }
     };
 
+    var lastRequest = null;
+
     function initCharts() {
+        var colorIndex = 0, colors = Highcharts.getOptions().colors;
+
+
         chartDefs.forEach(function(chartDef, i) {
             charts[i] = new Highcharts.Chart({
                 chart: {
@@ -89,6 +94,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
             chartDef.series.forEach(function(s) {
                 charts[i].addSeries({
                     name: s.name,
+                    color: colors[colorIndex++],
                     yAxis: s.yAxis,
                     events: {
                         click: function(ev) {
@@ -108,6 +114,9 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
     function cleanCharts() {
         //q.tasks.splice(0, q.tasks.length);
         //TODO call stop
+        if (lastRequest) {
+            lastRequest.stop();
+        }
         charts.forEach(function(chart) {
             chart.series.forEach(function(s) {
                 s.hide();
@@ -134,12 +143,16 @@ app.controller('ChartController', ['$scope', 'SensorHistory', function($scope, S
             chart.series.forEach(function(chartSeries) {
                 chartSeries.setData([]);
                 chartSeries.update($.extend({
-                    cursor: $scope.zoom === 'H' ? 'default': 'pointer'
+                    cursor: $scope.zoom === 'H' ? 'default': 'pointer',
+                    marker: {
+                        enabled: true/*$scope.zoom !== 'H'*/
+                    }
+                    //lineWidth: 3
                 }, seriesOptions));
             });
         });
 
-        var sh = SensorHistory[resourceMethod](queryArgs);
+        var sh = lastRequest = SensorHistory[resourceMethod](queryArgs);
         sh.$promise.then(null, null, function(sensor) {
             var data = sh[sensor],
                 chart = null,

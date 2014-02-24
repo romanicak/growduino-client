@@ -3,7 +3,16 @@ a[ng-click] {
 }
 
 .nav {
-    margin: 10px 0 20px 0;
+    margin-top: 10px;
+}
+
+.page-content {
+    padding-top: 10px;
+}
+
+.relays {
+    margin-top: 10px;
+    height: 30px;
 }
 
 .loading {
@@ -16,6 +25,10 @@ a[ng-click] {
 
 .relay-panel {
     margin-bottom: 40px;
+}
+
+.chart-controls {
+    margin-bottom: 5px;
 }
 
 .chart-controls .btn-group {
@@ -48,3 +61,8 @@ a[ng-click] {
     display: block;
     margin-bottom: 5px;
 }
+
+.chart {
+    height: 290px;
+}
+

@@ -41,6 +41,15 @@
   <div class="panel-heading"><b>Fan</b> triggers</div>
   <div class="panel-body">
 
+    <fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
+            Don't turn on <b>fan</b> when temperature is below
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="fanCritical.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
+            </div>
+            <a ng-click="toggleSentinel(fanCritical)">
+                <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
+            </a>
+    </fieldset>
     <fieldset class="form-group sentinel-line" ng-disabled="!temperatureOptimal.active">
         Keep <b>Temperature</b> between
         <div class="form-group" bs-has-error>
@@ -82,15 +91,7 @@
                 <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
             </a>
     </fieldset>
-    <fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
-            Don't turn on <b>fan</b> when temperature is below
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="fanCritical.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
-            </div>
-            <a ng-click="toggleSentinel(fanCritical)">
-                <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
-            </a>
-    </fieldset>
+
   </div>
 </div>
 

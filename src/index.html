@@ -40,13 +40,24 @@
 <body ng-app="growduino">
     <!--h1><div class="container">growduino client</div></h1-->
     <div class="container">
-        <ul class="nav nav-pills" ng-controller="NavigationController">
-            <li ng-class="{ active: isActive('/')}"><a href="#">Sensors</a></li>
-            <li ng-class="{ active: isActive('/triggers')}"><a href="#/triggers">Triggers</a></li>
-            <li ng-class="{ active: isActive('/network')}"><a href="#/network">Network</a></li>
-        </ul>
+        <div class="row">
+            <div class="col-md-2">
+                <ul class="nav nav-pills nav-stacked" ng-controller="NavigationController">
+                    <li ng-class="{ active: isActive('/')}"><a href="#">Sensors</a></li>
+                    <li ng-class="{ active: isActive('/triggers')}"><a href="#/triggers">Triggers</a></li>
+                    <li ng-class="{ active: isActive('/network')}"><a href="#/network">Network</a></li>
+                </ul>
 
-        <div ng-view></div>
+                <div class="relays" ng-controller="RelayController">
+                    <span ng-repeat="relay in relays">
+                      <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ relay.name }}</span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-10 page-content">
+                <div ng-view></div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
