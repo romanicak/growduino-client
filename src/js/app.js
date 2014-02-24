@@ -1,5 +1,7 @@
 (function() {
 
+var TZ_OFFSET = -60; //TODO read from /sensors/status.jso: timeZoneffset = -tz * 60
+
 $.ajaxSetup({
     contentType: 'application/json'
 });
@@ -11,7 +13,7 @@ Highcharts.setOptions({
         weekdays: $.fn.datetimepicker.dates.cs.days
     },
     global: {
-        useUTC: false
+        timezoneOffset: TZ_OFFSET
     }
 });
 
@@ -25,6 +27,8 @@ app.constant('OUTPUTS', [
     'Humidifier',
     'Heating'
 ]);
+
+app.constant('TZ_OFFSET', TZ_OFFSET);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
