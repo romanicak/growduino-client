@@ -7,8 +7,8 @@ ultrasound
 Dallas one wire devices
 */
 
-app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTransformer', 'SensorStatus', 'OUTPUTS',
-    function($scope, $http, Triggers, triggerTransformer, SensorStatus, OUTPUTS) {
+app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers', 'triggerTransformer', 'SensorStatus', 'OUTPUTS',
+    function($scope, $http, $timeout, Triggers, triggerTransformer, SensorStatus, OUTPUTS) {
 
     var FAN_TRIGGERS = ['temperatureOptimal', 'humidityOptimal', 'fanInterval', 'fanCritical'];
 
@@ -113,6 +113,10 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
                 }
             });
             $scope.saving = false;
+            $scope.saveSuccess = true;
+            $timeout(function() {
+                $scope.saveSuccess = false;
+            }, 2000);
         });
     };
 

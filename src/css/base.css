@@ -95,3 +95,7 @@ a[ng-click] {
 .relay-save {
     margin-top: 20px;
 }
+
+.relay-save .text-success {
+    padding-left: 20px;
+}
