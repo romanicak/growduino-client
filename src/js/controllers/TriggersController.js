@@ -131,6 +131,16 @@ app.controller('TriggersController', ['$scope', '$http', 'Triggers', 'triggerTra
         }
     };
 
+    $scope.relayTurnOff = function(relay) {
+        relay.off = !relay.off;
+        if (relay.off) relay.manualOn = false;
+    }
+
+    $scope.relayManualOn = function(relay) {
+        relay.manualOn= !relay.manualOn;
+        if (relay.manualOn) relay.off = false;
+    }
+
     SensorStatus.get(function(data) {
         $scope.triggerCount = data.triggers;
         //$scope.triggerCount = 8; //debug

@@ -13,11 +13,23 @@
     <div class="col-sm-3 relay-header">
         <div class="name">{{relay.name}}</div>
         <div class="number">relay {{$index}}</div>
-        <button type="button" class="btn btn-info btn-xs">Manual on</button>
-        <button type="button" class="btn btn-info btn-xs">Disable</button>
+        <button type="button" class="btn btn-info btn-xs" ng-click="relayManualOn(relay)">
+            <span ng-hide="relay.manualOn">Manual On</span>
+            <span ng-hide="!relay.manualOn">Stop</span>
+        </button>
+        <button type="button" class="btn btn-info btn-xs" ng-click="relayTurnOff(relay)">
+            <span ng-hide="relay.off">Disable</span>
+            <span ng-hide="!relay.off">Enable</span>
+        </button>
     </div>
     <div class="col-sm-9 relay-body">
-        <div class="form-group timer-line">
+        <div ng-show="relay.manualOn" class="alert alert-warning">
+            Relay is permanently turned on.
+        </div>
+        <div ng-show="relay.off" class="alert alert-info">
+            Relay is permanently disabled.
+        </div>
+        <div class="form-group" ng-hide="relay.off || relay.manualOn">
             <div ng-if="relay.index == 3" ng-include="'/partials/fan.html'"></div>
 
             <div class="timer-line" ng-repeat="range in relay.intervals">
