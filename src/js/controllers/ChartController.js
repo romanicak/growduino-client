@@ -107,9 +107,8 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
                     yAxis: s.yAxis,
                     events: {
                         click: function(ev) {
-                            if ($scope.zoom === 'H') return;
-                            $scope.dt = moment(ev.point.x);
-                            changeZoom($scope.zoom === 'M' ? 'D' : 'H');
+                            if ($scope.zoom === 'H') return; //should never happen
+                            updateChart($scope.zoom === 'M' ? 'D' : 'H', moment(ev.point.x));
                         }
                     }
                 });
@@ -193,10 +192,22 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
     }
 
     function updateChart(zoom, dt) {
-        zt = zoomTypes[zoom];
+        var zoomChanged = $scope.zoom !== zoom,
+            isNow = dt === 'now';
 
+        if (isNow) {
+            dt = moment().zone(TZ_OFFSET);
+            $scope.isCurrent = true;
+            if (zoom === 'H')  dt.subtract('hour', 1).startOf('minute');
+        }
+
+        if (!isNow || zoom !== 'H') padDate(dt);
+        $scope.dt = dt;
+        $scope.zoom = zoom;
+
+        zt = zoomTypes[zoom];
         $location.search('z', zoom);
-        $location.search('d', dt.format(zt.urlFormat));
+        $location.search('d', isNow && zoom === 'H' ? null : dt.format(zt.urlFormat));
 
         args = {};
         for (var arg in zt.dateComponents) {
@@ -207,6 +218,13 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             pointStart: dt.valueOf(),
             pointInterval: zt.pointInterval
         });
+
+        if (zoomChanged) {
+            setupPicker();
+        } else {
+            //TODO update selected picker date
+        }
+
     }
 
     function setupPicker() {
@@ -224,21 +242,13 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         }).on('changeDate', function(ev){
             //datetime picker return date with selected units in UTC, convert it!
             var d = moment(ev.date).zone(TZ_OFFSET).add('minutes', ev.date.getTimezoneOffset());
-            padDate(d);
-            changeDate(d);
+            updateChart($scope.zoom, d);
+            $('#picker-date').datetimepicker('hide');
         });
     }
 
-    function changeDate(d) {
-        $scope.dt = d;
-        updateChart($scope.zoom, d);
-    }
-
     function changeZoom(zoom) {
-        $scope.zoom = zoom;
-        padDate($scope.dt);
         updateChart(zoom, $scope.dt);
-        setupPicker();
     };
 
     function shiftByUnit(dt, zoom, offset) {
@@ -257,26 +267,12 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         }
         if (d.unix() <= moment().unix()) {
             $scope.isCurrent = false;
-            changeDate(d);
+            updateChart($scope.zoom, d);
         }
     };
 
-    function showRecent () {
-        $scope.dt = moment();
-        $scope.dt.zone(TZ_OFFSET);
-
-        if ($scope.zoom === 'H') {
-            $scope.dt.subtract('hour', 1);
-            $scope.dt.startOf('minute');
-            $scope.isCurrent = true;
-            show('min', 'get', {}, {
-                pointStart: $scope.dt.valueOf(),
-                pointInterval: 1000 * 60 //1 min
-            });
-        } else {
-            //call change zoom to align date
-            changeZoom($scope.zoom);
-        }
+    function showRecent() {
+        updateChart($scope.zoom, 'now');
     };
 
     $scope.changeZoom = changeZoom;
@@ -287,11 +283,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
 
     var search = $location.search();
     $scope.zoom = zoomTypes[search.z] ? search.z : 'H';
-    if (search.d) {
-        changeDate(moment(search.d));
-    } else {
-        showRecent();
-    }
+    updateChart($scope.zoom, search.d ? moment(search.d) : 'now');
 
     setupPicker();
 
