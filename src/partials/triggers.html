@@ -1,7 +1,7 @@
 <div ng-show="loading">
-    <i class="progress-title">Loading triggers <span ng-show="triggerCount">{{loadingStep}}/{{triggerCount}}</span></i>
+    <i class="progress-title">Loading triggers <span ng-show="stepCount">{{loadingStep}}/{{stepCount}}</span></i>
     <div class="progress progress-striped" x>
-      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{loadingStep}}" aria-valuemin="0" aria-valuemax="{{triggerCount}}"
+      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{loadingStep}}" aria-valuemin="0" aria-valuemax="{{stepCount}}"
         style="width: {{loadingPercent}}%;">
       </div>
     </div>
@@ -57,6 +57,5 @@
         <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
         <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
         <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
-
     </div>
 </div>

@@ -37,6 +37,15 @@ app.constant('SENSORS', [
     'Temp3'
 ]);
 
+app.constant('SENSOR_META', {
+    'Humidity':  { mapFn: utils.mapDecimalValues },
+    'Temp1': { mapFn: utils.mapDecimalValues },
+    'Temp2': { mapFn: utils.mapDecimalValues },
+    'Temp3': { mapFn: utils.mapDecimalValues },
+    'Light': { mapFn: utils.mapPercentValues },
+    'Usnd':  { mapFn: null }
+});
+
 app.constant('TZ_OFFSET', TZ_OFFSET);
 
 app.config(['$routeProvider', function($routeProvider) {

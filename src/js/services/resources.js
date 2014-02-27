@@ -8,6 +8,10 @@ app.factory('NetworkConfig', ['$resource', function($resource) {
     return $resource('/config.jso');
 }]);
 
+app.factory('ClientConfig', ['$resource', function($resource) {
+    return $resource('/client.jso');
+}]);
+
 app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, $http) {
     return function(name, mapFn) {
         var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
@@ -49,18 +53,9 @@ app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, 
     };
 }]);
 
-app.factory('SensorHistory', ['sensorResourceFactory', '$q', function(sensorResourceFactory, $q) {
-    var sensors = [
-        {name: 'Humidity', mapFn: utils.mapDecimalValues},
-        {name: 'Temp1', mapFn: utils.mapDecimalValues},
-        {name: 'Light', mapFn: utils.mapPercentValues},
-        {name: 'Usnd', mapFn: null},
-        {name: 'Temp2', mapFn: utils.mapDecimalValues},
-        {name: 'Temp3', mapFn: utils.mapDecimalValues}
-    ];
-
-    sensors.forEach(function(sensor) {
-        sensor.resource = sensorResourceFactory(sensor.name, sensor.mapFn);
+app.factory('SensorHistory', ['sensorResourceFactory', '$q', 'SENSORS', 'SENSOR_META', function(sensorResourceFactory, $q, SENSORS, SENSOR_META) {
+    SENSORS.forEach(function(sensor) {
+        sensor.resource = sensorResourceFactory(sensor, SENSOR_META[sensor].mapFn);
     });
 
     function load(resourceMethod, queryArgs) {
@@ -130,9 +125,8 @@ app.factory('Triggers', ['$http', function($http) {
             //dbg no load
             // success();
             // return;
-
             var q = async.queue(function(index, done) {
-                $http.get('/triggers/'+index+'.jso').success(function(data) {
+                $http.get('/triggers/'+index+'.jso', {cache: false}).success(function(data) {
                     console.log('trigger #'+index+' loaded', data);
                     data.index = index;
                     triggerLoaded(data);

@@ -19,6 +19,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
     }
 
     function sensorRangePack(sensor, u) {
+        if (!$.isNumeric(u.on) || !$.isNumeric(u.off)) return null;
         var on = parseInt(u.on * 10, 10),
             off = parseInt(u.off * 10, 10);
         return {t_since: -1, t_until:0, on_value: ">"+on, off_value:"<"+off, sensor: sensor, output: FAN_OUTPUT};
@@ -51,6 +52,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
                 return null;
             },
             pack: function(u) {
+                if (!$.isNumeric(u.temperature)) return null;
                 var val = parseInt(u.temperature * 10, 10);
                 return {t_since:-1, t_until:0, on_value: ">"+val, off_value: "<"+val+"!", sensor: SENSOR_TEMP, output: FAN_OUTPUT};
             },
@@ -69,7 +71,8 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
                 return null;
             },
             pack: function(u) {
-                return {t_since: -1, t_until: 0, on_value: "T"+fan.after, off_value:"T"+fan.duration, sensor:-1, output: FAN_OUTPUT};
+                if (!$.isNumeric(u.after) || !$.isNumeric(u.duration)) return null;
+                return {t_since: -1, t_until: 0, on_value: "T"+u.after, off_value:"T"+u.duration, sensor:-1, output: FAN_OUTPUT};
             },
             createEmpty: function() {
                 return { duration: null, after: null };
@@ -89,6 +92,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
                 return null;
             },
             pack: function(u) {
+                if (!u.since || !u.until) return null;
                 return {
                     t_since: utils.timeToMinutes(u.since),
                     t_until: utils.timeToMinutes(u.until),
@@ -107,7 +111,6 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
     return {
         createEmpty: function(triggerClass) {
             u = transformers[triggerClass].createEmpty();
-            u.active = triggerClass == 'timer';
             u.triggerClass = triggerClass;
             return u;
         },
@@ -115,7 +118,6 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             for (var key in transformers) {
                 var u = transformers[key].unpack(trigger);
                 if (u) {
-                    u.active = true;
                     u.triggerClass = key;
                     u.trigger = trigger;
                     console.log('trigger #'+trigger.index+' recognized: ' + key);
@@ -125,7 +127,6 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             return null;
         },
         pack: function(obj) {
-            if (!obj.active) return null;
             return transformers[obj.triggerClass].pack(obj);
         }
     };
