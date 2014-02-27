@@ -44,7 +44,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
             pointInterval: 1000 * 60, //1 min
             pickerMaxView: 1,
             pickerFormat: 'd. MM yyyy hh:ii',
-            momentFormat: 'D. MMMM YYYY h:mm'
+            momentFormat: 'D. MMMM YYYY HH:mm'
         },
         'D': {
             dataKey: 'h',

@@ -14,12 +14,13 @@ app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, 
             ['day', 'h', 'min'].forEach(function(key) {
                 if ($.isArray(data[key])) {
                     //invalid backend data temporary fix
-                    data[key] = data[key].map(function(item) {
+                    d = data[key].map(function(item) {
                         if (item && item > 25000) return item - 32768;
                         return item;
                     });
                     //end of fix
-                    data[key] = mapFn(utils.fixNull(data[key]));
+                    d = utils.fixNull(d);
+                    data[key] = mapFn ? mapFn(d) : d;
                 }
             });
             return data;
@@ -53,7 +54,7 @@ app.factory('SensorHistory', ['sensorResourceFactory', '$q', function(sensorReso
         {name: 'Humidity', mapFn: utils.mapDecimalValues},
         {name: 'Temp1', mapFn: utils.mapDecimalValues},
         {name: 'Light', mapFn: utils.mapPercentValues},
-        {name: 'Usnd', mapFn: utils.mapDecimalValues},
+        {name: 'Usnd', mapFn: null},
         {name: 'Temp2', mapFn: utils.mapDecimalValues},
         {name: 'Temp3', mapFn: utils.mapDecimalValues}
     ];
