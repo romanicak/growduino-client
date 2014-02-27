@@ -1,51 +1,51 @@
-<fieldset class="form-group sentinel-line" ng-disabled="!fanCritical.active">
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.tempBelow.active">
     Never turn on <b>fan</b> when temperature is below
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="fanCritical.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
+        <input type="text" class="form-control" ng-model="relay.triggers.tempBelow.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
     </div>
-    <a ng-click="toggleSentinel(fanCritical)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanCritical.active, 'glyphicon-ok-circle': !fanCritical.active}"></span>
+    <a ng-click="toggleTrigger(relay.triggers.tempBelow)">
+        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.tempBelow.active, 'glyphicon-ok-circle': !relay.triggers.tempBelow.active}"></span>
     </a>
 </fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!temperatureOptimal.active">
-    Keep <b>Temperature</b> between
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.tempOver.active">
+    Turn on when <b>Temperature</b> is over
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="temperatureOptimal.from" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-    </div>
-    and
+        <input type="text" class="form-control" ng-model="relay.triggers.tempOver.on" />&nbsp;°C
+    </div> then keep on till
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="temperatureOptimal.to" />&nbsp;°C
-    </div>
-    <a ng-click="toggleSentinel(temperatureOptimal)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': temperatureOptimal.active, 'glyphicon-ok-circle': !temperatureOptimal.active}"></span>
+        <input type="text" class="form-control" ng-model="relay.triggers.tempOver.off" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+    </div> is reached.
+    <a ng-click="toggleTrigger(relay.triggers.tempOver)">
+        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.tempOver.active, 'glyphicon-ok-circle': !relay.triggers.tempOver.active}"></span>
     </a>
 </fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!humidityOptimal.active">
-    Keep <b>Humidity</b> between
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.humidityOver.active">
+    Turn on when  <b>Humidity</b> is over
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="humidityOptimal.from" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-    </div>
-    and
+        <input type="text" class="form-control" ng-model="relay.triggers.humidityOver.on" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+    </div> then keep on till
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="humidityOptimal.to" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        <input type="text" class="form-control" ng-model="relay.triggers.humidityOver.off" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
     </div>
-    <a ng-click="toggleSentinel(humidityOptimal)">
-        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': humidityOptimal.active, 'glyphicon-ok-circle': !humidityOptimal.active}"></span>
+    is reached.
+
+    <a ng-click="toggleTrigger(relay.triggers.humidityOver)">
+        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': relay.triggers.humidityOver.active, 'glyphicon-ok-circle': !relay.triggers.humidityOver.active}"></span>
     </a>
 </fieldset>
 
-<fieldset class="form-group sentinel-line" ng-disabled="!fanInterval.active">
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.inactiveFor.active">
     Enable <b>fan</b> every
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="fanInterval.after" ng-pattern="/^\d+$/"/> minutes
+        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.after" ng-pattern="/^\d+$/"/> minutes
     </div>
     of inactivity for
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="fanInterval.duration" ng-pattern="/^\d+$/"/> minutes.
+        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.duration" ng-pattern="/^\d+$/"/> minutes.
     </div>
 
-    <a ng-click="toggleSentinel(fanInterval)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': fanInterval.active, 'glyphicon-ok-circle': !fanInterval.active}"></span>
+    <a ng-click="toggleTrigger(relay.triggers.inactiveFor)">
+        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.inactiveFor.active, 'glyphicon-ok-circle': !relay.triggers.inactiveFor.active}"></span>
     </a>
 </fieldset>
 

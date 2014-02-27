@@ -10,8 +10,6 @@ Dallas one wire devices
 app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers', 'triggerTransformer', 'SensorStatus', 'OUTPUTS',
     function($scope, $http, $timeout, Triggers, triggerTransformer, SensorStatus, OUTPUTS) {
 
-    var FAN_TRIGGERS = ['temperatureOptimal', 'humidityOptimal', 'fanInterval', 'fanCritical'];
-
     $scope.loading = true;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0
@@ -19,16 +17,20 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     $scope.relays = [];
 
     OUTPUTS.forEach(function(output, i) {
+        var triggers = {};
+
+        if (output == 'Fan') {
+            ['tempBelow', 'tempOver', 'humidityOver', 'inactiveFor'].forEach(function(key) {
+                triggers[key] = triggerTransformer.createEmpty(key);
+            });
+        }
+
         $scope.relays.push({
             name: output,
             index: i,
-            intervals: []
+            intervals: [],
+            triggers: triggers
         })
-    });
-
-    //TODO remove coupling with controller scope
-    FAN_TRIGGERS.forEach(function(key) {
-        $scope[key] = triggerTransformer.createEmpty(key);
     });
 
     function createDisabledTrigger(index) {
@@ -75,11 +77,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
             }
         }
 
-        FAN_TRIGGERS.forEach(function(key) {
-            pack($scope[key]);
-        });
         $scope.relays.forEach(function(r) {
             r.intervals.forEach(pack);
+            for (tc in r.triggers) {
+                pack(r.triggers[tc]);
+            }
         });
 
         while (created.length) {
@@ -95,8 +97,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         return modified;
     }
 
-    $scope.toggleSentinel = function(sentinel) {
-        sentinel.active = !sentinel.active;
+    $scope.toggleTrigger = function(trigger) {
+        trigger.active = !trigger.active;
     };
 
     $scope.saveTriggers = function() {
@@ -147,7 +149,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
     SensorStatus.get(function(data) {
         $scope.triggerCount = data.triggers;
-        //$scope.triggerCount = 8; //debug
+        $scope.triggerCount = 8; //debug
 
         Triggers.loadAll($scope.triggerCount,
             function(trigger) {
@@ -155,10 +157,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
                 $scope.loadingPercent = parseInt($scope.loadingStep / $scope.triggerCount * 100, 10);
                 u = triggerTransformer.unpack(trigger);
                 if (u) {
+                    var relay = $scope.relays[u.trigger.output];
                     if (u.triggerClass === 'timer') {
-                        $scope.relays[u.trigger.output].intervals.push(u);
+                        relay.intervals.push(u);
                     } else {
-                        $scope[u.triggerClass] = u;
+                        relay.triggers[u.triggerClass] = u;
                     }
                     return;
                 }

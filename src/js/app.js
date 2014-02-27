@@ -28,6 +28,15 @@ app.constant('OUTPUTS', [
     'Heating'
 ]);
 
+app.constant('SENSORS', [
+    'Humidity',
+    'Temp1',
+    'Light',
+    'Usnd',
+    'Temp2',
+    'Temp3'
+]);
+
 app.constant('TZ_OFFSET', TZ_OFFSET);
 
 app.config(['$routeProvider', function($routeProvider) {
