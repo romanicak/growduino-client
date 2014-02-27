@@ -44,7 +44,8 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
             pointInterval: 1000 * 60, //1 min
             pickerMaxView: 1,
             pickerFormat: 'd. MM yyyy hh:ii',
-            momentFormat: 'D. MMMM YYYY HH:mm'
+            momentFormat: 'D. MMMM YYYY HH:mm',
+            momentUnit: 'hour'
         },
         'D': {
             dataKey: 'h',
@@ -53,7 +54,8 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
             pointInterval: 1000 * 60 * 60,  //hour
             pickerMaxView: 2,
             pickerFormat: 'd. MM yyyy',
-            momentFormat: 'D. MMMM YYYY'
+            momentFormat: 'D. MMMM YYYY',
+            momentUnit: 'day'
         },
         'M': {
             dataKey: 'day',
@@ -62,7 +64,8 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
             pointInterval: 1000 * 60 * 60 * 24, //day
             pickerMaxView: 3,
             pickerFormat: 'MM yyyy',
-            momentFormat: 'MMMM YYYY'
+            momentFormat: 'MMMM YYYY',
+            momentUnit: 'month'
         }
     };
 
@@ -126,7 +129,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
         });
     }
 
-    function pad(data) {
+    function padValues(data) {
         if ($scope.zoom == 'H') {
             return utils.arrayPad(data, 60, null);
         }
@@ -138,6 +141,10 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
         }
     }
 
+    function padDate(d) {
+        d.startOf(zoomTypes[$scope.zoom].momentUnit);
+    }
+
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
         cleanCharts();
         charts.forEach(function(chart) {
@@ -145,10 +152,10 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
             chart.series.forEach(function(chartSeries) {
                 chartSeries.setData([]);
                 chartSeries.update($.extend({
-                    cursor: $scope.zoom === 'H' ? 'default': 'pointer',
-                    marker: {
-                        enabled: true/*$scope.zoom !== 'H'*/
-                    }
+                    cursor: $scope.zoom === 'H' ? 'default': 'pointer'
+                    /*marker: {
+                        enabled: true//$scope.zoom !== 'H'
+                    }*/
                 }, seriesOptions));
             });
         });
@@ -172,7 +179,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
             if (chartSeries == null) {
                 console.warn('No series for ' + sensor);
             } else {
-                chartSeries.setData(pad(data[dataKey]));
+                chartSeries.setData(padValues(data[dataKey]));
                 chart.hideLoading();
                 chartSeries.show();
             }
@@ -215,19 +222,6 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
         });
     }
 
-    function padDate(d) {
-        switch ($scope.zoom) {
-            case 'M':
-                d.startOf('month');
-                break;
-            case 'D':
-                d.startOf('day');
-                break;
-            case 'H':
-                d.startOf('hour');
-        }
-    }
-
     $scope.changeZoom = function(zoom) {
         $scope.zoom = zoom;
         padDate($scope.dt);
@@ -235,28 +229,20 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
         setupPicker();
     };
 
-    function shiftByUnit(dt, zoom, trimHourOnly, offset) {
+    function shiftByUnit(dt, zoom, offset) {
         var d = moment(dt);
-        switch (zoom) {
-            case 'M':
-                d.add('months', offset);
-                break;
-            case 'D':
-                d.add('days', offset);
-                break;
-            case 'H':
-                if (trimHourOnly) {
-                    d.startOf('hour');
-                } else {
-                    d.add('hours', offset);
-                }
-                break;
-        }
+        d.add(zoomTypes[zoom].momentUnit+'s', offset);
         return d;
     }
 
     $scope.shiftDateUnit = function(offset) {
-        var d = shiftByUnit($scope.dt, $scope.zoom, $scope.isCurrent, offset);
+        var d;
+        if ($scope.isCurrent) {
+            var d = moment($scope.dt);
+            padDate(d);
+        } else {
+            d = shiftByUnit($scope.dt, $scope.zoom, offset);
+        }
         if (d.unix() <= moment().unix()) {
             $scope.isCurrent = false;
             $scope.dt = d;
@@ -291,7 +277,7 @@ app.controller('ChartController', ['$scope', 'SensorHistory', 'TZ_OFFSET', funct
         return $scope.zoom + '-' + $scope.dt.unix();
     }, function() {
         $scope.formattedDate = $scope.dt.format(zoomTypes[$scope.zoom].momentFormat);
-        $scope.forwardAllowed = !$scope.isCurrent && shiftByUnit($scope.dt, $scope.zoom, false, 1).unix() <= moment().unix();
+        $scope.forwardAllowed = !$scope.isCurrent && shiftByUnit($scope.dt, $scope.zoom, 1).unix() <= moment().unix();
 
         //debug
         //$scope.formattedDate += ' ' + $scope.dt.unix() + ' / ' + $scope.dt.format();
