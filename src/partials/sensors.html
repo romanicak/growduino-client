@@ -1,29 +1,24 @@
+<form class="chart-controls form-inline" role="form">
+    <div class="btn-group">
+        <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'M')}" ng-click="changeZoom('M')">Month</button>
+        <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'D')}" ng-click="changeZoom('D')">Day</button>
+        <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'H')}" ng-click="changeZoom('H')">Hour</button>
+    </div>
 
+    <div class="btn-group">
+        <button title="Select date" type="button" class="btn btn-info" id="picker-date"><span class="glyphicon glyphicon-calendar"></span></button>
+        <button title="Show recent data" type="button" class="btn btn-info" ng-click="showRecent()"><span class="glyphicon glyphicon-home"></span></button>
+    </div>
 
+    <div class="btn-group">
+        <button title="Previous" type="button" class="btn btn-info" ng-click="shiftDateUnit(-1)"><span class="glyphicon glyphicon-backward"></span></button>
+        <button title="Next" type="button" class="btn btn-info" ng-click="shiftDateUnit(1)" ng-disabled="!forwardAllowed"><span class="glyphicon glyphicon-forward"></span></button>
+    </div>
 
+    <span class="selected-date">{{ formattedDate }}</span>
+</form>
 
-<div ng-controller="ChartController">
-    <form class="chart-controls form-inline" role="form">
-        <div class="btn-group">
-            <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'M')}" ng-click="changeZoom('M')">Month</button>
-            <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'D')}" ng-click="changeZoom('D')">Day</button>
-            <button type="button" ng-class="{btn: true, 'btn-info': true, active: (zoom == 'H')}" ng-click="changeZoom('H')">Hour</button>
-        </div>
+<div class="chart" id="chart-huteli"></div>
+<div class="chart" id="chart-temp23"></div>
+<div class="chart" id="chart-usnd"></div>
 
-        <div class="btn-group">
-            <button title="Select date" type="button" class="btn btn-info" id="picker-date"><span class="glyphicon glyphicon-calendar"></span></button>
-            <button title="Show recent data" type="button" class="btn btn-info" ng-click="showRecent()"><span class="glyphicon glyphicon-home"></span></button>
-        </div>
-
-        <div class="btn-group">
-            <button title="Previous" type="button" class="btn btn-info" ng-click="shiftDateUnit(-1)"><span class="glyphicon glyphicon-backward"></span></button>
-            <button title="Next" type="button" class="btn btn-info" ng-click="shiftDateUnit(1)" ng-disabled="!forwardAllowed"><span class="glyphicon glyphicon-forward"></span></button>
-        </div>
-
-        <span class="selected-date">{{ formattedDate }}</span>
-    </form>
-
-    <div class="chart" id="chart-huteli"></div>
-    <div class="chart" id="chart-temp23"></div>
-    <div class="chart" id="chart-usnd"></div>
-</div>

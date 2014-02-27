@@ -33,7 +33,9 @@ app.constant('TZ_OFFSET', TZ_OFFSET);
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/', {
-            templateUrl: 'partials/sensors.html'
+            templateUrl: 'partials/sensors.html',
+            controller: 'ChartController',
+            reloadOnSearch: false
         }).
         when('/triggers', {
             templateUrl: 'partials/triggers.html',

@@ -69,8 +69,8 @@ app.factory('SensorHistory', ['sensorResourceFactory', '$q', function(sensorReso
         var queue = async.queue(function(sensor, done) {
             sensor.resource[resourceMethod](queryArgs, function(data) {
                 result[sensor.name] = data;
-                d.notify(sensor.name);
             }).$promise.finally(function() {
+                d.notify(sensor.name);
                 done();
             });
         }, 1);
