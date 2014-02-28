@@ -6,8 +6,8 @@ var connect = require('connect');
 var bodyParser = connect.bodyParser();
 var request = require('request');
 
-var TARGET = 'arduino.natur.cuni.cz';
-//var TARGET = '78.108.106.180';
+//var TARGET = 'arduino.natur.cuni.cz';
+var TARGET = '78.108.106.180';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
 var staticServer = new nodeStatic.Server('./src');
@@ -39,7 +39,7 @@ var server = require('http').createServer(function(req, res) {
         return;
     }
 
-    if (req.url.match(/^\/(sensors|triggers|DATA|config.jso)/)) {
+    if (req.url.match(/^\/(sensors|triggers|DATA|config.jso|client.jso)/)) {
         if (req.method == 'POST') {
             proxyPost(req, res);
         } else {

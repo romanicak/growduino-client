@@ -54,8 +54,13 @@ app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, 
 }]);
 
 app.factory('SensorHistory', ['sensorResourceFactory', '$q', 'SENSORS', 'SENSOR_META', function(sensorResourceFactory, $q, SENSORS, SENSOR_META) {
+    var sensorResources = [];
+
     SENSORS.forEach(function(sensor) {
-        sensor.resource = sensorResourceFactory(sensor, SENSOR_META[sensor].mapFn);
+        sensorResources.push({
+            name: sensor,
+            resource: sensorResourceFactory(sensor, SENSOR_META[sensor].mapFn)
+        });
     });
 
     function load(resourceMethod, queryArgs) {
@@ -74,7 +79,7 @@ app.factory('SensorHistory', ['sensorResourceFactory', '$q', 'SENSORS', 'SENSOR_
             d.resolve(result);
         };
 
-        sensors.forEach(function(sensor) {
+        sensorResources.forEach(function(sensor) {
             queue.push(sensor);
         });
 
