@@ -42,11 +42,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     function serializeTriggers() {
         var modified = [], deleted = [], created = [], unmodified = [], inactive = [];
 
-        function pack(u) {
+        function pack(u, relayDisabled) {
+            //TODO relay enabled
+
             var trigger = triggerTransformer.pack(u);
-            if (!u.active) {
+            if (relayDisabled || !u.active) {
                 if (trigger != null) {
-                    trigger.active = false;
+                    trigger.active = u.active;
                     inactive.push(trigger);
                 }
                 trigger = null;
@@ -88,9 +90,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         }
 
         $scope.relays.forEach(function(r) {
-            r.intervals.forEach(pack);
+            r.intervals.forEach(function(u) {
+                pack(u, r.off)
+            });
             for (tc in r.triggers) {
-                pack(r.triggers[tc]);
+                pack(r.triggers[tc], r.off);
             }
         });
 
@@ -110,6 +114,16 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         }
     }
 
+    function getDisabledRelays() {
+        var disabled = []
+        $scope.relays.forEach(function(r) {
+            if (r.off) {
+                disabled.push(r.name);
+            }
+        });
+        return disabled;
+    }
+
     $scope.toggleTrigger = function(trigger) {
         trigger.active = !trigger.active;
     };
@@ -126,13 +140,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
                 Triggers.save(ser.modified, function() { done(); /*do not pas err arg */ });
             });
         }
-        if (ser.inactive.length) {
-            steps.push(function(done) {
-                ClientConfig.save({
-                    triggers: ser.inactive
-                }, function() { done(); /*do not pas err arg */ });
-            });
-        }
+
+        steps.push(function(done) {
+            ClientConfig.save({
+                triggers: ser.inactive,
+                disabledRelays: getDisabledRelays()
+            }, function() { done(); /*do not pas err arg */ });
+        });
 
         async.series(steps, function() {
             $scope.relays.forEach(function(r) {
@@ -208,6 +222,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
                     u.active = !!trigger.active;
                     delete u.trigger;
                 }
+            });
+            (data.disabledRelays || []).forEach(function(relayName)  {
+                $scope.relays.forEach(function(r) {
+                    if (r.name === relayName) {
+                        r.off = true;
+                    }
+                });
             });
         });
 
