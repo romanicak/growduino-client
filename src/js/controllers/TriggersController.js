@@ -192,7 +192,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
     SensorStatus.get(function(data) {
         var triggerCount = data.triggers
-        var triggerCount = 8; // debug
+        //var triggerCount = 8; // debug
 
         $scope.loadingStep = 0
         $scope.stepCount = triggerCount + 1;
