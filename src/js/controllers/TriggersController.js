@@ -10,6 +10,8 @@ Dallas one wire devices
 app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers', 'triggerTransformer', 'SensorStatus', 'ClientConfig', 'OUTPUTS',
     function($scope, $http, $timeout, Triggers, triggerTransformer, SensorStatus, ClientConfig, OUTPUTS) {
 
+    var triggerCount = null;
+
     $scope.loading = true;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0
@@ -82,7 +84,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         }
 
         function getUnusedId() {
-            for (var i = 0; i < $scope.triggerCount; i++) {
+            for (var i = 0; i < triggerCount; i++) {
                 if (containsIndex(modified, i)) continue;
                 if (containsIndex(unmodified, i)) continue;
                 return i;
@@ -191,8 +193,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     }
 
     SensorStatus.get(function(data) {
-        var triggerCount = data.triggers
-        //var triggerCount = 8; // debug
+        triggerCount = data.triggers; //store variable for getUnusedId
+        //triggerCount = 8; // debug
 
         $scope.loadingStep = 0
         $scope.stepCount = triggerCount + 1;
