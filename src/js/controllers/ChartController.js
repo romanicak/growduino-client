@@ -222,9 +222,15 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         if (zoomChanged) {
             setupPicker();
         } else {
-            //TODO update selected picker date
+            updatePicker();
         }
+    }
 
+    function updatePicker() {
+        var picker = $('#picker-date').data('datetimepicker');
+        if (picker) {
+            picker.initialDate = $scope.dt.toDate();
+        }
     }
 
     function setupPicker() {
@@ -237,14 +243,14 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             format: zt.pickerFormat,
             language: 'cs',
             startDate: new Date(2013, 0, 1),
-            endDate: new Date(),
-            initialDate: $scope.date
+            endDate: new Date()
         }).on('changeDate', function(ev){
             //datetime picker return date with selected units in UTC, convert it!
             var d = moment(ev.date).zone(TZ_OFFSET).add('minutes', ev.date.getTimezoneOffset());
             updateChart($scope.zoom, d);
             $('#picker-date').datetimepicker('hide');
         });
+        updatePicker();
     }
 
     function changeZoom(zoom) {
