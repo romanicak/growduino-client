@@ -44,11 +44,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     function serializeTriggers() {
         var modified = [], deleted = [], created = [], unmodified = [], inactive = [];
 
-        function pack(u, relayDisabled) {
+        function pack(u, relay) {
             //TODO relay enabled
 
             var trigger = triggerTransformer.pack(u);
-            if (relayDisabled || !u.active) {
+            if (u.triggerClass == 'manualOn') {
+                if (!relay.manualOn) trigger = null;
+            } else if (relay.off || relay.manualOn || !u.active) {
                 if (trigger != null) {
                     trigger.active = u.active;
                     inactive.push(trigger);
@@ -93,10 +95,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
         $scope.relays.forEach(function(r) {
             r.intervals.forEach(function(u) {
-                pack(u, r.off)
+                pack(u, r)
             });
             for (tc in r.triggers) {
-                pack(r.triggers[tc], r.off);
+                pack(r.triggers[tc], r);
             }
         });
 
@@ -116,14 +118,20 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         }
     }
 
-    function getDisabledRelays() {
-        var disabled = []
+    function getInactiveRelays() {
+        var disabledRelays = [], manualOnRelays = [];
         $scope.relays.forEach(function(r) {
             if (r.off) {
-                disabled.push(r.name);
+                disabledRelays.push(r.name);
+            }
+            if (r.manualOn) {
+                manualOnRelays.push(r.name);
             }
         });
-        return disabled;
+        return {
+            disabledRelays: disabledRelays,
+            manualOnRelays: manualOnRelays
+        }
     }
 
     $scope.toggleTrigger = function(trigger) {
@@ -144,10 +152,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         }
 
         steps.push(function(done) {
-            ClientConfig.save({
-                triggers: ser.inactive,
-                disabledRelays: getDisabledRelays()
-            }, function() { done(); /*do not pas err arg */ });
+            var saveData = getInactiveRelays();
+            saveData.triggers = ser.inactive;
+            ClientConfig.save(saveData, function() { done(); /*do not pas err arg */ });
         });
 
         async.series(steps, function() {
@@ -189,7 +196,17 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
     $scope.relayManualOn = function(relay) {
         relay.manualOn= !relay.manualOn;
-        if (relay.manualOn) relay.off = false;
+        var rt = relay.triggers;
+        if (relay.manualOn) {
+            relay.off = false;
+            if (!rt.manualOn) {
+                rt.manualOn = triggerTransformer.createEmpty('manualOn');
+                rt.manualOn.output = relay.index;
+            }
+            rt.manualOn.active = true;
+        } else {
+            if (rt.manualOn) rt.manualOn.active = false;
+        }
     }
 
     SensorStatus.get(function(data) {
@@ -208,7 +225,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
             u = triggerTransformer.unpack(trigger);
             if (u) {
                 var relay = $scope.relays[u.trigger.output];
-                if (u.triggerClass === 'timer') {
+                if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
                     relay.intervals.push(u);
                 } else {
                     relay.triggers[u.triggerClass] = u;
@@ -229,6 +246,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
                 $scope.relays.forEach(function(r) {
                     if (r.name === relayName) {
                         r.off = true;
+                    }
+                });
+            });
+            (data.manualOnRelays || []).forEach(function(relayName)  {
+                $scope.relays.forEach(function(r) {
+                    if (r.name === relayName) {
+                        r.manualOn = true;
                     }
                 });
             });

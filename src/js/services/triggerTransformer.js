@@ -105,6 +105,15 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             createEmpty: function() {
                 return { since: '00:00', until: '00:00'};
             }
+        },
+        'manualOn': {
+            unpack: $.noop,
+            pack: function(u) {
+                 return transformers['timer'].pack({since: '00:00', until: '24:00', output: u.output});
+            },
+            createEmpty: function() {
+                return {};
+            }
         }
     };
 
@@ -118,6 +127,9 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             for (var key in transformers) {
                 var u = transformers[key].unpack(trigger);
                 if (u) {
+                    if (key === 'timer' && trigger.t_since === 0 && trigger.t_until === 1440) {
+                        key = 'manualOn';
+                    }
                     u.triggerClass = key;
                     u.trigger = trigger;
                     console.log('trigger #'+trigger.index+' recognized: ' + key);
@@ -127,6 +139,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             return null;
         },
         pack: function(obj) {
+            var tClass = obj.triggerClass;
             return transformers[obj.triggerClass].pack(obj);
         }
     };

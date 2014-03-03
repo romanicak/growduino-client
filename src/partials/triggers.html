@@ -13,7 +13,7 @@
     <div class="col-sm-3 relay-header">
         <div class="name">{{relay.name}}</div>
         <div class="number">relay {{$index}}</div>
-        <button type="button" class="btn btn-info btn-xs" ng-click="relayManualOn(relay)" disabled="disabled">
+        <button type="button" class="btn btn-info btn-xs" ng-click="relayManualOn(relay)">
             <span ng-hide="relay.manualOn">Manual On</span>
             <span ng-hide="!relay.manualOn">Stop</span>
         </button>
