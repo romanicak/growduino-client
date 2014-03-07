@@ -44,6 +44,10 @@ grunt.initConfig({
             src: ['index.html'],
             dest: '.tmp',
             expand: true
+        },
+        settings: {
+            src: ['src/js/settings.js'],
+            dest: 'dist/js/settings.js'
         }
     },
     htmlmin: {

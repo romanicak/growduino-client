@@ -210,8 +210,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     }
 
     SensorStatus.get(function(data) {
-        triggerCount = data.triggers; //store variable for getUnusedId
-        //triggerCount = 8; // debug
+        triggerCount = data.triggers; //keep variable on contoller to use in getUnusedId!
+        if (settings.triggerLimit) {
+            triggerCount = Math.min(triggerCount, settings.triggerLimit);
+        }
 
         $scope.loadingStep = 0
         $scope.stepCount = triggerCount + 1;
