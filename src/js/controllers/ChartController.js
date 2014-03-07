@@ -165,7 +165,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
 
         lastRequest = SensorHistory[resourceMethod](queryArgs);
         lastRequest.$promise.then(null, null, function(sensor) {
-            var data = sh[sensor],
+            var data = lastRequest[sensor],
                 chart = null,
                 chartSeries = null;
 
