@@ -1,5 +1,7 @@
 app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope, OUTPUTS, Relay) {
 
+    $scope.loaded = false;
+
     function arrayFromMask(nMask) {
         // nMask must be between -2147483648 and 2147483647
         if (nMask > 0x7fffffff || nMask < -0x80000000) { throw new TypeError("arrayFromMask - out of range"); }
@@ -16,5 +18,25 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
                 state: states.length > i ? states[i] : false
             });
         });
+
+        $scope.history = [];
+        for (var i = 0; i < d.history.length-1; i++) {
+            var curr = arrayFromMask(d.history[i].state),
+                prev = arrayFromMask(d.history[i+1].state),
+                relays = [];
+
+            for (var j = 0; j < OUTPUTS.length; j++) {
+                if (curr[j] !== prev[j]) {
+                    relays.push({ name: OUTPUTS[j], on: curr[j]});
+                }
+            }
+
+            $scope.history.push({
+                when: d.history[i].when,
+                relays: relays
+            });
+        }
+
+        $scope.loaded = true;
     });
 }]);

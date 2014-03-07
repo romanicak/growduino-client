@@ -105,15 +105,18 @@ app.factory('SensorHistory', ['sensorResourceFactory', '$q', 'SENSORS', 'SENSOR_
     };
 }]);
 
-app.factory('Relay', ['$resource', '$http', function($resource, $http) {
+app.factory('Relay', ['$resource', '$http', 'TZ_OFFSET', function($resource, $http, TZ_OFFSET) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
-        var last = -1;
+        var history = [];
         for (var ts in data.state) {
-            if (ts > last) {
-                last = ts;
-                data.currentState = data.state[ts];
-            }
+            history.push({
+                when: moment.unix(ts).zone(TZ_OFFSET),
+                state: data.state[ts]
+            });
         }
+        history.sort(function(a, b) { return b.when.valueOf() - a.when.valueOf();});
+        data.currentState = history.length === 0 ? 0 : history[0].state;
+        data.history = history;
         return data;
     }]);
     return $resource('/sensors/outputs.jso', {}, {

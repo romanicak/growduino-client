@@ -54,6 +54,17 @@
                     <span ng-repeat="relay in relays">
                       <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ relay.name }}</span>
                     </span>
+
+                    <div class="relay-history" ng-show="loaded">
+                        <h5>Relay state history</h5>
+                        <ul>
+                            <li ng-repeat="item in history">{{ item.when.format('HH:mm') }}
+                                <span ng-repeat="relay in item.relays">
+                                    <span ng-class="{label: true, 'label-default': !relay.on, 'label-success': relay.on }">{{ relay.name }}</span>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="col-md-10 page-content">
