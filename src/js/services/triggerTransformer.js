@@ -8,6 +8,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
 
     var FAN_OUTPUT = OUTPUTS.indexOf('Fan'),
         HUMIDIFIER_OUTPUT = OUTPUTS.indexOf('Humidifier'),
+        HEATING_OUTPUT = OUTPUTS.indexOf('Heating'),
         SENSOR_TEMP = SENSORS.indexOf('Temp1'),
         SENSOR_HUMIDITY = SENSORS.indexOf('Humidity');
 
@@ -61,6 +62,21 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
         };
     }
 
+    function createTempLowTransformer() {
+        return {
+            unpack: function(t) {
+                return sensorRangeUnpack(SENSOR_TEMP, t);
+            },
+            pack: function(u) {
+                if (!$.isNumeric(u.on) || !$.isNumeric(u.off)) return null;
+                var on = parseInt(u.on * 10, 10),
+                    off = parseInt(u.off * 10, 10);
+                    return {t_since: -1, t_until:0, on_value: "<"+on, off_value:">"+off, sensor: SENSOR_TEMP, output: HEATING_OUTPUT};
+            },
+            createEmpty: sensorRangeCreateEmpty
+        };
+    }
+
     var transformers = {
         'tempBelow': {
             unpack: function(t) {
@@ -101,6 +117,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
         'humidityOver': createSensorTransformer(SENSOR_HUMIDITY),
         'humidityLow': createHumidityLowTransformer(),
         'tempOver': createSensorTransformer(SENSOR_TEMP),
+        'tempLow': createTempLowTransformer(),
         'timer': {
             unpack: function(t) {
                 if (t.t_since !== -1 && t.t_until !== -1 && t.on_value === ">-256" && t.off_value === "<-512" && t.sensor === -1) {

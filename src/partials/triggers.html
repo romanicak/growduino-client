@@ -32,6 +32,7 @@
         <div class="form-group" ng-hide="relay.off || relay.manualOn">
             <div ng-if="relay.name == 'Fan'" ng-include="'partials/triggers/fan.html'"></div>
             <div ng-if="relay.name == 'Humidifier'" ng-include="'partials/triggers/humidifier.html'"></div>
+            <div ng-if="relay.name == 'Heating'" ng-include="'partials/triggers/heating.html'"></div>
 
             <div class="timer-line" ng-repeat="range in relay.intervals">
                 <fieldset ng-disabled="!range.active">

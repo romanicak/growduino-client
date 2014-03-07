@@ -1,0 +1,12 @@
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.tempLow.active">
+    Turn on when <b>Temperature</b> is bellow
+    <div class="form-group" bs-has-error>
+        <input type="text" class="form-control" ng-model="relay.triggers.tempLow.on" />&nbsp;°C
+    </div> then keep it on till
+    <div class="form-group" bs-has-error>
+        <input type="text" class="form-control" ng-model="relay.triggers.tempLow.off" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+    </div> is reached.
+    <a ng-click="toggleTrigger(relay.triggers.tempLow)">
+        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.tempLow.active, 'glyphicon-ok-circle': !relay.triggers.tempLow.active}"></span>
+    </a>
+</fieldset>

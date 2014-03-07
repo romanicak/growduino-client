@@ -21,20 +21,20 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     OUTPUTS.forEach(function(output, i) {
         var triggers = {};
 
-        if (output == 'Fan') {
-            ['tempBelow', 'tempOver', 'humidityOver', 'inactiveFor'].forEach(function(key) {
-                var t = triggerTransformer.createEmpty(key);
-                t.active = false;
-                triggers[key] = t;
-            });
-        }
+        var createEmpty = function(key) {
+            var t = triggerTransformer.createEmpty(key);
+            t.active = false;
+            triggers[key] = t;
+        };
 
+        if (output == 'Fan') {
+            ['tempBelow', 'tempOver', 'humidityOver', 'inactiveFor'].forEach(createEmpty);
+        }
         if (output == 'Humidifier') {
-            ['humidityLow'].forEach(function(key) {
-                var t = triggerTransformer.createEmpty(key);
-                t.active = false;
-                triggers[key] = t;
-            });
+            ['humidityLow'].forEach(createEmpty);
+        }
+        if (output == 'Heating') {
+            ['tempLow'].forEach(createEmpty);
         }
 
         $scope.relays.push({
