@@ -1,8 +1,13 @@
 (function() {
 
+/**
+    TO REDESIGN !!!
+*/
+
 app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPUTS) {
 
     var FAN_OUTPUT = OUTPUTS.indexOf('Fan'),
+        HUMIDIFIER_OUTPUT = OUTPUTS.indexOf('Humidifier'),
         SENSOR_TEMP = SENSORS.indexOf('Temp1'),
         SENSOR_HUMIDITY = SENSORS.indexOf('Humidity');
 
@@ -36,6 +41,21 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             },
             pack: function(u) {
                 return sensorRangePack(sensor, u);
+            },
+            createEmpty: sensorRangeCreateEmpty
+        };
+    }
+
+    function createHumidityLowTransformer() {
+        return {
+            unpack: function(t) {
+                return sensorRangeUnpack(SENSOR_HUMIDITY, t);
+            },
+            pack: function(u) {
+                if (!$.isNumeric(u.on) || !$.isNumeric(u.off)) return null;
+                var on = parseInt(u.on * 10, 10),
+                    off = parseInt(u.off * 10, 10);
+                    return {t_since: -1, t_until:0, on_value: "<"+on, off_value:">"+off, sensor: SENSOR_HUMIDITY, output: HUMIDIFIER_OUTPUT};
             },
             createEmpty: sensorRangeCreateEmpty
         };
@@ -79,6 +99,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
             }
         },
         'humidityOver': createSensorTransformer(SENSOR_HUMIDITY),
+        'humidityLow': createHumidityLowTransformer(),
         'tempOver': createSensorTransformer(SENSOR_TEMP),
         'timer': {
             unpack: function(t) {

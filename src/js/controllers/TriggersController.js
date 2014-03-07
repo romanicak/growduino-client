@@ -29,6 +29,14 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
             });
         }
 
+        if (output == 'Humidifier') {
+            ['humidityLow'].forEach(function(key) {
+                var t = triggerTransformer.createEmpty(key);
+                t.active = false;
+                triggers[key] = t;
+            });
+        }
+
         $scope.relays.push({
             name: output,
             index: i,
