@@ -85,7 +85,7 @@ app.factory('SensorHistory', ['sensorResourceFactory', '$q', 'SENSORS', 'SENSOR_
 
         result.stop = function() {
             queue.tasks.splice(0, queue.tasks.length);
-        }
+        };
         return result;
     }
 
@@ -126,10 +126,11 @@ app.factory('Relay', ['$resource', '$http', function($resource, $http) {
 
 app.factory('Triggers', ['$http', function($http) {
     return {
-        loadAll: function(triggerCount, triggerLoaded, success) {
-            //dbg no load
-            // success();
-            // return;
+        loadAll: function(triggerIndexes, triggerLoaded, success) {
+            if (triggerIndexes.length === 0) {
+                success();
+                return;
+            }
             var q = async.queue(function(index, done) {
                 $http.get('/triggers/'+index+'.jso', {cache: false}).success(function(data) {
                     console.log('trigger #'+index+' loaded', data);
@@ -141,9 +142,9 @@ app.factory('Triggers', ['$http', function($http) {
                 success();
             };
 
-            for (var i = 0; i < triggerCount; i++) {
-                q.push(i);
-            }
+            triggerIndexes.forEach(function(index) {
+                q.push(index);
+            });
         },
         save: function(triggers, success)  {
             if (!triggers.length) {

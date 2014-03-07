@@ -109,7 +109,7 @@ app.factory('triggerTransformer', ['SENSORS', 'OUTPUTS', function(SENSORS, OUTPU
         'manualOn': {
             unpack: $.noop,
             pack: function(u) {
-                 return transformers['timer'].pack({since: '00:00', until: '24:00', output: u.output});
+                return transformers.timer.pack({since: '00:00', until: '24:00', output: u.output});
             },
             createEmpty: function() {
                 return {};

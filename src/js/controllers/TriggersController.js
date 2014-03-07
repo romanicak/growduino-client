@@ -14,7 +14,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
     $scope.loading = true;
     $scope.loadingStep = 0;
-    $scope.loadingPercent = 0
+    $scope.loadingPercent = 0;
 
     $scope.relays = [];
 
@@ -23,7 +23,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
         if (output == 'Fan') {
             ['tempBelow', 'tempOver', 'humidityOver', 'inactiveFor'].forEach(function(key) {
-                var t = triggerTransformer.createEmpty(key);;
+                var t = triggerTransformer.createEmpty(key);
                 t.active = false;
                 triggers[key] = t;
             });
@@ -34,7 +34,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
             index: i,
             intervals: [],
             triggers: triggers
-        })
+        });
     });
 
     function createDisabledTrigger(index) {
@@ -45,13 +45,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         var modified = [], deleted = [], created = [], unmodified = [], inactive = [];
 
         function pack(u, relay) {
-            //TODO relay enabled
-
             var trigger = triggerTransformer.pack(u);
             if (u.triggerClass == 'manualOn') {
                 if (!relay.manualOn) trigger = null;
             } else if (relay.off || relay.manualOn || !u.active) {
-                if (trigger != null) {
+                if (trigger !== null) {
                     trigger.active = u.active;
                     inactive.push(trigger);
                 }
@@ -95,9 +93,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
         $scope.relays.forEach(function(r) {
             r.intervals.forEach(function(u) {
-                pack(u, r)
+                pack(u, r);
             });
-            for (tc in r.triggers) {
+            for (var tc in r.triggers) {
                 pack(r.triggers[tc], r);
             }
         });
@@ -108,14 +106,17 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
             modified.push(t);
         }
 
+        var usedIds = modified.concat(unmodified).map(function(t) { return t.index; });
+
         while (deleted.length) {
             modified.push(createDisabledTrigger(deleted.pop().index));
         }
 
         return {
             modified: modified,
-            inactive: inactive
-        }
+            inactive: inactive,
+            usedIds: usedIds
+        };
     }
 
     function getInactiveRelays() {
@@ -131,7 +132,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         return {
             disabledRelays: disabledRelays,
             manualOnRelays: manualOnRelays
-        }
+        };
     }
 
     $scope.toggleTrigger = function(trigger) {
@@ -154,6 +155,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         steps.push(function(done) {
             var saveData = getInactiveRelays();
             saveData.triggers = ser.inactive;
+            if (settings.fastTriggerLoad) {
+                saveData.usedTriggers = ser.usedIds;
+            }
             ClientConfig.save(saveData, function() { done(); /*do not pas err arg */ });
         });
 
@@ -192,7 +196,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
     $scope.relayTurnOff = function(relay) {
         relay.off = !relay.off;
         if (relay.off) relay.manualOn = false;
-    }
+    };
 
     $scope.relayManualOn = function(relay) {
         relay.manualOn= !relay.manualOn;
@@ -207,7 +211,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
         } else {
             if (rt.manualOn) rt.manualOn.active = false;
         }
-    }
+    };
 
     SensorStatus.get(function(data) {
         triggerCount = data.triggers; //keep variable on contoller to use in getUnusedId!
@@ -215,8 +219,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
             triggerCount = Math.min(triggerCount, settings.triggerLimit);
         }
 
-        $scope.loadingStep = 0
+        $scope.loadingStep = 0;
         $scope.stepCount = triggerCount + 1;
+
+        var usedTriggers = null;
 
         function step() {
             $scope.loadingStep += 1;
@@ -238,7 +244,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
 
         var cfg = ClientConfig.get(function(data) {
             (data.triggers || []).forEach(function(trigger) {
-                var u = processTrigger(trigger)
+                var u = processTrigger(trigger);
                 if (u) {
                     u.active = !!trigger.active;
                     delete u.trigger;
@@ -258,17 +264,21 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
                     }
                 });
             });
+            if (settings.fastTriggerLoad) {
+                usedTriggers = data.usedTriggers;
+            }
+            if (!usedTriggers) {
+                usedTriggers = [];
+                for (var i = 0; i < triggerCount; i++) usedTriggers.push(i);
+            }
         });
 
         cfg.$promise.finally(function() {
             step();
-            Triggers.loadAll(triggerCount,
-                function(trigger) {
+            Triggers.loadAll(usedTriggers, function(trigger) {
                     step();
                     var u = processTrigger(trigger);
-                    if (u) {
-                        u.active = true;
-                    }
+                    if (u) u.active = true;
                 }, function() {
                     $scope.loadingPercent = 100;
                     $scope.relays.forEach(function(r) {
@@ -284,7 +294,5 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Triggers',
                 }
             );
         });
-
-
     });
 }]);

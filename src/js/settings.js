@@ -7,7 +7,12 @@ window.settings = {
     /*limit number of used triggers on client side
       null = no limit (all firmaware triggers are used, usually 32)
     */
-    triggerLimit: 10,
+    triggerLimit: null,
+
+    /* load only triggers marked as non-empty on previous save
+       if true triggers saved outside app will not be recognized and can be accidentally rewritten
+    */
+    fastTriggerLoad: true,
 
     outputs: [
         'Timer 1',

@@ -163,8 +163,8 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             });
         });
 
-        var sh = lastRequest = SensorHistory[resourceMethod](queryArgs);
-        sh.$promise.then(null, null, function(sensor) {
+        lastRequest = SensorHistory[resourceMethod](queryArgs);
+        lastRequest.$promise.then(null, null, function(sensor) {
             var data = sh[sensor],
                 chart = null,
                 chartSeries = null;
@@ -179,7 +179,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
                     }
                 }
             }
-            if (chartSeries == null) {
+            if (chartSeries === null) {
                 console.warn('No series for ' + sensor);
             } else {
                 if (data) {
@@ -255,7 +255,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
 
     function changeZoom(zoom) {
         updateChart(zoom, $scope.dt);
-    };
+    }
 
     function shiftByUnit(dt, zoom, offset) {
         var d = moment(dt);
@@ -266,7 +266,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
     function shiftDateUnit(offset) {
         var d;
         if ($scope.isCurrent) {
-            var d = moment($scope.dt);
+            d = moment($scope.dt);
             padDate(d);
         } else {
             d = shiftByUnit($scope.dt, $scope.zoom, offset);
@@ -275,11 +275,11 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             $scope.isCurrent = false;
             updateChart($scope.zoom, d);
         }
-    };
+    }
 
     function showRecent() {
         updateChart($scope.zoom, 'now');
-    };
+    }
 
     $scope.changeZoom = changeZoom;
     $scope.shiftDateUnit = shiftDateUnit;
