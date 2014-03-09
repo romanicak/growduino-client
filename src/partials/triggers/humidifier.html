@@ -1,10 +1,10 @@
 <fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.humidityLow.active">
     Turn on when  <b>Humidity</b> is bellow
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityLow.on" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        <input type="text" class="form-control" ng-model="relay.triggers.humidityLow.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
     </div> then keep it on till
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityLow.off" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        <input type="text" class="form-control" ng-model="relay.triggers.humidityLow.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
     </div>
     is reached.
 

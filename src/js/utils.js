@@ -38,11 +38,13 @@ utils.arrayPad = function(arr, size, value) {
 };
 
 utils.timeToMinutes = function(val) {
+    if ($.type(val) !== 'string') return null;
     var t = val.split(':');
     return parseInt(t[0], 10)*60+parseInt(t[1], 10);
 };
 
 utils.minutesToTime = function(val) {
+    if (!$.isNumeric(val)) return null;
     var h = parseInt(val / 60, 10), m = val % 60;
     //TODO padstr fn
     return (h < 10 ? '0': '') + h + ":" + (m < 10 ? '0' : '') + m;

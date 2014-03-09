@@ -127,47 +127,4 @@ app.factory('Relay', ['$resource', '$http', 'TZ_OFFSET', function($resource, $ht
     });
 }]);
 
-app.factory('Triggers', ['$http', function($http) {
-    return {
-        loadAll: function(triggerIndexes, triggerLoaded, success) {
-            if (triggerIndexes.length === 0) {
-                success();
-                return;
-            }
-            var q = async.queue(function(index, done) {
-                $http.get('/triggers/'+index+'.jso', {cache: false}).success(function(data) {
-                    console.log('trigger #'+index+' loaded', data);
-                    data.index = index;
-                    triggerLoaded(data);
-                }).finally(done);
-            }, 1);
-            q.drain = function() {
-                success();
-            };
-
-            triggerIndexes.forEach(function(index) {
-                q.push(index);
-            });
-        },
-        save: function(triggers, success)  {
-            if (!triggers.length) {
-                success();
-                return;
-            }
-            var q = async.queue(function(trigger, done) {
-                var index = trigger.index;
-                console.log('Trigger #'+index+' saved', trigger);
-                $http.post('/triggers/'+index+'.jso', trigger).finally(done);
-            }, 1);
-            q.drain = function() {
-                success();
-            };
-            triggers.forEach(function(trigger) {
-                q.push(trigger);
-            });
-        }
-    };
-}]);
-
-
 })();

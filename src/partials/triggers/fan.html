@@ -1,47 +1,47 @@
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.tempBelow.active">
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.temp1LowDisallow.active">
     Never turn on <b>fan</b> when temperature is below
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.tempBelow.temperature" ng-pattern="/^\d+(.\d)?$/"/> °C
+        <input type="text" class="form-control" ng-model="relay.triggers.temp1LowDisallow.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
     </div>
-    <a ng-click="toggleTrigger(relay.triggers.tempBelow)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.tempBelow.active, 'glyphicon-ok-circle': !relay.triggers.tempBelow.active}"></span>
+    <a ng-click="toggleTrigger(relay.triggers.temp1LowDisallow)">
+        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.temp1LowDisallow.active, 'glyphicon-ok-circle': !relay.triggers.temp1LowDisallow.active}"></span>
     </a>
 </fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.tempOver.active">
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.temp1High.active">
     Turn on when <b>Temperature</b> is over
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.tempOver.on" />&nbsp;°C
+        <input type="text" class="form-control" ng-model="relay.triggers.temp1High.on.val" />&nbsp;°C
     </div> then keep it on till
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.tempOver.off" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+        <input type="text" class="form-control" ng-model="relay.triggers.temp1High.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
     </div> is reached.
-    <a ng-click="toggleTrigger(relay.triggers.tempOver)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.tempOver.active, 'glyphicon-ok-circle': !relay.triggers.tempOver.active}"></span>
+    <a ng-click="toggleTrigger(relay.triggers.temp1High)">
+        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.temp1High.active, 'glyphicon-ok-circle': !relay.triggers.temp1High.active}"></span>
     </a>
 </fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.humidityOver.active">
+<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.humidityHigh.active">
     Turn on when  <b>Humidity</b> is over
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityOver.on" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        <input type="text" class="form-control" ng-model="relay.triggers.humidityHigh.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
     </div> then keep it on till
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityOver.off" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        <input type="text" class="form-control" ng-model="relay.triggers.humidityHigh.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
     </div>
     is reached.
 
-    <a ng-click="toggleTrigger(relay.triggers.humidityOver)">
-        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': relay.triggers.humidityOver.active, 'glyphicon-ok-circle': !relay.triggers.humidityOver.active}"></span>
+    <a ng-click="toggleTrigger(relay.triggers.humidityHigh)">
+        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': relay.triggers.humidityHigh.active, 'glyphicon-ok-circle': !relay.triggers.humidityHigh.active}"></span>
     </a>
 </fieldset>
 
 <fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.inactiveFor.active">
     Enable <b>fan</b> every
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.after" ng-pattern="/^\d+$/"/> minutes
+        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.on.val" ng-pattern="/^\d+$/"/> minutes
     </div>
     of inactivity for
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.duration" ng-pattern="/^\d+$/"/> minutes.
+        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.off.val" ng-pattern="/^\d+$/"/> minutes.
     </div>
 
     <a ng-click="toggleTrigger(relay.triggers.inactiveFor)">
