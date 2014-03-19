@@ -44,7 +44,9 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             pointInterval: 1000 * 60, //1 min
             pickerMaxView: 1,
             pickerFormat: 'd. MM yyyy hh:ii',
-            momentFormat: 'D. MMMM YYYY HH:mm',
+            momentFormat: function(m) {
+                return m.format('D. MMMM YYYY HH:mm') + ' - ' + moment(m).add('h', 1).format('HH:mm');
+            },
             momentUnit: 'hour',
             urlFormat: 'YYYY-MM-DDTHH:mm',
 
@@ -296,7 +298,8 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
     $scope.$watch(function() {
         return $scope.zoom + '-' + $scope.dt.unix();
     }, function() {
-        $scope.formattedDate = $scope.dt.format(zoomTypes[$scope.zoom].momentFormat);
+        var fmt = zoomTypes[$scope.zoom].momentFormat;
+        $scope.formattedDate = $.isFunction(fmt) ? fmt($scope.dt) : $scope.dt.format(fmt);
         $scope.forwardAllowed = !$scope.isCurrent && shiftByUnit($scope.dt, $scope.zoom, 1).unix() <= moment().unix();
 
         //debug
