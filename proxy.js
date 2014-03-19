@@ -10,8 +10,12 @@ var request = require('request');
 var TARGET = '78.108.106.180';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
-var staticServer = new nodeStatic.Server('./src');
 
+var express = require('express');
+var app = express();
+
+
+/* special method needs because of strange arguino connection closing */
 function proxyPost(req, res) {
     bodyParser(req, res, function() {
         request({
@@ -30,28 +34,18 @@ function proxyPost(req, res) {
     });
 }
 
-var server = require('http').createServer(function(req, res) {
-    //console.log(req.url);
-    if (req.method == 'OPTIONS') {
-        res.statisCode = 200;
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.end();
-        return;
-    }
-
-    if (req.url.match(/^\/(sensors|triggers|DATA|config.jso|client.jso)/)) {
-        if (req.method == 'POST') {
-            proxyPost(req, res);
-        } else {
-            proxy.proxyRequest(req, res);
-        }
-
-    } else {
-        req.addListener('end', function () {
-            staticServer.serve(req, res);
-        }).resume();
-    }
+app.get(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) {
+    proxy.proxyRequest(req, res);
+});
+app.post(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) {
+    proxyPost(req, res);
 });
 
-console.log("listening on port 8000");
-server.listen(8000);
+app.use('/lib', express.static(__dirname + '/bower_components'));
+app.use(express.static(__dirname + '/src'));
+
+app.listen(8000, function () {
+    console.log("listening on port 8000");
+});
+
+
