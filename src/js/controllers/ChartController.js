@@ -146,8 +146,8 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         }
     }
 
-    function padDate(d) {
-        d.startOf(zoomTypes[$scope.zoom].momentUnit);
+    function padDate(d, zoom) {
+        d.startOf(zoomTypes[zoom].momentUnit);
     }
 
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
@@ -203,7 +203,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             if (zoom === 'H')  dt.subtract('hour', 1).startOf('minute');
         }
 
-        if (!isNow || zoom !== 'H') padDate(dt);
+        if (!isNow || zoom !== 'H') padDate(dt, zoom);
         $scope.dt = dt;
         $scope.zoom = zoom;
 
@@ -269,7 +269,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         var d;
         if ($scope.isCurrent) {
             d = moment($scope.dt);
-            padDate(d);
+            padDate(d, $scope.zoom);
         } else {
             d = shiftByUnit($scope.dt, $scope.zoom, offset);
         }

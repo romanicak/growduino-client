@@ -250,7 +250,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             return u;
         }
 
-        var cfg = ClientConfig.get(function(data) {
+        function parseConfig(data) {
             (data.triggers || []).forEach(function(trigger) {
                 var u = processTrigger(trigger);
                 if (u) {
@@ -279,9 +279,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
                 usedTriggers = [];
                 for (var i = 0; i < triggerCount; i++) usedTriggers.push(i);
             }
-        });
+        }
 
+        var cfg = ClientConfig.get();
         cfg.$promise.finally(function() {
+            parseConfig(cfg || {});
             step();
             Trigger.loadMany(usedTriggers, function(raw) {
                     step();
