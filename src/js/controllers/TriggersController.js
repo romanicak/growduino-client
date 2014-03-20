@@ -1,3 +1,5 @@
+define(['app'], function(app) {
+
 /* from firmaware conf:
 sensors are (indexed from zero):
 humidity
@@ -306,3 +308,5 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
         });
     });
 }]);
+
+});

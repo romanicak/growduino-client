@@ -1,3 +1,5 @@
+define(['app'], function(app) {
+
 app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_OFFSET', function($scope, $location, SensorHistory, TZ_OFFSET) {
     var charts = [];
     var chartDefs = [
@@ -306,3 +308,5 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         //$scope.formattedDate += ' ' + $scope.dt.unix() + ' / ' + $scope.dt.format();
     });
 }]);
+
+});

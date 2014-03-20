@@ -1,4 +1,7 @@
-(function() {
+define([
+    'angular', 'bootstrap', 'highcharts', 'moment',
+    'bootstrap_datetimepicker', 'bootstrap_datetimepicker_cs', 'async', 'utils', 'settings'
+], function() {
 
 $.ajaxSetup({
     contentType: 'application/json'
@@ -49,4 +52,6 @@ app.config(['$routeProvider', function($routeProvider) {
         });
 }]);
 
-})();
+return app;
+
+});

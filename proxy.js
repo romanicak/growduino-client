@@ -41,7 +41,7 @@ app.post(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) 
     proxyPost(req, res);
 });
 
-app.use('/lib', express.static(__dirname + '/bower_components'));
+app.use('/bower', express.static(__dirname + '/bower_components'));
 app.use(express.static(__dirname + '/src'));
 
 app.listen(8000, function () {

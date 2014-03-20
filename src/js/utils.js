@@ -1,4 +1,4 @@
-(function() {
+define([], function() {
 
 //TODO angular module
 
@@ -166,4 +166,4 @@ utils.deepCompare = function() {
   return true;
 };
 
-})();
+});

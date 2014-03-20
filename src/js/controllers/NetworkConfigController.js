@@ -1,3 +1,5 @@
+define(['app'], function(app) {
+
 app.controller('NetworkConfigController', ['$scope', 'NetworkConfig', function($scope, NetworkConfig) {
     $scope.loading = true;
     var config = $scope.config = NetworkConfig.get(function() {
@@ -5,3 +7,5 @@ app.controller('NetworkConfigController', ['$scope', 'NetworkConfig', function($
         $scope.loading = false;
     });
 }]);
+
+});

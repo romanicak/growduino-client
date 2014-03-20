@@ -1,4 +1,4 @@
-(function() {
+define(['app'], function(app) {
 
 app.factory('Trigger', ['$http', 'SENSORS', 'OUTPUTS', function($http, SENSORS, OUTPUTS) {
 
@@ -200,4 +200,4 @@ app.factory('Trigger', ['$http', 'SENSORS', 'OUTPUTS', function($http, SENSORS, 
     return Trigger;
 }]);
 
-})();
+});

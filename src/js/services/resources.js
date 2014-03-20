@@ -1,4 +1,4 @@
-(function() {
+define(['app'], function(app) {
 
 app.factory('SensorStatus', ['$resource', function($resource) {
     return $resource('/sensors/status.jso');
@@ -127,4 +127,4 @@ app.factory('Relay', ['$resource', '$http', 'TZ_OFFSET', function($resource, $ht
     });
 }]);
 
-})();
+});

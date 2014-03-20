@@ -1,4 +1,4 @@
-(function() {
+define([], function() {
 
 window.settings = {
     /* TODO read from /sensors/status.jso: timeZoneffset = -tz * 60 */
@@ -33,4 +33,4 @@ window.settings = {
     ]
 };
 
-})();
+});

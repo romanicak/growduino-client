@@ -1,3 +1,5 @@
+define(['app'], function(app) {
+
 app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope, OUTPUTS, Relay) {
 
     $scope.loaded = false;
@@ -40,3 +42,5 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
         $scope.loaded = true;
     });
 }]);
+
+});
