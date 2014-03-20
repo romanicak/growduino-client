@@ -57,6 +57,7 @@
                 'angular': ['jquery'],
                 'angular_resource': ['angular'],
                 'angular_route': ['angular'],
+                'highcharts': ['jquery'],
                 'bootstrap': ['jquery'],
                 'bootstrap_datetimepicker': ['bootstrap'],
                 'bootstrap_datetimepicker_cs': ['bootstrap_datetimepicker']
@@ -73,7 +74,9 @@
             "controllers/TriggersController",
             "directives/bsHasError",
         ], function() {
-            angular.bootstrap(document, ['growduino']);
+            $(function() {
+                angular.bootstrap(document, ['growduino']);
+            });
         });
     </script>
 </head>

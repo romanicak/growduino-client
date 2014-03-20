@@ -1,5 +1,5 @@
 define([
-    'angular', 'bootstrap', 'highcharts', 'moment',
+    'angular', 'angular_resource', 'angular_route', 'bootstrap', 'highcharts', 'moment',
     'bootstrap_datetimepicker', 'bootstrap_datetimepicker_cs', 'async', 'utils', 'settings'
 ], function() {
 
