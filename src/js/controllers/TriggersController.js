@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['app', 'async'], function(app, async) {
 
 /* from firmaware conf:
 sensors are (indexed from zero):

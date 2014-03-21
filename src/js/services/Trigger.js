@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['app', 'async'], function(app, async) {
 
 app.factory('Trigger', ['$http', 'SENSORS', 'OUTPUTS', function($http, SENSORS, OUTPUTS) {
 

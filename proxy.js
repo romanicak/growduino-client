@@ -1,6 +1,5 @@
 var http = require('http'),
-    httpProxy = require('http-proxy'),
-    nodeStatic = require('node-static');
+    httpProxy = require('http-proxy');
 
 var connect = require('connect');
 var bodyParser = connect.bodyParser();

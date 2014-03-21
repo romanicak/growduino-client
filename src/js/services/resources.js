@@ -1,4 +1,4 @@
-define(['app'], function(app) {
+define(['app', 'async'], function(app, async) {
 
 app.factory('SensorStatus', ['$resource', function($resource) {
     return $resource('/sensors/status.jso');
