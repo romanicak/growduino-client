@@ -18,8 +18,8 @@
     "http": "0.0.0",
     "http-proxy": "~1.0",
     "connect": "~2.14",
-    "request": "~2.33"
+    "request": "~2.33",
+    "grunt-contrib-requirejs": "~0.4.3"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

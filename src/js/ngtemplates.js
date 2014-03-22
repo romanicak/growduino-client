@@ -1,0 +1,1 @@
+//dummy file. module used in minified app
