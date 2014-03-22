@@ -39,12 +39,12 @@ grunt.initConfig({
             dest: 'dist',
             expand: true
         },
-        libs: {
-            cwd: 'src',
-            src: ['libs/**/*.js'],
-            dest: 'dist',
-            expand: true
-        },
+        // libs: {
+        //     cwd: 'src',
+        //     src: ['libs/**/*.js'],
+        //     dest: 'dist',
+        //     expand: true
+        // },
         index: {
             cwd: 'src',
             src: ['index.html'],
@@ -54,6 +54,24 @@ grunt.initConfig({
         settings: {
             src: ['src/js/settings.js'],
             dest: 'dist/js/settings.js'
+        },
+        bower: {
+            files: [
+                {dest: 'bower83/require.js', src: 'bower_components/requirejs/require.js'},
+                {dest: 'bower83/jquery.js', src: 'bower_components/jquery/dist/jquery.min.js'},
+                {dest: 'bower83/angular.js', src: 'bower_components/angular/angular.min.js'},
+                {dest: 'bower83/ngres.js', src: 'bower_components/angular-resource/angular-resource.min.js'},
+                {dest: 'bower83/ngroute.js', src: 'bower_components/angular-route/angular-route.min.js'},
+                {dest: 'bower83/bs.js', src: 'bower_components/bootstrap/dist/js/bootstrap.min.js'},
+                {dest: 'bower83/hicharts.js', src: 'bower_components/highcharts.com/js/highcharts.src.js'},
+                {dest: 'bower83/moment.js', src: 'bower_components/moment/min/moment.min.js'},
+            ]
+        },
+        bowerdist: {
+            cwd: 'bower83/',
+            src: ['*.js'],
+            dest: 'dist/bower/',
+            expand: true
         }
     },
     concat: {
@@ -127,13 +145,12 @@ grunt.initConfig({
                 bootstrap: "empty:",
                 highcharts: "empty:",
                 moment: "empty:",
-                bootstrap_datetimepicker: "empty:",
-                bootstrap_datetimepicker_cs: "empty:",
-                async: "empty:",
-                ngtemplates: "empty:"
-                // bootstrap_datetimepicker: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker',
-                // bootstrap_datetimepicker_cs: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs',
-                // async: __dirname+'/src/libs/async'
+                // bootstrap_datetimepicker: "empty:",
+                // bootstrap_datetimepicker_cs: "empty:",
+                // async: "empty:",
+                bootstrap_datetimepicker: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker',
+                bootstrap_datetimepicker_cs: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs',
+                async: __dirname+'/src/libs/async'
             }
         }
       }
@@ -165,7 +182,9 @@ grunt.loadNpmTasks('grunt-targethtml');
 grunt.registerTask('default', ['watch']);
 grunt.registerTask('distUsemin', ['watch']);
 grunt.registerTask('dist', [
-    'clean:dist', 'copy', 'useminPrepare', 'ngtemplates', 'concat:generated', 'cssmin', /*'uglify', */'usemin', 'requirejs',
+    'clean:dist',
+    'copy:images', 'copy:index', 'copy:settings', 'copy:bower', 'copy:bowerdist',
+    'useminPrepare', 'ngtemplates', 'concat:generated', 'cssmin', /*'uglify', */'usemin', 'requirejs',
     'concat:templates',
     /*'targethtml:dist',*/ 'htmlmin:index', 'clean:tmp'
 ]);

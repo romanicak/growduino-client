@@ -40,9 +40,10 @@ app.post(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) 
     proxyPost(req, res);
 });
 
-app.use('/bower', express.static(__dirname + '/bower_components'));
+app.use('/bower', express.static(__dirname + '/bower83'));
 app.use(express.static(__dirname + '/src'));
 //app.use(express.static(__dirname + '/dist'));
+
 
 app.listen(8000, function () {
     console.log("listening on port 8000");

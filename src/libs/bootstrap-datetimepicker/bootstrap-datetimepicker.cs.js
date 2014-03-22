@@ -1,3 +1,5 @@
+define(['bootstrap_datetimepicker'], function() {
+
 /**
  * Czech translation for bootstrap-datetimepicker
  * Matěj Koubík <matej@koubik.name>
@@ -15,3 +17,5 @@
 		meridiem: []
 	};
 }(jQuery));
+
+});

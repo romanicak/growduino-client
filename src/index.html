@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="css/base.css">
     <!-- endbuild -->
 
-    <script src="/bower/requirejs/require.js"></script>
+    <script src="/bower/require.js"></script>
     <script>
         require.config({
             //urlArgs: "ts="+new Date().getTime(), // disable caching - remove in production
@@ -21,31 +21,31 @@
             paths: {
                 jquery: [
                     "//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min",
-                    "/bower/jquery/dist/jquery.min"
+                    "/bower/jquery"
                 ],
                 angular: [
                     "//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min",
-                    "/bower/angular/angular.min"
+                    "/bower/angular"
                 ],
                 angular_resource: [
                     "//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-resource.min",
-                    "/bower/angular-resource/angular-resource.min"
+                    "/bower/ngres"
                 ],
                 angular_route: [
                     "//ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular-route.min",
-                    "/bower/angular-route/angular-route.min"
+                    "/bower/ngroute"
                 ],
                 bootstrap: [
                     "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min",
-                    "/bower/bootstrap/dist/js/bootstrap.min"
+                    "/bower/bs"
                 ],
                 highcharts: [
                     "//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.9/highcharts",
-                    "/bower/highcharts.com/js/highcharts.src"
+                    "/bower/hicharts"
                 ],
                 moment: [
                     "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min",
-                    "/bower/moment/min/moment.min"
+                    "/bower/moment"
                 ],
                 bootstrap_datetimepicker: '/libs/bootstrap-datetimepicker/bootstrap-datetimepicker',
                 bootstrap_datetimepicker_cs: '/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs',
@@ -56,9 +56,7 @@
                 'angular_resource': ['angular'],
                 'angular_route': ['angular'],
                 'highcharts': ['jquery'],
-                'bootstrap': ['jquery'],
-                'bootstrap_datetimepicker': ['bootstrap'],
-                'bootstrap_datetimepicker_cs': ['bootstrap_datetimepicker']
+                'bootstrap': ['jquery']
             }
         });
         require(['growduino']);
