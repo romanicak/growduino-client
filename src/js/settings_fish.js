@@ -18,30 +18,33 @@ window.settings = {
     fastTriggerLoad: true,
 
     outputs: [
-        'Timer 1',
-        'Timer 2',
-        'Pump',
+        'Light',
         'Fan',
-        'Humidifier',
-        'Heating'
+        'Water level',
     ],
+
+    //0 : Light - cas + Light1 <
+    //1: Fan - Temp1, Humidity1
+    //2: Water level - dopousteni vody - Usnd > dokud < 0
 
     sensors: [
         'Humidity',
-        'Temp1',
-        'Light',
-        'Usnd',
-        'Temp2',
-        'Temp3'
+        'Temp1',   //air
+        'Temp2', //water
+        'Light1', //out
+        'Light2', //indoor
+        'Usnd'
     ],
+
+    //cs pryc
 
     //axis conf is Highcharts configuration
     charts: [
         {
             series: [
-                {name: 'Temperature', resource: 'Temp1', yAxis: 0},
+                {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
+                {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
                 {name: 'Humidity', resource: 'Humidity', yAxis: 1},
-                {name: 'Lighting', resource: 'Light', yAxis: 1},
             ],
             yAxis: [
                 { title: { text: '°C' }, minRange: 5},
@@ -50,11 +53,11 @@ window.settings = {
         },
         {
             series: [
-                {name: 'Temperature 2', resource: 'Temp2', yAxis: 0},
-                {name: 'Temperature 3', resource: 'Temp3', yAxis: 0},
+                {name: 'Lighting Outdoor', resource: 'Light1', yAxis: 0},
+                {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0},
             ],
             yAxis: [
-                { title: { text: '°C' }, minRange: 5}
+                { title: { text: '%' }, minRange: 5}
             ]
         },
         {

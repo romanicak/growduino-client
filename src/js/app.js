@@ -1,6 +1,7 @@
 define([
     'angular', 'angular_resource', 'angular_route', 'bootstrap', 'highcharts', 'moment',
-    'bootstrap_datetimepicker', 'bootstrap_datetimepicker_cs', 'async', 'utils', 'settings'
+    'bootstrap_datetimepicker',
+    'async', 'utils', 'settings'
 ], function() {
 
 $.ajaxSetup({
@@ -8,11 +9,11 @@ $.ajaxSetup({
 });
 
 Highcharts.setOptions({
-    lang: {
+    /*lang: {
         months: $.fn.datetimepicker.dates.cs.months,
         shortMonths: $.fn.datetimepicker.dates.cs.monthsShort,
         weekdays: $.fn.datetimepicker.dates.cs.days
-    },
+    },*/
     global: {
         timezoneOffset: settings.tzOffset
     }
