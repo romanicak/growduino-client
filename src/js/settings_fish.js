@@ -2,7 +2,7 @@ define([], function() {
 
 window.settings = {
 
-    title: 'Growduino',
+    title: 'Fish & Tomatoes',
 
     /* TODO read from /sensors/status.jso: timeZoneffset = -tz * 60 */
     tzOffset: -60,

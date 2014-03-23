@@ -72,6 +72,11 @@ grunt.initConfig({
             src: ['*.js'],
             dest: 'dist/bower/',
             expand: true
+        },
+        distfish: {
+            files: [
+                {src: 'src/js/settings_fish.js', dest: 'dist/js/settings.js'}
+            ]
         }
     },
     concat: {
@@ -180,7 +185,7 @@ grunt.loadNpmTasks('grunt-contrib-requirejs');
 grunt.loadNpmTasks('grunt-targethtml');
 
 grunt.registerTask('default', ['watch']);
-grunt.registerTask('distUsemin', ['watch']);
+//grunt.registerTask('distUsemin', ['watch']);
 grunt.registerTask('dist', [
     'clean:dist',
     'copy:images', 'copy:index', 'copy:settings', 'copy:bower', 'copy:bowerdist',
@@ -188,5 +193,6 @@ grunt.registerTask('dist', [
     'concat:templates',
     /*'targethtml:dist',*/ 'htmlmin:index', 'clean:tmp'
 ]);
+grunt.registerTask('distfish', ['dist', 'copy:distfish']);
 
 };
