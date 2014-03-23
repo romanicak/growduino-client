@@ -10,6 +10,8 @@ define([
     "directives/bsHasError",
     "ngtemplates"
 ], function() {
+    document.title = settings.title;
+
     $(function() {
         $.each(document.styleSheets, function(i,sheet){
             if (sheet.href && sheet.href.indexOf('bootstrap.min.css') !== -1) {
@@ -19,6 +21,8 @@ define([
                 }
             }
         });
+        $('#app-loading').remove();
+        $('.container').show();
         angular.bootstrap(document, ['growduino']);
     });
 });

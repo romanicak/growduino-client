@@ -1,6 +1,9 @@
 define([], function() {
 
 window.settings = {
+
+    title: 'Growduino',
+
     /* TODO read from /sensors/status.jso: timeZoneffset = -tz * 60 */
     tzOffset: -60,
 
@@ -30,6 +33,38 @@ window.settings = {
         'Usnd',
         'Temp2',
         'Temp3'
+    ],
+
+    //axis conf is Highcharts configuration
+    charts: [
+        {
+            series: [
+                {name: 'Temperature', resource: 'Temp1', yAxis: 0},
+                {name: 'Humidity', resource: 'Humidity', yAxis: 1},
+                {name: 'Lighting', resource: 'Light', yAxis: 1},
+            ],
+            yAxis: [
+                { title: { text: '°C' }, minRange: 5},
+                { title: { text: '%' }, min: 0, minRange: 5},
+            ]
+        },
+        {
+            series: [
+                {name: 'Ultrasound', resource: 'Usnd', yAxis: 0}
+            ],
+            yAxis: [
+                { title: { text: 'usnd' }, min: 0, minRange: 5},
+            ]
+        },
+        {
+            series: [
+                {name: 'Temperature 2', resource: 'Temp2', yAxis: 0},
+                {name: 'Temperature 3', resource: 'Temp3', yAxis: 0},
+            ],
+            yAxis: [
+                { title: { text: '°C' }, minRange: 5}
+            ]
+        }
     ]
 };
 

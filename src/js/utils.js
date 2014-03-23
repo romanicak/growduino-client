@@ -50,6 +50,12 @@ utils.minutesToTime = function(val) {
     return (h < 10 ? '0': '') + h + ":" + (m < 10 ? '0' : '') + m;
 };
 
+utils.generateId = function() {
+    var randLetter = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+    var uniqid = randLetter + Date.now();
+    return 'id_'+uniqid;
+};
+
 //http://stackoverflow.com/questions/1068834/object-comparison-in-javascript
 utils.deepCompare = function() {
   var leftChain, rightChain;

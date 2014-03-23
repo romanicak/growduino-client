@@ -2,41 +2,7 @@ define(['app'], function(app) {
 
 app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_OFFSET', function($scope, $location, SensorHistory, TZ_OFFSET) {
     var charts = [];
-    var chartDefs = [
-        {
-            element: 'chart-huteli',
-            series: [
-                {name: 'Temperature', resource: 'Temp1', yAxis: 0},
-                {name: 'Humidity', resource: 'Humidity', yAxis: 1},
-                {name: 'Lighting', resource: 'Light', yAxis: 1},
-            ],
-            yAxis: [
-                { title: { text: '°C' }, minRange: 5},
-                { title: { text: '%' }, min: 0, minRange: 5},
-                //{ title: { text: '% (Humidity)' }},
-                //{ title: { text: '% (Lighting)' }}
-            ]
-        },
-        {
-            element: 'chart-usnd',
-            series: [
-                {name: 'Ultrasound', resource: 'Usnd', yAxis: 0}
-            ],
-            yAxis: [
-                { title: { text: 'usnd' }, min: 0, minRange: 5},
-            ]
-        },
-        {
-            element: 'chart-temp23',
-            series: [
-                {name: 'Temperature 2', resource: 'Temp2', yAxis: 0},
-                {name: 'Temperature 3', resource: 'Temp3', yAxis: 0},
-            ],
-            yAxis: [
-                { title: { text: '°C' }, minRange: 5}
-            ]
-        }
-    ];
+    var chartDefs = settings.charts;
 
     var zoomTypes = {
         'H': {
@@ -83,9 +49,11 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
         var colorIndex = 0, colors = Highcharts.getOptions().colors;
 
         chartDefs.forEach(function(chartDef, i) {
+            var divId = utils.generateId();
+            $('<div class="chart"></div>').attr('id', divId).appendTo('#charts');
             charts[i] = new Highcharts.Chart({
                 chart: {
-                    renderTo: chartDef.element,
+                    renderTo: divId,
                     type: 'spline',
                     zoomType: 'x'
                 },
