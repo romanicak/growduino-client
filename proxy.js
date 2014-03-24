@@ -41,6 +41,10 @@ app.post(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) 
 });
 
 app.use('/bower', express.static(__dirname + '/bower83'));
+app.get('/js/settings.js', function(req, res) {
+    res.sendfile('./src/js/settings_fish.js');
+});
+
 app.use(express.static(__dirname + '/src'));
 //app.use(express.static(__dirname + '/dist'));
 

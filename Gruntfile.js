@@ -90,8 +90,8 @@ grunt.initConfig({
                     }
                 },
             },
-            src: ['.tmp/templates.js', '.tmp/growduino.js'],
-            dest: 'dist/js/growduino.js'
+            src: ['.tmp/templates.js', '.tmp/init.js'],
+            dest: 'dist/js/init.js'
         }
     },
     htmlmin: {
@@ -140,8 +140,8 @@ grunt.initConfig({
         options: {
             baseUrl: "src/js",
             //mainConfigFile: "src/js/requirejs.cfg.js",
-            name: "growduino", // assumes a production build using almond
-            out: ".tmp/growduino.js",
+            name: "init", // assumes a production build using almond
+            out: ".tmp/init.js",
             paths: {
                 jquery: "empty:",
                 angular: "empty:",

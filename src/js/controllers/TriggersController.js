@@ -243,10 +243,15 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             u = Trigger.unpack(raw);
             if (u) {
                 var relay = $scope.relays[u.output];
-                if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
-                    relay.intervals.push(u);
+                if (relay) {
+                    if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
+                        relay.intervals.push(u);
+                    } else {
+                        relay.triggers[u.triggerClass] = u;
+                    }
                 } else {
-                    relay.triggers[u.triggerClass] = u;
+                    console.warn('Loaded trigger for undefined output '+ u.output);
+                    return null;
                 }
             }
             return u;

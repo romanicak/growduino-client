@@ -27,9 +27,9 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
                 prev = arrayFromMask(d.history[i+1].state),
                 relays = [];
 
-            for (var j = 0; j < OUTPUTS.length; j++) {
+            for (var j = 0; j < curr.length; j++) {
                 if (curr[j] !== prev[j]) {
-                    relays.push({ name: OUTPUTS[j], on: curr[j]});
+                    relays.push({ name: OUTPUTS[j] || (''+j), on: curr[j]});
                 }
             }
 
