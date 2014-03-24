@@ -21,9 +21,9 @@ window.settings = {
         {name: 'Timer 1'},
         {name: 'Timer 2'},
         {name: 'Pump'},
-        {name: 'Fan'},
-        {name: 'Humidifier'},
-        {name: 'Heating'}
+        {name: 'Fan', partial: 'fan.html'},
+        {name: 'Humidifier', partial: 'humidifier.html'},
+        {name: 'Heating', partial: 'heating.html'}
     ],
 
     sensors: [

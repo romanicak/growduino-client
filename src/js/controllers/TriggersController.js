@@ -40,6 +40,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
 
         $scope.relays.push({
             name: output.name,
+            partial: output.partial,
             index: i,
             intervals: [],
             triggers: triggers

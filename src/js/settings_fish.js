@@ -19,8 +19,8 @@ window.settings = {
 
     outputs: [
         {name: 'Light'},
-        {name: 'Fan'},
-        {name: 'Water level'}
+        {name: 'Fan', partial: 'fan.html'},
+        {name: 'Water level', partial: 'water.html'}
     ],
 
     //0 : Light - cas + Light1 <
