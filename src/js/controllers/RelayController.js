@@ -14,9 +14,9 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
     $scope.relays = [];
     Relay.get(function(d) {
         var states = arrayFromMask(d.currentState);
-        OUTPUTS.forEach(function(name, i) {
+        OUTPUTS.forEach(function(output, i) {
             $scope.relays.push({
-                name: name,
+                name: output.name,
                 state: states.length > i ? states[i] : false
             });
         });
@@ -29,7 +29,8 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
 
             for (var j = 0; j < curr.length; j++) {
                 if (curr[j] !== prev[j]) {
-                    relays.push({ name: OUTPUTS[j] || (''+j), on: curr[j]});
+                    var name = OUTPUTS[j] ? OUTPUTS[j].name : ''+j;
+                    relays.push({ name: name, on: curr[j]});
                 }
             }
 

@@ -18,12 +18,12 @@ window.settings = {
     fastTriggerLoad: true,
 
     outputs: [
-        'Timer 1',
-        'Timer 2',
-        'Pump',
-        'Fan',
-        'Humidifier',
-        'Heating'
+        {name: 'Timer 1'},
+        {name: 'Timer 2'},
+        {name: 'Pump'},
+        {name: 'Fan'},
+        {name: 'Humidifier'},
+        {name: 'Heating'}
     ],
 
     sensors: [

@@ -1,6 +1,6 @@
 define(['app', 'async'], function(app, async) {
 
-app.factory('Trigger', ['$http', 'SENSORS', 'OUTPUTS', function($http, SENSORS, OUTPUTS) {
+app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
 
     var patterns = [
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],

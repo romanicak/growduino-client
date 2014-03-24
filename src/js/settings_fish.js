@@ -18,9 +18,9 @@ window.settings = {
     fastTriggerLoad: true,
 
     outputs: [
-        'Light',
-        'Fan',
-        'Water level',
+        {name: 'Light'},
+        {name: 'Fan'},
+        {name: 'Water level'}
     ],
 
     //0 : Light - cas + Light1 <

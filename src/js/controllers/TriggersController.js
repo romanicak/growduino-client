@@ -39,7 +39,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
         (triggerClasses[output] || []).forEach(createEmpty);
 
         $scope.relays.push({
-            name: output,
+            name: output.name,
             index: i,
             intervals: [],
             triggers: triggers
