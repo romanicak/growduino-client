@@ -28,12 +28,12 @@ window.settings = {
     //2: Water level - dopousteni vody - Usnd > dokud < 0
 
     sensors: [
-        'Humidity',
-        'Temp1',   //air
-        'Temp2', //water
-        'Light1', //out
-        'Light2', //indoor
-        'Usnd'
+        {resource: 'Humidity', divisor: 10},
+        {resource: 'Temp1', divisor: 10}, //air
+        {resource: 'Temp2', divisor: 10}, //water
+        {resource: 'Light1', divisor: '%'}, //out
+        {resource: 'Light2', divisor: '%'}, //indoor
+        {resource: 'Usnd', divisor: 1}
     ],
 
     //cs pryc

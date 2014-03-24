@@ -10,19 +10,6 @@ utils.fixNull = function(values) {
     });
 };
 
-utils.mapDecimalValues = function(values) {
-    return values.map(function(val) {
-        if (val === null) return null;
-        return val / 10.0;
-    });
-};
-
-utils.mapPercentValues = function(values) {
-    return values.map(function(val) {
-        if (val === null) return null;
-        return Math.round(val / 1.024) / 10.0;
-    });
-};
 
 utils.daysInMonth = function daysInMonth(month, year) {
     return new Date(year, month+1, 0).getDate();

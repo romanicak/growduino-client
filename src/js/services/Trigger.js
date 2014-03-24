@@ -21,7 +21,7 @@ app.factory('Trigger', ['$http', 'SENSORS', 'OUTPUTS', function($http, SENSORS, 
                 };
             }
             for (var j = 0; j < SENSORS.length; j++) {
-                if ((SENSORS[j] + patterns[i][0]).toLowerCase() === lowered) {
+                if ((SENSORS[j].resource + patterns[i][0]).toLowerCase() === lowered) {
                     return {
                         pattern: patterns[i][1],
                         sensor: j
@@ -121,7 +121,7 @@ app.factory('Trigger', ['$http', 'SENSORS', 'OUTPUTS', function($http, SENSORS, 
     Trigger.prototype.getName = function() {
         for (var i = 0; i < patterns.length; i++) {
             if (this.match(patterns[i][1])) {
-                var name = (this.sensor !== null ? SENSORS[this.sensor] : '') + patterns[i][0];
+                var name = (this.sensor !== null ? SENSORS[this.sensor].resource : '') + patterns[i][0];
                 return name[0].toLowerCase() + name.substring(1);
             }
         }

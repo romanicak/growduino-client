@@ -1,6 +1,7 @@
 define([
     "app",
     "services/resources",
+    "services/divisors",
     "services/Trigger",
     "controllers/NavigationController",
     "controllers/ChartController",

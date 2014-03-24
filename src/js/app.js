@@ -24,14 +24,6 @@ var app = window.app = angular.module('growduino', ['ngResource', 'ngRoute']);
 app.constant('TZ_OFFSET', settings.tzOffset);
 app.constant('OUTPUTS', settings.outputs);
 app.constant('SENSORS', settings.sensors);
-app.constant('SENSOR_META', {
-    'Humidity':  { mapFn: utils.mapDecimalValues },
-    'Temp1': { mapFn: utils.mapDecimalValues },
-    'Temp2': { mapFn: utils.mapDecimalValues },
-    'Temp3': { mapFn: utils.mapDecimalValues },
-    'Light': { mapFn: utils.mapPercentValues },
-    'Usnd':  { mapFn: null }
-});
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider.

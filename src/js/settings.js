@@ -27,12 +27,12 @@ window.settings = {
     ],
 
     sensors: [
-        'Humidity',
-        'Temp1',
-        'Light',
-        'Usnd',
-        'Temp2',
-        'Temp3'
+        {resource: 'Humidity', divisor: 10},
+        {resource: 'Temp1', divisor: 10},
+        {resource: 'Light', divisor: '%'},
+        {resource: 'Usnd', divisor: 1},
+        {resource: 'Temp2', divisor: 10},
+        {resource: 'Temp3', divisor: 10}
     ],
 
     //axis conf is Highcharts configuration
