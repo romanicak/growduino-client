@@ -150,12 +150,14 @@ grunt.initConfig({
                 bootstrap: "empty:",
                 highcharts: "empty:",
                 moment: "empty:",
+                settings: "empty:",
                 // bootstrap_datetimepicker: "empty:",
                 // bootstrap_datetimepicker_cs: "empty:",
                 // async: "empty:",
                 bootstrap_datetimepicker: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker',
                 bootstrap_datetimepicker_cs: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs',
-                async: __dirname+'/src/libs/async'
+                async: __dirname+'/src/libs/async',
+
             }
         }
       }
