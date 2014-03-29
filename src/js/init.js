@@ -8,6 +8,7 @@ define([
     "controllers/NetworkConfigController",
     "controllers/RelayController",
     "controllers/TriggersController",
+    "controllers/AlertsController",
     "directives/bsHasError",
     "ngtemplates"
 ], function() {

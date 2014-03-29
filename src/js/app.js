@@ -36,6 +36,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'partials/triggers.html',
             controller: 'TriggersController'
         }).
+        when('/alerts', {
+            templateUrl: 'partials/alerts.html',
+            controller: 'AlertsController'
+        }).
         when('/network', {
             templateUrl: 'partials/network.html',
             controller: 'NetworkConfigController'

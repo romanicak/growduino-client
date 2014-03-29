@@ -18,9 +18,9 @@ window.settings = {
     fastTriggerLoad: true,
 
     outputs: [
-        {name: 'Light'},
-        {name: 'Fan', partial: 'fan.html'},
-        {name: 'Water level', partial: 'water.html'}
+        {name: 'Light', partial: 'fish/light.html'},
+        {name: 'Valve', partial: 'fish/valve.html'},
+        {name: 'Fan', partial: 'fish/fan.html'}
     ],
 
     //0 : Light - cas + Light1 <
@@ -44,7 +44,7 @@ window.settings = {
             series: [
                 {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
                 {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
-                {name: 'Humidity', resource: 'Humidity', yAxis: 1},
+                {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1},
             ],
             yAxis: [
                 { title: { text: '°C' }, minRange: 5},
@@ -62,7 +62,7 @@ window.settings = {
         },
         {
             series: [
-                {name: 'Ultrasound', resource: 'Usnd', yAxis: 0}
+                {name: 'Water Level', resource: 'Usnd', yAxis: 0}
             ],
             yAxis: [
                 { title: { text: 'cm' }, min: 0, minRange: 5},

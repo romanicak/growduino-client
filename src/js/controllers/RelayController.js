@@ -21,7 +21,8 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
             });
         });
 
-        $scope.history = [];
+        var days = [];
+
         for (var i = 0; i < d.history.length-1; i++) {
             var curr = arrayFromMask(d.history[i].state),
                 prev = arrayFromMask(d.history[i+1].state),
@@ -34,12 +35,26 @@ app.controller('RelayController', ['$scope', 'OUTPUTS', 'Relay', function($scope
                 }
             }
 
-            $scope.history.push({
-                when: d.history[i].when,
+            var when = d.history[i].when,
+                whenDay = moment(when).startOf('day'),
+                lastDay = days[days.length-1];
+
+            var item = {
+                when: when,
                 relays: relays
-            });
+            };
+
+            if (lastDay && lastDay.when.isSame(whenDay)) {
+                lastDay.items.push(item);
+            } else {
+                days.push({
+                    when: whenDay,
+                    items: [item]
+                });
+            }
         }
 
+        $scope.history = days;
         $scope.loaded = true;
     });
 }]);

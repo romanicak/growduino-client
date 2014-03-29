@@ -33,11 +33,10 @@ function proxyPost(req, res) {
     });
 }
 
-app.get(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) {
+app.get(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso)/, function(req, res) {
     proxy.proxyRequest(req, res);
-    //res.send('{}');
 });
-app.post(/^\/(sensors|triggers|DATA|config.jso|client.jso)/, function(req, res) {
+app.post(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso)/, function(req, res) {
     proxyPost(req, res);
 });
 

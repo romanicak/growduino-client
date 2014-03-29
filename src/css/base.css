@@ -33,6 +33,14 @@ a[ng-click] {
     padding: 0;
 }
 
+.relay-history-day {
+    margin-bottom: 10px;
+}
+
+.relay-history-day ul {
+    margin-top: 4px;
+}
+
 .loading {
     background: url('../images/loading.gif') center center no-repeat;
 }

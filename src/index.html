@@ -16,7 +16,6 @@
     <script src="/bower/require.js"></script>
     <script>
         require.config({
-            //urlArgs: "ts="+new Date().getTime(), // disable caching - remove in production
             baseUrl: '/js',
             paths: {
                 jquery: [
@@ -71,6 +70,7 @@
                 <ul class="nav nav-pills nav-stacked" ng-controller="NavigationController">
                     <li ng-class="{ active: isActive('/')}"><a href="#">Sensors</a></li>
                     <li ng-class="{ active: isActive('/triggers')}"><a href="#/triggers">Outputs</a></li>
+                    <li ng-class="{ active: isActive('/alerts')}"><a href="#/alerts">Alerts</a></li>
                     <li ng-class="{ active: isActive('/network')}"><a href="#/network">Network</a></li>
                 </ul>
 
@@ -82,10 +82,14 @@
                     <div class="relay-history" ng-show="loaded">
                         <h5>Relay state history</h5>
                         <ul>
-                            <li ng-repeat="item in history">{{ item.when.format('HH:mm') }}
-                                <span ng-repeat="relay in item.relays">
-                                    <span ng-class="{label: true, 'label-default': !relay.on, 'label-success': relay.on }">{{ relay.name }}</span>
-                                </span>
+                            <li class="relay-history-day" ng-repeat="day in history">{{ day.when.format('Do MMMM') }}
+                                <ul>
+                                    <li ng-repeat="item in day.items">{{ item.when.format('HH:mm') }}
+                                        <span ng-repeat="relay in item.relays">
+                                            <span ng-class="{label: true, 'label-default': !relay.on, 'label-success': relay.on }">{{ relay.name }}</span>
+                                        </span>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </div>
