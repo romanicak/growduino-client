@@ -1,26 +1,28 @@
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.usndHigh.active">
-    Open when sensor distance from <b>Water level </b><br> is more than
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.usndHigh.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;cm
-    </div> then keep it open till
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.usndHigh.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;cm
-    </div>
-    is reached.
+<div ng-controller="TriggerController" ng-init="init(relay, 'usndHigh')">
+    <fieldset class="form-group sentinel-line"  ng-disabled="!t.active">
+        Open when sensor distance from <b>Water level </b><br> is more than
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;cm
+        </div> then keep it open till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;cm
+        </div>
+        is reached.
 
-    <a ng-click="toggleTrigger(relay.triggers.usndHigh)">
-        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': relay.triggers.humidityHigh.active, 'glyphicon-ok-circle': !relay.triggers.usndHigh.active}"></span>
-    </a>
-</fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.temp2High.active">
-    Turn on when <b>Water Temperature</b> is over
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.temp2High.on.val" />&nbsp;°C
-    </div> then keep it on till
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.temp2High.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-    </div> is reached.
-    <a ng-click="toggleTrigger(relay.triggers.temp2High)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.temp2High.active, 'glyphicon-ok-circle': !relay.triggers.temp2High.active}"></span>
-    </a>
-</fieldset>
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp2High')">
+    <fieldset class="form-group sentinel-line" ng-init="t = relay.getTrigger('temp2High')" ng-disabled="!t.active">
+        Turn on when <b>Water Temperature</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+        </div> is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>

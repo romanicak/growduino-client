@@ -1,13 +1,14 @@
 define(['app', 'async'], function(app, async) {
 
-/* from firmaware conf:
-sensors are (indexed from zero):
-humidity
-temperature
-light
-ultrasound
-Dallas one wire devices
-*/
+app.controller('TriggerController', ['$scope', function($scope) {
+    $scope.init = function(relay, name) {
+        $scope.t = relay.getTrigger(name);
+    };
+
+    $scope.toggle = function() {
+        $scope.t.active = !$scope.t.active;
+    };
+}]);
 
 app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 'SensorStatus', 'ClientConfig', 'OUTPUTS',
     function($scope, $http, $timeout, Trigger, SensorStatus, ClientConfig, OUTPUTS) {
@@ -20,31 +21,25 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
 
     $scope.relays = [];
 
-    var triggerClasses = {
-        'Fan': ['temp1LowDisallow', 'temp1High', 'humidityHigh', 'inactiveFor'],
-        'Humidifier':  ['humidityLow'],
-        'Heating': ['temp1Low']
-    };
-
     OUTPUTS.forEach(function(output, i) {
-        var triggers = {};
-
-        function createEmpty(key) {
-            var t = Trigger.create(key);
-            t.active = false;
-            t.output = i;
-            triggers[key] = t;
-        }
-
-        (triggerClasses[output] || []).forEach(createEmpty);
-
-        $scope.relays.push({
+        var relay = {
             name: output.name,
             partial: output.partial,
             index: i,
             intervals: [],
-            triggers: triggers
-        });
+            triggers: {},
+
+            getTrigger: function(name) {
+                if (this.triggers[name]) return this.triggers[name];
+
+                var t = Trigger.create(name);
+                t.active = false;
+                t.output = i;
+                this.triggers[name] = t;
+                return t;
+            }
+        };
+        $scope.relays.push(relay);
     });
 
     function createDisabledTrigger(index) {
@@ -143,10 +138,6 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             manualOnRelays: manualOnRelays
         };
     }
-
-    $scope.toggleTrigger = function(trigger) {
-        trigger.active = !trigger.active;
-    };
 
     $scope.saveTriggers = function() {
         if ($scope.saving) return;

@@ -1,14 +1,14 @@
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.humidityLow.active">
-    Turn on when  <b>Humidity</b> is below
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityLow.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-    </div> then keep it on till
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityLow.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-    </div>
-    is reached.
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityLow')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Turn on when  <b>Humidity</b> is below
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
+        is reached.
 
-    <a ng-click="toggleTrigger(relay.triggers.humidityLow)">
-        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': relay.triggers.humidityLow.active, 'glyphicon-ok-circle': !relay.triggers.humidityLow.active}"></span>
-    </a>
-</fieldset>
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>

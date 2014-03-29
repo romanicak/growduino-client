@@ -4,6 +4,7 @@ app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
 
     var patterns = [
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],
+        ['HighDisallow', { off: {important: true, op: '>', val: '*'}}],
         ['InactiveFor', { since: null, on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
         ['High', { since: null, on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['Low', { since: null, on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],

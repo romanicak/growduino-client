@@ -1,20 +1,22 @@
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.light1Low.active">
-    <!--Turn on when time is from xx:xx to xx.xx and LightOutdoor amount is below xx. -->
-    Turn on when <b>Outdoor light</b> is below
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.light1Low.on.val" />&nbsp;%
-    </div>
-    <a ng-click="toggleTrigger(relay.triggers.light1Low)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.light1Low.active, 'glyphicon-ok-circle': !relay.triggers.light1Low.active}"></span>
-    </a>
-</fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.temp1HighDisallow.active">
-    Never turn on when <b>Air temperature</b> is over
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.temp1HighDisallow.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
-    </div>
-    <a ng-click="toggleTrigger(relay.triggers.temp1HighDisallow)">
-        <span class="glyphicon"
-        ng-class="{'glyphicon-ban-circle': relay.triggers.temp1HighDisallow.active, 'glyphicon-ok-circle': !relay.triggers.temp1HighDisallow.active}"></span>
-    </a>
-</fieldset>
+<div ng-controller="TriggerController" ng-init="init(relay, 'light1Low')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        <!--Turn on when time is from xx:xx to xx.xx and LightOutdoor amount is below xx. -->
+        Turn on when <b>Outdoor light</b> is below
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;%
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighDisallow')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Never turn on when <b>Air temperature</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>

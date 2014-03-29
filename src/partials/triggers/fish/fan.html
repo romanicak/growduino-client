@@ -1,52 +1,54 @@
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.temp1LowDisallow.active">
-    Never turn on when <b>Air Temperature</b> is below
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.temp1LowDisallow.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
-    </div>
-    <a ng-click="toggleTrigger(relay.triggers.temp1LowDisallow)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.temp1LowDisallow.active, 'glyphicon-ok-circle': !relay.triggers.temp1LowDisallow.active}"></span>
-    </a>
-</fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.temp1High.active">
-    Turn on when <b>Air Temperature</b> is over
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.temp1High.on.val" />&nbsp;°C
-    </div> then keep it on till
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.temp1High.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-    </div> is reached.
-    <a ng-click="toggleTrigger(relay.triggers.temp1High)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.temp1High.active, 'glyphicon-ok-circle': !relay.triggers.temp1High.active}"></span>
-    </a>
-</fieldset>
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.humidityHigh.active">
-    Turn on when  <b>Relative Humidity</b> is over
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityHigh.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-    </div> then keep it on till
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.humidityHigh.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-    </div>
-    is reached.
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1LowDisallow')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Never turn on when <b>Air Temperature</b> is below
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+        </div>
 
-    <a ng-click="toggleTrigger(relay.triggers.humidityHigh)">
-        <span class="glyphicon", ng-class="{'glyphicon-ban-circle': relay.triggers.humidityHigh.active, 'glyphicon-ok-circle': !relay.triggers.humidityHigh.active}"></span>
-    </a>
-</fieldset>
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
 
-<fieldset class="form-group sentinel-line" ng-disabled="!relay.triggers.inactiveFor.active">
-    Enable every
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.on.val" ng-pattern="/^\d+$/"/> minutes
-    </div>
-    of inactivity for
-    <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.triggers.inactiveFor.off.val" ng-pattern="/^\d+$/"/> minutes.
-    </div>
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1High')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Turn on when <b>Air Temperature</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+        </div> is reached.
 
-    <a ng-click="toggleTrigger(relay.triggers.inactiveFor)">
-        <span class="glyphicon" ng-class="{'glyphicon-ban-circle': relay.triggers.inactiveFor.active, 'glyphicon-ok-circle': !relay.triggers.inactiveFor.active}"></span>
-    </a>
-</fieldset>
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
 
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHigh')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Turn on when  <b>Relative Humidity</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
+        is reached.
 
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveFor')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Enable every
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+        </div>
+        of inactivity for
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
