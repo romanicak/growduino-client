@@ -1,0 +1,8 @@
+<div ng-show="loading">
+    <i class="progress-title">{{loadingMessage}} <span ng-show="stepCount">{{loadingStep}}/{{stepCount}}</span></i>
+    <div class="progress progress-striped" x>
+      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{loadingStep}}" aria-valuemin="0" aria-valuemax="{{stepCount}}"
+        style="width: {{loadingPercent}}%;">
+      </div>
+    </div>
+</div>

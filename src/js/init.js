@@ -3,6 +3,7 @@ define([
     "services/resources",
     "services/divisors",
     "services/Trigger",
+    "services/Alert",
     "controllers/NavigationController",
     "controllers/ChartController",
     "controllers/NetworkConfigController",

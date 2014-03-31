@@ -1,0 +1,39 @@
+<div ng-include="'partials/loadingProgress.html'"></div>
+
+<form novalidate class="form-inline triggers-form" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveAlerts()">
+
+    <div>
+        <fieldset class="form-group alert" ng-disabled="true">
+            When <b>Air Temperature</b> is over
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+            </div>
+            send notification to
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="alert.target"/>
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="row">
+        <fieldset class="form-group alert" ng-disabled="true">
+            When <b>Water Temperature</b> is over
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+            </div>
+            send notification to
+            <div class="form-group" bs-has-error>
+                <input type="text" class="form-control" ng-model="alert.target">
+            </div>
+        </fieldset>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-offset-3 col-sm-9 form-group">
+            <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
+            <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
+            <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
+        </div>
+    </div>
+
+</form>

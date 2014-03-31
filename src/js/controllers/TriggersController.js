@@ -15,6 +15,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
 
     var triggerCount = null;
 
+    $scope.loadingMessage = 'Loading triggers';
     $scope.loading = true;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0;

@@ -1,11 +1,4 @@
-<div ng-show="loading">
-    <i class="progress-title">Loading triggers <span ng-show="stepCount">{{loadingStep}}/{{stepCount}}</span></i>
-    <div class="progress progress-striped" x>
-      <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{loadingStep}}" aria-valuemin="0" aria-valuemax="{{stepCount}}"
-        style="width: {{loadingPercent}}%;">
-      </div>
-    </div>
-</div>
+<div ng-include="'partials/loadingProgress.html'"></div>
 
 <form novalidate class="form-inline triggers-form" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveTriggers()">
 
@@ -58,3 +51,5 @@
         <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
     </div>
 </div>
+
+</form>
