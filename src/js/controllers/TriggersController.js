@@ -239,7 +239,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
                     if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
                         relay.intervals.push(u);
                     } else {
-                        relay.triggers[u.triggerClass] = u;
+                        var exists = relay.triggers[u.triggerClass];
+                        if (exists) {
+                            exists.update(u); //updated needed because TriggerController already refs existing record in it's scope
+                            u = exists;
+                        } else {
+                            relay.triggers[u.triggerClass] = u;
+                        }
                     }
                 } else {
                     console.warn('Loaded trigger for undefined output '+ u.output);

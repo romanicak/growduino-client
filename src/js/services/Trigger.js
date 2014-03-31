@@ -7,6 +7,7 @@ app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
         ['HighDisallow', { off: {important: true, op: '>', val: '*'}}],
         ['InactiveFor', { since: null, on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
         ['High', { since: null, on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
+        ['LowNoStopTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '<', val: Number.NEGATIVE_INFINITY}}],
         ['Low', { since: null, on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
         ['ManualOn', { since: '00:00', until: '24:00', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}],
         ['Timer', { since: '**:**', until: '**:**', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}]
@@ -127,6 +128,13 @@ app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
             }
         }
         return null;
+    };
+
+    Trigger.prototype.update = function(t) {
+        var keys = Object.keys(t);
+        for (var i = 0; i < keys.length; i++) {
+            this[keys[i]] = t[keys[i]];
+        }
     };
 
     $.extend(Trigger, {
