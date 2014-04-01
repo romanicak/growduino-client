@@ -63,14 +63,21 @@ grunt.initConfig({
                 {dest: 'bower83/ngres.js', src: 'bower_components/angular-resource/angular-resource.min.js'},
                 {dest: 'bower83/ngroute.js', src: 'bower_components/angular-route/angular-route.min.js'},
                 {dest: 'bower83/bs.js', src: 'bower_components/bootstrap/dist/js/bootstrap.min.js'},
+                {dest: 'bower83/bs.css', src: 'bower_components/bootstrap/dist/css/bootstrap.min.css'},
                 {dest: 'bower83/hicharts.js', src: 'bower_components/highcharts.com/js/highcharts.src.js'},
                 {dest: 'bower83/moment.js', src: 'bower_components/moment/min/moment.min.js'},
             ]
         },
         bowerdist: {
             cwd: 'bower83/',
-            src: ['*.js'],
+            src: ['*.js', '*.css'],
             dest: 'dist/bower/',
+            expand: true
+        },
+        fontsdist: {
+            cwd: 'bower_components/bootstrap/fonts',
+            src: ['*'],
+            dest: 'dist/fonts/',
             expand: true
         },
         distfish: {
@@ -190,7 +197,7 @@ grunt.registerTask('default', ['watch']);
 //grunt.registerTask('distUsemin', ['watch']);
 grunt.registerTask('dist', [
     'clean:dist',
-    'copy:images', 'copy:index', 'copy:settings', 'copy:bower', 'copy:bowerdist',
+    'copy:images', 'copy:index', 'copy:settings', 'copy:bower', 'copy:bowerdist', 'copy:fontsdist',
     'useminPrepare', 'ngtemplates', 'concat:generated', 'cssmin', /*'uglify', */'usemin', 'requirejs',
     'concat:templates',
     /*'targethtml:dist',*/ 'htmlmin:index', 'clean:tmp'
