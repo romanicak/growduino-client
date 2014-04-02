@@ -41,10 +41,6 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
         $scope.relays.push(relay);
     });
 
-    function createDisabledTrigger(index) {
-        return {t_since:-1, t_until:-1, on_value: "<-256", off_value:">-512", sensor:-1, output:-1, index: index};
-    }
-
     function serializeTriggers() {
         var modified = [], deleted = [], created = [], unmodified = [], inactive = [];
 
@@ -92,6 +88,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
                 if (containsIndex(unmodified, i)) continue;
                 return i;
             }
+            //TODO
+            alert('Too many triggers!');
         }
 
         $scope.relays.forEach(function(r) {
@@ -112,7 +110,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
         var usedIds = modified.concat(unmodified).map(function(t) { return t.index; });
 
         while (deleted.length) {
-            modified.push(createDisabledTrigger(deleted.pop().index));
+            modified.push(Trigger.createDisabled(deleted.pop().index));
         }
 
         return {
@@ -274,8 +272,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             usedTriggers = data.usedTriggers;
         }
         if (!usedTriggers) {
-            usedTriggers = [];
-            for (var i = 0; i < triggerCount; i++) usedTriggers.push(i);
+            usedTriggers = utils.seq(triggerCount);
         }
     }
 

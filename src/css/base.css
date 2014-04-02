@@ -80,6 +80,10 @@ a[ng-click] {
     width: 70px;
 }
 
+.triggers-form .form-control.alert-target {
+    width: 150px;
+}
+
 .triggers-form .timer-line, .triggers-form .sentinel-line {
     display: block;
     margin-bottom: 4px;

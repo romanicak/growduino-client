@@ -18,6 +18,9 @@ window.settings = {
     */
     fastTriggerLoad: true,
 
+    /* number of triggers reserved for alerts */
+    alertLimit: 0,
+
     outputs: [
         {name: 'Timer 1'},
         {name: 'Timer 2'},

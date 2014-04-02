@@ -137,13 +137,17 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
         }
     };
 
-    var triggerCount = settings.triggerCount;
+    var triggerCount = settings.triggerCount - settings.alertLimit;
     if (settings.triggerLimit) {
         triggerCount = Math.min(triggerCount, settings.triggerLimit);
     }
 
     $.extend(Trigger, {
         LENGTH: triggerCount,
+
+        createDisabled: function(index) {
+            return {t_since:-1, t_until:-1, on_value: "<-256", off_value:">-512", sensor:-1, output:-1, index: index};
+        },
 
         loadMany: function(triggerIndexes, triggerLoaded, success) {
             if (triggerIndexes.length === 0) {

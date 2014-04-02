@@ -2,30 +2,38 @@
 
 <form novalidate class="form-inline triggers-form" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveAlerts()">
 
-    <div>
-        <fieldset class="form-group alert" ng-disabled="true">
-            When <b>Air Temperature</b> is over
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
-            </div>
-            send notification to
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="alert.target"/>
-            </div>
-        </fieldset>
+    <div ng-controller="AlertController" ng-init="init('temp1High')">
+        <div class="row">
+            <fieldset class="form-group alert" ng-disabled="!alert.active">
+                When <b>Air Temperature</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target"/>
+                </div>
+
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
     </div>
 
-    <div class="row">
-        <fieldset class="form-group alert" ng-disabled="true">
-            When <b>Water Temperature</b> is over
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
-            </div>
-            send notification to
-            <div class="form-group" bs-has-error>
-                <input type="text" class="form-control" ng-model="alert.target">
-            </div>
-        </fieldset>
+    <div ng-controller="AlertController" ng-init="init('temp2High')">
+        <div class="row">
+            <fieldset class="form-group alert" ng-disabled="!alert.active">
+                When <b>Water Temperature</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
     </div>
 
     <div class="row">

@@ -15,6 +15,9 @@ window.settings = {
     */
     fastTriggerLoad: true,
 
+    /* number of triggers reserved for alerts */
+    alertLimit: 3,
+
     outputs: [
         {name: 'Light', partial: 'fish/light.html'},
         {name: 'Valve', partial: 'fish/valve.html'},
