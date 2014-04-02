@@ -1,6 +1,6 @@
 define(['app', 'async'], function(app, async) {
 
-app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
+app.factory('Trigger', ['$http', 'settings', function($http, settings) {
 
     var patterns = [
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],
@@ -22,8 +22,8 @@ app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
                     sensor: null
                 };
             }
-            for (var j = 0; j < SENSORS.length; j++) {
-                if ((SENSORS[j].resource + patterns[i][0]).toLowerCase() === lowered) {
+            for (var j = 0; j < settings.sensors.length; j++) {
+                if ((settings.sensors[j].resource + patterns[i][0]).toLowerCase() === lowered) {
                     return {
                         pattern: patterns[i][1],
                         sensor: j
@@ -123,7 +123,7 @@ app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
     Trigger.prototype.getName = function() {
         for (var i = 0; i < patterns.length; i++) {
             if (this.match(patterns[i][1])) {
-                var name = (this.sensor !== null ? SENSORS[this.sensor].resource : '') + patterns[i][0];
+                var name = (this.sensor !== null ? settings.sensors[this.sensor].resource : '') + patterns[i][0];
                 return name[0].toLowerCase() + name.substring(1);
             }
         }
@@ -137,7 +137,14 @@ app.factory('Trigger', ['$http', 'SENSORS', function($http, SENSORS) {
         }
     };
 
+    var triggerCount = settings.triggerCount;
+    if (settings.triggerLimit) {
+        triggerCount = Math.min(triggerCount, settings.triggerLimit);
+    }
+
     $.extend(Trigger, {
+        LENGTH: triggerCount,
+
         loadMany: function(triggerIndexes, triggerLoaded, success) {
             if (triggerIndexes.length === 0) {
                 success();

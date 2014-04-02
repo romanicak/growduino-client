@@ -10,10 +10,8 @@ app.controller('TriggerController', ['$scope', function($scope) {
     };
 }]);
 
-app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 'SensorStatus', 'ClientConfig', 'OUTPUTS',
-    function($scope, $http, $timeout, Trigger, SensorStatus, ClientConfig, OUTPUTS) {
-
-    var triggerCount = null;
+app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 'ClientConfig', 'settings',
+    function($scope, $http, $timeout, Trigger, ClientConfig, settings) {
 
     $scope.loadingMessage = 'Loading triggers';
     $scope.loading = true;
@@ -22,7 +20,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
 
     $scope.relays = [];
 
-    OUTPUTS.forEach(function(output, i) {
+    settings.outputs.forEach(function(output, i) {
         var relay = {
             name: output.name,
             partial: output.partial,
@@ -89,7 +87,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
         }
 
         function getUnusedId() {
-            for (var i = 0; i < triggerCount; i++) {
+            for (var i = 0; i < Trigger.LENGTH; i++) {
                 if (containsIndex(modified, i)) continue;
                 if (containsIndex(unmodified, i)) continue;
                 return i;
@@ -216,101 +214,95 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
         }
     };
 
-    SensorStatus.get(function(data) {
-        triggerCount = data.triggers; //keep variable on contoller to use in getUnusedId!
-        if (settings.triggerLimit) {
-            triggerCount = Math.min(triggerCount, settings.triggerLimit);
-        }
+    $scope.loadingStep = 0;
+    $scope.stepCount = Trigger.LENGTH + 1;
 
-        $scope.loadingStep = 0;
-        $scope.stepCount = triggerCount + 1;
+    var usedTriggers = null;
 
-        var usedTriggers = null;
+    function step() {
+        $scope.loadingStep += 1;
+        $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+    }
 
-        function step() {
-            $scope.loadingStep += 1;
-            $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
-        }
-
-        function processTrigger(raw) {
-            u = Trigger.unpack(raw);
-            if (u) {
-                var relay = $scope.relays[u.output];
-                if (relay) {
-                    if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
-                        relay.intervals.push(u);
-                    } else {
-                        var exists = relay.triggers[u.triggerClass];
-                        if (exists) {
-                            exists.update(u); //updated needed because TriggerController already refs existing record in it's scope
-                            u = exists;
-                        } else {
-                            relay.triggers[u.triggerClass] = u;
-                        }
-                    }
+    function processTrigger(raw) {
+        u = Trigger.unpack(raw);
+        if (u) {
+            var relay = $scope.relays[u.output];
+            if (relay) {
+                if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
+                    relay.intervals.push(u);
                 } else {
-                    console.warn('Loaded trigger for undefined output '+ u.output);
-                    return null;
-                }
-            }
-            return u;
-        }
-
-        function parseConfig(data) {
-            (data.triggers || []).forEach(function(trigger) {
-                var u = processTrigger(trigger);
-                if (u) {
-                    u.active = !!trigger.active;
-                    delete u.origin;
-                }
-            });
-            (data.disabledRelays || []).forEach(function(relayName)  {
-                $scope.relays.forEach(function(r) {
-                    if (r.name === relayName) {
-                        r.off = true;
+                    var exists = relay.triggers[u.triggerClass];
+                    if (exists) {
+                        exists.update(u); //updated needed because TriggerController already refs existing record in it's scope
+                        u = exists;
+                    } else {
+                        relay.triggers[u.triggerClass] = u;
                     }
-                });
-            });
-            (data.manualOnRelays || []).forEach(function(relayName)  {
-                $scope.relays.forEach(function(r) {
-                    if (r.name === relayName) {
-                        r.manualOn = true;
-                    }
-                });
-            });
-            if (settings.fastTriggerLoad) {
-                usedTriggers = data.usedTriggers;
-            }
-            if (!usedTriggers) {
-                usedTriggers = [];
-                for (var i = 0; i < triggerCount; i++) usedTriggers.push(i);
+                }
+            } else {
+                console.warn('Loaded trigger for undefined output '+ u.output);
+                return null;
             }
         }
+        return u;
+    }
 
-        var cfg = ClientConfig.get();
-        cfg.$promise.finally(function() {
-            parseConfig(cfg || {});
-            step();
-            Trigger.loadMany(usedTriggers, function(raw) {
-                    step();
-                    var u = processTrigger(raw);
-                    if (u) u.active = true;
-                }, function() {
-                    $scope.loadingPercent = 100;
-                    $scope.relays.forEach(function(r) {
-                        r.intervals.sort(function(a, b) {
-                            if (a.since != b.since) {
-                                return utils.timeToMinutes(a.since) - utils.timeToMinutes(b.since);
-                            } else {
-                                return utils.timeToMinutes(a.until) - utils.timeToMinutes(b.until);
-                            }
-                        });
-                    });
-                    $scope.loading = false;
-                }
-            );
+    function parseConfig(data) {
+        (data.triggers || []).forEach(function(trigger) {
+            var u = processTrigger(trigger);
+            if (u) {
+                u.active = !!trigger.active;
+                delete u.origin;
+            }
         });
+        (data.disabledRelays || []).forEach(function(relayName)  {
+            $scope.relays.forEach(function(r) {
+                if (r.name === relayName) {
+                    r.off = true;
+                }
+            });
+        });
+        (data.manualOnRelays || []).forEach(function(relayName)  {
+            $scope.relays.forEach(function(r) {
+                if (r.name === relayName) {
+                    r.manualOn = true;
+                }
+            });
+        });
+        if (settings.fastTriggerLoad) {
+            usedTriggers = data.usedTriggers;
+        }
+        if (!usedTriggers) {
+            usedTriggers = [];
+            for (var i = 0; i < triggerCount; i++) usedTriggers.push(i);
+        }
+    }
+
+    var cfg = ClientConfig.get();
+    cfg.$promise.finally(function() {
+        parseConfig(cfg || {});
+        step();
+        Trigger.loadMany(usedTriggers, function(raw) {
+                step();
+                var u = processTrigger(raw);
+                if (u) u.active = true;
+            }, function() {
+                $scope.loadingPercent = 100;
+                $scope.relays.forEach(function(r) {
+                    r.intervals.sort(function(a, b) {
+                        if (a.since != b.since) {
+                            return utils.timeToMinutes(a.since) - utils.timeToMinutes(b.since);
+                        } else {
+                            return utils.timeToMinutes(a.until) - utils.timeToMinutes(b.until);
+                        }
+                    });
+                });
+                $scope.loading = false;
+            }
+        );
     });
+
 }]);
 
 });

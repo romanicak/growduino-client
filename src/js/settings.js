@@ -1,11 +1,12 @@
 define([], function() {
 
+/* some keys are loaded from sensor status
+    tzOffset
+    triggerCount
+*/
 window.settings = {
 
     title: 'Growduino',
-
-    /* TODO read from /sensors/status.jso: timeZoneffset = -tz * 60 */
-    tzOffset: -60,
 
     /*limit number of used triggers on client side
       null = no limit (all firmaware triggers are used, usually 32)

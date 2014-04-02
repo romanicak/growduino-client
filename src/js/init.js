@@ -19,8 +19,29 @@ define([
         if ($('#bootstrap-css-check').css('display') !== 'none') {
             $('<link rel="stylesheet" href="/bower/bs.css">').appendTo('head');
         }
-        $('#app-loading').remove();
-        $('.container').show();
-        angular.bootstrap(document, ['growduino']);
+        $('#app-loading').text('Loading backend status…');
+        $.get('/sensors/status.jso', function(status) {
+
+            $.extend(window.settings, {
+                tzOffset: -status.tz * 60,
+                triggerCount: status.triggers
+            });
+
+            Highcharts.setOptions({
+                /*lang: {
+                    months: $.fn.datetimepicker.dates.cs.months,
+                    shortMonths: $.fn.datetimepicker.dates.cs.monthsShort,
+                    weekdays: $.fn.datetimepicker.dates.cs.days
+                },*/
+                global: {
+                    timezoneOffset: settings.tzOffset
+                }
+            });
+
+            $('#app-loading').remove();
+            $('.container').show();
+            angular.bootstrap(document, ['growduino']);
+        });
+
     });
 });

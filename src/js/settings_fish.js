@@ -4,8 +4,6 @@ window.settings = {
 
     title: 'Fish & Tomatoes',
 
-    /* TODO read from /sensors/status.jso: timeZoneffset = -tz * 60 */
-    tzOffset: -60,
 
     /*limit number of used triggers on client side
       null = no limit (all firmaware triggers are used, usually 32)
@@ -23,10 +21,6 @@ window.settings = {
         {name: 'Fan', partial: 'fish/fan.html'}
     ],
 
-    //0 : Light - cas + Light1 <
-    //1: Fan - Temp1, Humidity1
-    //2: Water level - dopousteni vody - Usnd > dokud < 0
-
     sensors: [
         {resource: 'Humidity', divisor: 10},
         {resource: 'Temp1', divisor: 10}, //air
@@ -35,8 +29,6 @@ window.settings = {
         {resource: 'Light2', divisor: '%'}, //indoor
         {resource: 'Usnd', divisor: 1}
     ],
-
-    //cs pryc
 
     //axis conf is Highcharts configuration
     charts: [

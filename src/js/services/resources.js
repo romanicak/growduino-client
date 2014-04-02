@@ -1,9 +1,5 @@
 define(['app', 'async'], function(app, async) {
 
-app.factory('SensorStatus', ['$resource', function($resource) {
-    return $resource('/sensors/status.jso');
-}]);
-
 app.factory('NetworkConfig', ['$resource', function($resource) {
     return $resource('/config.jso');
 }]);
@@ -53,10 +49,10 @@ app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, 
     };
 }]);
 
-app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'SENSORS', function($q, sensorResourceFactory, divisors, SENSORS) {
+app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settings', function($q, sensorResourceFactory, divisors, settings) {
     var sensorResources = [];
 
-    SENSORS.forEach(function(sensor) {
+    settings.sensors.forEach(function(sensor) {
         sensorResources.push({
             name: sensor.resource,
             resource: sensorResourceFactory(sensor.resource, divisors.get(sensor.divisor))
@@ -105,12 +101,12 @@ app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'SENSOR
     };
 }]);
 
-app.factory('Relay', ['$resource', '$http', 'TZ_OFFSET', function($resource, $http, TZ_OFFSET) {
+app.factory('Relay', ['$resource', '$http', 'settings', function($resource, $http, settings) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
         var history = [];
         for (var ts in data.state) {
             history.push({
-                when: moment.unix(ts).zone(TZ_OFFSET),
+                when: moment.unix(ts).zone(settings.tzOffset),
                 state: data.state[ts]
             });
         }

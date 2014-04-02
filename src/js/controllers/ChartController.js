@@ -1,6 +1,6 @@
 define(['app'], function(app) {
 
-app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_OFFSET', function($scope, $location, SensorHistory, TZ_OFFSET) {
+app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'settings', function($scope, $location, SensorHistory, settings) {
     var charts = [];
     var chartDefs = settings.charts;
 
@@ -168,7 +168,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             isNow = dt === 'now';
 
         if (isNow) {
-            dt = moment().zone(TZ_OFFSET);
+            dt = moment().zone(settings.tzOffset);
             $scope.isCurrent = true;
             if (zoom === 'H')  dt.subtract('hour', 1).startOf('minute');
         }
@@ -218,7 +218,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'TZ_O
             endDate: new Date()
         }).on('changeDate', function(ev){
             //datetime picker return date with selected units in UTC, convert it!
-            var d = moment(ev.date).zone(TZ_OFFSET).add('minutes', ev.date.getTimezoneOffset());
+            var d = moment(ev.date).zone(settings.tzOffset).add('minutes', ev.date.getTimezoneOffset());
             updateChart($scope.zoom, d);
             $('#picker-date').datetimepicker('hide');
         });
