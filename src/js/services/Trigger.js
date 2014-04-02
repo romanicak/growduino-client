@@ -162,7 +162,7 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
                 }).finally(done);
             }, 1);
             q.drain = function() {
-                success();
+                if ($.isFunction(success)) success();
             };
 
             triggerIndexes.forEach(function(index) {

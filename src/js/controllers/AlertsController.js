@@ -100,26 +100,50 @@ app.controller('AlertsController', ['$scope', '$timeout', 'Alert', 'Trigger', 'C
         });
     };
 
-    function step() {
-        $scope.loadingStep += 1;
-        $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+    function loadAlerts() {
+
+        function step() {
+            $scope.loadingStep += 1;
+            $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+        }
+
+        //var cfg = ClientConfig.get();
+        //cfg.$promise.finally(function() {
+        //     step();
+        //});
+
+        var loadTasks = [];
+
+        $scope.stepCount = settings.alertLimit * 2;
+        Alert.loadMany(utils.seq(settings.alertLimit), function(rawAlert) {
+            step(); //one step for alert
+            if (rawAlert.trigger === -1) {
+                step(); //second for trigger
+            } else {
+                loadTasks.push(function(done) {
+                    Trigger.loadMany([rawAlert.trigger], function(rawTrigger) {
+                        u = Trigger.unpack(rawTrigger);
+                        if (u) {
+                            //console.log(u.triggerClass);
+                            var alert = $scope.alerts[u.triggerClass];
+                            alert.target = rawAlert.target;
+                            alert.trigger = u;
+                            alert.active = true;
+                        }
+                        step();
+                        done();
+                    });
+                });
+            }
+        }, function() {
+            async.series(loadTasks, function() {
+                $scope.loadingPercent = 100;
+                $scope.loading = false;
+            });
+        });
     }
 
-    //var cfg = ClientConfig.get();
-
-    $scope.stepCount = settings.alertLimit;
-    // cfg.$promise.finally(function() {
-    //     step();
-        Alert.loadMany(utils.seq(settings.alertLimit), function(raw) {
-           step();
-
-        }, function() {
-            $scope.loadingPercent = 100;
-            $scope.loading = false;
-        });
-    //});
-
-
+    loadAlerts();
 }]);
 
 });

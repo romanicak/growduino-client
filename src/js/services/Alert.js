@@ -29,7 +29,7 @@ app.factory('Alert', ['$http', function($http) {
                 }).finally(done);
             }, 1);
             q.drain = function() {
-                success();
+                if ($.isFunction(success)) success();
             };
 
             alertIndexes.forEach(function(index) {

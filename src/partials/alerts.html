@@ -36,6 +36,25 @@
         </div>
     </div>
 
+
+
+    <div ng-controller="AlertController" ng-init="init('usndHigh')">
+        <div class="row">
+            <fieldset class="form-group alert" ng-disabled="!alert.active">
+                When sensor distance from <b>Water Level</b> is more than
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> cm
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-offset-3 col-sm-9 form-group">
             <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
