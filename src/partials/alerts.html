@@ -1,10 +1,10 @@
 <div ng-include="'partials/loadingProgress.html'"></div>
 
-<form novalidate class="form-inline triggers-form" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveAlerts()">
+<form novalidate class="form-inline triggers-form alerts" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveAlerts()">
 
     <div ng-controller="AlertController" ng-init="init('temp1High')">
         <div class="row">
-            <fieldset class="form-group alert" ng-disabled="!alert.active">
+            <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Air Temperature</b> is over
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
@@ -21,7 +21,7 @@
 
     <div ng-controller="AlertController" ng-init="init('temp2High')">
         <div class="row">
-            <fieldset class="form-group alert" ng-disabled="!alert.active">
+            <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Water Temperature</b> is over
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
@@ -40,7 +40,7 @@
 
     <div ng-controller="AlertController" ng-init="init('usndHigh')">
         <div class="row">
-            <fieldset class="form-group alert" ng-disabled="!alert.active">
+            <fieldset class="form-group" ng-disabled="!alert.active">
                 When sensor distance from <b>Water Level</b> is more than
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> cm

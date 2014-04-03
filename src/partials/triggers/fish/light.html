@@ -1,4 +1,4 @@
-<div ng-controller="TriggerController" ng-init="init(relay, 'light1LowNoStopTimer')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'light1LowTimer')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         <!--Turn on when time is from xx:xx to xx.xx and LightOutdoor amount is below xx. -->
         Turn on when time is from
@@ -8,11 +8,16 @@
         to
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-        </div>
-        and <b>Outdoor light</b> is below
+        </div>…<br>
+        …and <b>Outdoor light</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;%
+            <input type="text" class="form-control" ng-model="t.on.val" />
         </div>
+        then keep it open till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" />
+        </div>
+        is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>

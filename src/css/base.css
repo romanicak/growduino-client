@@ -89,8 +89,20 @@ a[ng-click] {
     margin-bottom: 4px;
 }
 
+.triggers-form.alerts {
+    padding-top: 20px;
+}
+
+.triggers-form.alerts fieldset {
+    margin-bottom: 10px;
+}
+
 .timer-line fieldset[disabled] .form-control {
     text-decoration: line-through;
+}
+
+.sentinel-line {
+    margin-top: 12px;
 }
 
 .sentinel-line[disabled] {

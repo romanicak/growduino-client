@@ -33,7 +33,7 @@ window.settings = {
     sensors: [
         {resource: 'Humidity', divisor: 10},
         {resource: 'Temp1', divisor: 10},
-        {resource: 'Light', divisor: '%'},
+        {resource: 'Light', divisor: 10},
         {resource: 'Usnd', divisor: 1},
         {resource: 'Temp2', divisor: 10},
         {resource: 'Temp3', divisor: 10}
@@ -49,7 +49,7 @@ window.settings = {
             ],
             yAxis: [
                 { title: { text: '°C' }, minRange: 5},
-                { title: { text: '%' }, min: 0, minRange: 5},
+                { title: { text: '' }, min: 0, minRange: 5},
             ]
         },
         {

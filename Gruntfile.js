@@ -191,9 +191,10 @@ grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-angular-templates');
 grunt.loadNpmTasks('grunt-usemin');
 grunt.loadNpmTasks('grunt-contrib-requirejs');
-grunt.loadNpmTasks('grunt-targethtml');
+//grunt.loadNpmTasks('grunt-targethtml');
 
 grunt.registerTask('default', ['watch']);
+grunt.registerTask('bower', ['copy:bower']);
 //grunt.registerTask('distUsemin', ['watch']);
 grunt.registerTask('dist', [
     'clean:dist',
@@ -203,5 +204,6 @@ grunt.registerTask('dist', [
     /*'targethtml:dist',*/ 'htmlmin:index', 'clean:tmp'
 ]);
 grunt.registerTask('distfish', ['dist', 'copy:distfish']);
+
 
 };

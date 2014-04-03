@@ -1,6 +1,7 @@
 <div ng-controller="TriggerController" ng-init="init(relay, 'usndHigh')">
     <fieldset class="form-group sentinel-line"  ng-disabled="!t.active">
-        Open when sensor distance from <b>Water level </b><br> is more than
+        Open when sensor distance from <b>Water level </b>…<br>
+        …is more than
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;cm
         </div> then keep it open till

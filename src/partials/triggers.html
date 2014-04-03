@@ -16,12 +16,22 @@
         </button>
     </div>
     <div class="col-sm-9 relay-body">
-        <div ng-show="relay.manualOn" class="alert alert-warning">
+        <div ng-show="relay.manualOn && !relay.manualOnSaved" class="alert alert-warning">
+            <b>Save</b> triggers to turn on permanently!
+        </div>
+        <div ng-show="relay.manualOn && relay.manualOnSaved" class="alert alert-success">
             Relay is permanently turned on.
         </div>
-        <div ng-show="relay.off" class="alert alert-info">
+        <div ng-show="relay.off && !relay.offSaved" class="alert alert-warning">
+            <b>Save</b> triggers to disable permanently!
+        </div>
+        <div ng-show="relay.off && relay.offSaved" class="alert alert-info">
             Relay is permanently disabled.
         </div>
+        <div ng-show="!relay.manualOn && !relay.off && (relay.manualOnSaved || relay.offSaved)" class="alert alert-warning">
+            <b>Save</b> triggers to enable!
+        </div>
+
         <div class="form-group" ng-hide="relay.off || relay.manualOn">
             <div ng-if="relay.partial" ng-include="'partials/triggers/'+relay.partial"></div>
             <div class="timer-line" ng-repeat="range in relay.intervals">

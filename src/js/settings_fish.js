@@ -28,8 +28,8 @@ window.settings = {
         {resource: 'Humidity', divisor: 10},
         {resource: 'Temp1', divisor: 10}, //air
         {resource: 'Temp2', divisor: 10}, //water
-        {resource: 'Light1', divisor: '%'}, //out
-        {resource: 'Light2', divisor: '%'}, //indoor
+        {resource: 'Light1', divisor: 10}, //out
+        {resource: 'Light2', divisor: 10}, //indoor
         {resource: 'Usnd', divisor: 1}
     ],
 
@@ -52,7 +52,7 @@ window.settings = {
                 {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0},
             ],
             yAxis: [
-                { title: { text: '%' }, minRange: 5}
+                { title: { text: '' }, minRange: 5}
             ]
         },
         {

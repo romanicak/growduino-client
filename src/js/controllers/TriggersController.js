@@ -167,6 +167,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
                         r.intervals.splice(i, 1);
                     }
                 }
+                //clear dirty flags
+                r.offSaved = r.off;
+                r.manualOnSaved = r.manualOn;
             });
             $scope.saving = false;
             $scope.saveSuccess = true;
@@ -258,6 +261,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             $scope.relays.forEach(function(r) {
                 if (r.name === relayName) {
                     r.off = true;
+                    r.offSaved = true;
                 }
             });
         });
@@ -265,6 +269,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             $scope.relays.forEach(function(r) {
                 if (r.name === relayName) {
                     r.manualOn = true;
+                    r.manualOnSaved = true;
                 }
             });
         });
