@@ -277,7 +277,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
             usedTriggers = data.usedTriggers;
         }
         if (!usedTriggers) {
-            usedTriggers = utils.seq(triggerCount);
+            usedTriggers = utils.seq(Trigger.LENGTH);
         }
     }
 
