@@ -39,6 +39,15 @@ window.settings = {
         {resource: 'Temp3', divisor: 10}
     ],
 
+    sensors: {
+        'Humidity': { divisor: 10},
+        'Temp1': { divisor: 10},
+        'Temp2': { divisor: 10},
+        'Temp3': { divisor: 10},
+        'Light': { divisor: 10},
+        'Usnd': { divisor: 1}
+    },
+
     //axis conf is Highcharts configuration
     charts: [
         {

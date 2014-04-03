@@ -24,14 +24,14 @@ window.settings = {
         {name: 'Fan', partial: 'fish/fan.html'}
     ],
 
-    sensors: [
-        {resource: 'Humidity', divisor: 10},
-        {resource: 'Temp1', divisor: 10}, //air
-        {resource: 'Temp2', divisor: 10}, //water
-        {resource: 'Light1', divisor: 10}, //out
-        {resource: 'Light2', divisor: 10}, //indoor
-        {resource: 'Usnd', divisor: 1}
-    ],
+    sensors: {
+        'Humidity': { divisor: 10, name: 'Relative Humidity'},
+        'Temp1': { divisor: 10, name: 'Air Temperature'},
+        'Temp2': { divisor: 10, name: 'Water Temperature'},
+        'Light1': { divisor: 10, name: 'Lighting Outdoor'},
+        'Light2': { divisor: 10, name: 'Lighting Indoor'},
+        'Usnd': { divisor: 1, name: 'Water Level'}
+    },
 
     //axis conf is Highcharts configuration
     charts: [

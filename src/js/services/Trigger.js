@@ -35,12 +35,24 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
         return null;
     }
 
-    function parseCondition(cond) {
+    function getSensorDivisor(sensorIndex) {
+        var sensor = settings.sensors[sensorIndex];
+        if (sensor) {
+            return sensor.divisor;
+        } else {
+            console.warn('Storing value for undeclared sensor: '+sensorIndex);
+            return 10;
+        }
+    }
+
+    function parseCondition(cond, sensorIndex) {
         var val = parseInt(cond.substring(1), 10);
         if (val <= -256) {
             val = Number.NEGATIVE_INFINITY;
         } else {
-            if (cond[0] !== 'T') val /= 10;
+            if (cond[0] !== 'T') {
+                val /= getSensorDivisor(sensorIndex);
+            }
         }
         return {
             op: cond[0],
@@ -49,12 +61,16 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
         };
     }
 
-    function packCondition(cond) {
+    function packCondition(cond, sensorIndex) {
         var val;
         if (cond.val === Number.NEGATIVE_INFINITY || cond.val === null) {
             val = -512;
         } else {
-            val = cond.op === 'T'? cond.val : parseInt(cond.val * 10, 10);
+            if (cond.op === 'T') {
+                val = cond.val;
+            } else {
+                val = parseInt(cond.val * getSensorDivisor(sensorIndex), 10);
+            }
         }
         return cond.op + val + (cond.important ? '!' : '');
     }
@@ -75,8 +91,8 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
     Trigger.prototype.unpack = function(raw) {
         this.since = raw.t_since === -1 ? null : utils.minutesToTime(raw.t_since);
         this.until = raw.t_since === -1 ? null : utils.minutesToTime(raw.t_until); //if since is null until must null too regardless on value
-        this.on = parseCondition(raw.on_value);
-        this.off = parseCondition(raw.off_value);
+        this.on = parseCondition(raw.on_value, raw.sensor);
+        this.off = parseCondition(raw.off_value, raw.sensor);
         this.sensor = raw.sensor === -1 ? null : raw.sensor;
         this.output = raw.output;
         if (raw.index !== null) this.index = raw.index;
@@ -88,8 +104,8 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
         raw = {
             t_since: this.since === null ? -1 : utils.timeToMinutes(this.since),
             t_until: this.since === null ? 0 : utils.timeToMinutes(this.until),  //since === null -> no range: t_since: -1, t_until: 0
-            on_value: packCondition(this.on),
-            off_value: packCondition(this.off),
+            on_value: packCondition(this.on, this.sensor),
+            off_value: packCondition(this.off, this.sensor),
             sensor: this.sensor === null ? -1 : this.sensor,
             output: this.output
         };

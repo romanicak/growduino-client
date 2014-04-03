@@ -27,6 +27,19 @@ define([
                 triggerCount: status.triggers
             });
 
+            var sensors = [];
+            $.each(status.sensor_list, function(index, resource) {
+                var sensor = {resource: resource};
+                if (settings.sensors[resource]) {
+                    $.extend(sensor, settings.sensors[resource]);
+                } else {
+                    console.warn('Sensor '+ resource + ' is not configured in settings');
+                }
+                sensors[parseInt(index, 10)] = sensor;
+            });
+            settings.sensors = sensors;
+            console.log('Sensors', settings.sensors);
+
             Highcharts.setOptions({
                 /*lang: {
                     months: $.fn.datetimepicker.dates.cs.months,
