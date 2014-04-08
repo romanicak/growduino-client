@@ -45,6 +45,18 @@
         </div>
     </div>
     <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">SMTP port</label>
+        <div class="col-sm-10">
+            <input name="smtp" type="text" ng-model="config.smtp_port" ng-pattern="/^\d*$/" class="form-control"/>
+        </div>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">System name</label>
+        <div class="col-sm-10">
+            <input name="smtp" type="text" ng-model="config.sys_name" class="form-control"/>
+        </div>
+    </div>
+    <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">E-mail from</label>
         <div class="col-sm-10">
             <input name="mail_from" type="text" ng-model="config.mail_from" ng-pattern="/^\S+@\S+\.\S+$/" class="form-control"/>
