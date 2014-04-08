@@ -29,16 +29,18 @@ define([
 
             var sensors = [];
             $.each(status.sensor_list, function(index, resource) {
-                var sensor = {resource: resource};
-                if (settings.sensors[resource]) {
-                    $.extend(sensor, settings.sensors[resource]);
-                } else {
-                    console.warn('Sensor '+ resource + ' is not configured in settings');
+                if (resource) {
+                    var sensor = {resource: resource};
+                    if (settings.sensors[resource]) {
+                        $.extend(sensor, settings.sensors[resource]);
+                    } else {
+                        console.warn('Sensor '+ resource + ' is not configured in settings');
+                    }
+                    sensors[parseInt(index, 10)] = sensor;
                 }
-                sensors[parseInt(index, 10)] = sensor;
             });
             settings.sensors = sensors;
-            console.log('Sensors', settings.sensors);
+            console.log('Sensors', settings.sensors.map(function(s) { return s.resource;}));
 
             Highcharts.setOptions({
                 /*lang: {

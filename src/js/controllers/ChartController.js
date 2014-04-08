@@ -186,7 +186,7 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'sett
             args[arg] = dt.format(zt.dateComponents[arg]);
         }
 
-        show(zt.dataKey, zt.resourceMethod, args, {
+        show(zt.dataKey, isNow ? 'get' : zt.resourceMethod, args, {
             pointStart: dt.valueOf(),
             pointInterval: zt.pointInterval
         });
