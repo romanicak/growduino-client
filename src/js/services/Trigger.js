@@ -8,7 +8,7 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
         ['InactiveFor', { since: null, on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
         ['High', { since: null, on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['LowNoStopTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '<', val: Number.NEGATIVE_INFINITY}}],
-        ['LowTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '<', val: '*'}}],
+        ['LowTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
         ['Low', { since: null, on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
         ['ManualOn', { since: '00:00', until: '24:00', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}],
         ['Timer', { since: '**:**', until: '**:**', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}]
