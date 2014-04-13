@@ -111,7 +111,8 @@ grunt.initConfig({
                 removeStyleLinkTypeAttributes:  true
             },
             files: {
-                'dist/index.htm': '.tmp/index.html'
+                //'dist/index.htm': '.tmp/index.html'
+                '.tmp/index2.html': '.tmp/index.html'
             }
         }
     },
@@ -169,6 +170,32 @@ grunt.initConfig({
         }
       }
     },
+    'string-replace': {
+        dist: {
+            files: {
+                'dist/index.htm': '.tmp/index2.html'
+            },
+            options: {
+              replacements: [
+                {
+                    pattern: '<link rel="stylesheet" href="css/minified.css">',
+                    replacement: "<style>\n"+
+                        "<%= grunt.file.read('src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css') %>\n"+
+                        "<%= grunt.file.read('src/css/base.css') %>\n"+
+                        "</style>"
+                },
+                {
+                    pattern: '<script src="/bower/require.js"></script>',
+                    replacement: "<script>\n"+
+                        "<%= grunt.file.read('bower_components/requirejs/require.js') %>\n"+
+                        "</script>"
+                }
+
+
+              ]
+            }
+        }
+    }
     /*targethtml: {
       dist: {
         files: {
@@ -191,7 +218,7 @@ grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-angular-templates');
 grunt.loadNpmTasks('grunt-usemin');
 grunt.loadNpmTasks('grunt-contrib-requirejs');
-//grunt.loadNpmTasks('grunt-targethtml');
+grunt.loadNpmTasks('grunt-string-replace');
 
 grunt.registerTask('default', ['watch']);
 grunt.registerTask('bower', ['copy:bower']);
@@ -201,9 +228,10 @@ grunt.registerTask('dist', [
     'copy:images', 'copy:index', 'copy:settings', 'copy:bower', 'copy:bowerdist', 'copy:fontsdist',
     'useminPrepare', 'ngtemplates', 'concat:generated', 'cssmin', /*'uglify', */'usemin', 'requirejs',
     'concat:templates',
-    /*'targethtml:dist',*/ 'htmlmin:index', 'clean:tmp'
+    /*'targethtml:dist',*/ 'htmlmin:index', 'string-replace', 'clean:tmp'
 ]);
 grunt.registerTask('distfish', ['dist', 'copy:distfish']);
 
+//TODO remove htmlmin, it is now quite useless when using string-replace!
 
 };

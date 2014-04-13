@@ -19,7 +19,8 @@
     "http-proxy": "~1.0",
     "connect": "~2.14",
     "request": "~2.33",
-    "grunt-contrib-requirejs": "~0.4.3"
+    "grunt-contrib-requirejs": "~0.4.3",
+    "grunt-string-replace": "~0.2.7"
   },
   "dependencies": {}
 }

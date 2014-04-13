@@ -56,7 +56,10 @@
                 'bootstrap': ['jquery']
             }
         });
-        require(['init']);
+        //make requests serial, arduino ethernet shild has problem with parallel loads
+        require(['settings'], function() {
+            require(['init']);
+        });
     </script>
 </head>
 <body>
