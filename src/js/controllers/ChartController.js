@@ -1,6 +1,6 @@
 define(['app'], function(app) {
 
-app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'settings', function($scope, $location, SensorHistory, settings) {
+app.controller('ChartController', ['$scope', '$rootScope', '$location', 'SensorHistory', 'settings', function($scope, $rootScope, $location, SensorHistory, settings) {
     var charts = [];
     var chartDefs = settings.charts;
 
@@ -135,32 +135,42 @@ app.controller('ChartController', ['$scope', '$location', 'SensorHistory', 'sett
             });
         });
 
-        lastRequest = SensorHistory[resourceMethod](queryArgs);
-        lastRequest.$promise.then(null, null, function(sensor) {
-            var data = lastRequest[sensor],
-                chart = null,
-                chartSeries = null;
+        //HACK - use service to serialize instead promise on $rootScope
+        var makeRequest = function() {
+            lastRequest = SensorHistory[resourceMethod](queryArgs);
+            lastRequest.$promise.then(null, null, function(sensor) {
+                var data = lastRequest[sensor],
+                    chart = null,
+                    chartSeries = null;
 
-            chloop:
-            for (var ci = 0; ci < charts.length; ci++) {
-                for (var i = 0; i < chartDefs[ci].series.length; i++) {
-                    if (chartDefs[ci].series[i].resource === sensor) {
-                        chart = charts[ci];
-                        chartSeries = chart.series[i];
-                        break chloop;
+                chloop:
+                for (var ci = 0; ci < charts.length; ci++) {
+                    for (var i = 0; i < chartDefs[ci].series.length; i++) {
+                        if (chartDefs[ci].series[i].resource === sensor) {
+                            chart = charts[ci];
+                            chartSeries = chart.series[i];
+                            break chloop;
+                        }
                     }
                 }
-            }
-            if (chartSeries === null) {
-                console.warn('No series for ' + sensor);
-            } else {
-                if (data) {
-                    chartSeries.setData(padValues(data[dataKey]));
+                if (chartSeries === null) {
+                    console.warn('No series for ' + sensor);
+                } else {
+                    if (data) {
+                        chartSeries.setData(padValues(data[dataKey]));
+                    }
+                    chart.hideLoading();
+                    chartSeries.show();
                 }
-                chart.hideLoading();
-                chartSeries.show();
-            }
-        });
+            });
+        };
+
+        if ($rootScope.relayRequest) {
+            //wait for history
+            $rootScope.relayRequest.finally(makeRequest);
+        } else {
+            makeRequest();
+        }
     }
 
     function updateChart(zoom, dt) {
