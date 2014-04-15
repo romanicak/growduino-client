@@ -101,11 +101,15 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
 
     Trigger.prototype.pack = function() {
         if (!this.match(this.triggerClass)) return null;
+        if (this.off.important) {
+            //in ui no field for off value, it should have same value as on val
+            this.on.val = this.off.val;
+        }
         raw = {
             t_since: this.since === null ? -1 : utils.timeToMinutes(this.since),
             t_until: this.since === null ? 0 : utils.timeToMinutes(this.until),  //since === null -> no range: t_since: -1, t_until: 0
-            on_value: packCondition(this.on, this.sensor),
             off_value: packCondition(this.off, this.sensor),
+            on_value: packCondition(this.on, this.sensor),
             sensor: this.sensor === null ? -1 : this.sensor,
             output: this.output
         };

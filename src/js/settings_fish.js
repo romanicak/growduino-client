@@ -39,20 +39,22 @@ window.settings = {
             series: [
                 {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
                 {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
-                {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1},
+                {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1}
             ],
             yAxis: [
-                { title: { text: '°C' }, minRange: 5},
-                { title: { text: '%' }, min: 0, minRange: 5},
+                { title: { text: '°C' },  minRange: 5},
+                { title: { text: '%' }, opposite: true, min: 0, minRange: 5}
             ]
         },
         {
             series: [
                 {name: 'Lighting Outdoor', resource: 'Light1', yAxis: 0},
-                {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0},
+                {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0}
             ],
             yAxis: [
-                { title: { text: '' }, minRange: 5}
+                { title: {
+                    text: ' ' //em-space to keep all charts aligned
+                }, minRange: 5}
             ]
         },
         {
@@ -60,7 +62,7 @@ window.settings = {
                 {name: 'Water Level', resource: 'Usnd', yAxis: 0}
             ],
             yAxis: [
-                { title: { text: 'cm' }, min: 0, minRange: 5},
+                { title: { text: 'cm' }, min: 0, minRange: 5}
             ]
         },
     ]
