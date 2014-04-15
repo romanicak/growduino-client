@@ -1,6 +1,6 @@
 define(['app', 'async'], function(app, async) {
 
-app.factory('NetworkConfig', ['$resource', function($resource) {
+app.factory('BackendConfig', ['$resource', function($resource) {
     return $resource('/config.jso');
 }]);
 

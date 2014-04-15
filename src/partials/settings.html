@@ -37,6 +37,13 @@
             <input name="ntp" type="text" ng-model="config.ntp" class="form-control"/>
         </div>
     </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Time zone</label>
+        <div class="col-sm-10">
+            <input name="time_zone" type="text" ng-model="config.time_zone" ng-pattern="/^\d*$/" class="form-control"/>
+        </div>
+    </div>
+
     <br>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">SMTP server</label>
