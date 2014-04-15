@@ -51,7 +51,7 @@ function onComplete() {
 
 function loadApplication() {
     yepnope({
-        load: [
+        load: DIST ? [ 'js/minified.js'] : [
             "js/services/utils.js",
             "js/services/resources.js",
             "js/services/divisors.js",
@@ -64,8 +64,6 @@ function loadApplication() {
             "js/controllers/TriggersController.js",
             "js/controllers/AlertsController.js",
             "js/directives/bsHasError.js",
-            //"ngtemplates"
-
         ],
         complete: onComplete
     });
@@ -88,9 +86,9 @@ function loadSerial(resources, done) {
 function loadLibsOnline() {
     yepnope({
         load: [
-            "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js",
-            "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min.js",
-            "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js",
+            "//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js",
+            "//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.min.js",
+            "//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js",
             "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js",
             "//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.10/highcharts.js",
             "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js",

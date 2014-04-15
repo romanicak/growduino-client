@@ -33,27 +33,35 @@ grunt.initConfig({
         }
     },
     copy: {
-        images: {
-            cwd: 'src',
-            src: ['images/*'],
-            dest: 'dist',
-            expand: true
-        },
-        // libs: {
-        //     cwd: 'src',
-        //     src: ['libs/**/*.js'],
-        //     dest: 'dist',
-        //     expand: true
-        // },
-        index: {
+        tmpindex: {
             cwd: 'src',
             src: ['index.html'],
             dest: '.tmp',
             expand: true
         },
-        settings: {
-            src: ['src/js/settings.js'],
-            dest: 'dist/js/settings.js'
+        nouglify: {
+            files: [
+                {dest: 'dist/js/settings.js', src: 'src/js/settings.js'},
+                {dest: 'dist/js/app.js', src: 'src/js/app.js'},
+                {
+                    cwd: 'src',
+                    src: ['libs/**/*.js'],
+                    dest: 'dist',
+                    expand: true
+                },
+                {
+                    cwd: 'src',
+                    src: ['images/*'],
+                    dest: 'dist',
+                    expand: true
+                },
+                {
+                    cwd: 'bower_components/bootstrap/fonts',
+                    src: ['*'],
+                    dest: 'dist/fonts/',
+                    expand: true
+                }
+            ]
         },
         bower: {
             files: [
@@ -73,12 +81,6 @@ grunt.initConfig({
             dest: 'dist/bower/',
             expand: true
         },
-        fontsdist: {
-            cwd: 'bower_components/bootstrap/fonts',
-            src: ['*'],
-            dest: 'dist/fonts/',
-            expand: true
-        },
         distfish: {
             files: [
                 {src: 'src/js/settings_fish.js', dest: 'dist/js/settings.js'}
@@ -87,17 +89,17 @@ grunt.initConfig({
     },
     concat: {
         templates: {
-            options: {
-                process: function(src, filepath) {
-                    if (filepath == '.tmp/templates.js') {
-                        return 'define("ngtemplates",[\'app\', \'angular\'],function(){\n'+src+'\n});';
-                    } else {
-                        return src;
-                    }
-                },
-            },
-            src: ['.tmp/templates.js', '.tmp/init.js'],
-            dest: 'dist/js/init.js'
+            // options: {
+            //     process: function(src, filepath) {
+            //         if (filepath == '.tmp/templates.js') {
+            //             return 'define("ngtemplates",[\'app\', \'angular\'],function(){\n'+src+'\n});';
+            //         } else {
+            //             return src;
+            //         }
+            //     },
+            // },
+            src: ['.tmp/templates.js', '.tmp/uglify.js'],
+            dest: 'dist/js/minified.js'
         }
     },
     htmlmin: {
@@ -110,7 +112,6 @@ grunt.initConfig({
                 removeStyleLinkTypeAttributes:  true
             },
             files: {
-                //'dist/index.htm': '.tmp/index.html'
                 '.tmp/index2.html': '.tmp/index.html'
             }
         }
@@ -142,32 +143,26 @@ grunt.initConfig({
             }
         }
     },
-    requirejs: {
-      compile: {
-        options: {
-            baseUrl: "src/js",
-            //mainConfigFile: "src/js/requirejs.cfg.js",
-            name: "init", // assumes a production build using almond
-            out: ".tmp/init.js",
-            paths: {
-                jquery: "empty:",
-                angular: "empty:",
-                angular_resource: "empty:",
-                angular_route: "empty:",
-                bootstrap: "empty:",
-                highcharts: "empty:",
-                moment: "empty:",
-                settings: "empty:",
-                // bootstrap_datetimepicker: "empty:",
-                // bootstrap_datetimepicker_cs: "empty:",
-                // async: "empty:",
-                bootstrap_datetimepicker: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker',
-                bootstrap_datetimepicker_cs: __dirname+'/src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.cs',
-                async: __dirname+'/src/libs/async',
-
-            }
+    uglify: {
+        app: {
+          files: {
+            '.tmp/uglify.js': [
+                "src/js/services/utils.js",
+                "src/js/services/resources.js",
+                "src/js/services/divisors.js",
+                "src/js/services/Trigger.js",
+                "src/js/services/Alert.js",
+                "src/js/controllers/NavigationController.js",
+                "src/js/controllers/ChartController.js",
+                "src/js/controllers/SettingsController.js",
+                "src/js/controllers/RelayController.js",
+                "src/js/controllers/TriggersController.js",
+                "src/js/controllers/AlertsController.js",
+                "src/js/directives/bsHasError.js",
+            ],
+            '.tmp/yepnope.load.js': ["src/js/yepnope.load.js"]
+          }
         }
-      }
     },
     'string-replace': {
         dist: {
@@ -178,19 +173,33 @@ grunt.initConfig({
               replacements: [
                 {
                     pattern: '<link rel="stylesheet" href="css/minified.css">',
-                    replacement: "<style>\n"+
-                        "<%= grunt.file.read('src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css') %>\n"+
-                        "<%= grunt.file.read('src/css/base.css') %>\n"+
-                        "</style>"
+                    // replacement: "<style>\n"+
+                    //     "<%= grunt.file.read('src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.css') %>\n"+
+                    //     "<%= grunt.file.read('src/css/base.css') %>\n"+
+                    //     "</style>"
+                    replacement: function (match, p1, offset, string) {
+                        var css = grunt.file.read('dist/css/minified.css');
+                        css = css.replace('../images/', 'images/');
+                        return "<style>\n"+ css + "</style>";
+                    }
                 },
                 {
-                    pattern: '<script src="/bower/require.js"></script>',
+                    pattern: '<script src="/bower_components/yepnope/yepnope.js"></script>',
                     replacement: "<script>\n"+
-                        "<%= grunt.file.read('bower_components/requirejs/require.js') %>\n"+
+                        "<%= grunt.file.read('bower_components/yepnope/yepnope.1.5.4-min.js') %>\n"+
                         "</script>"
-                }
-
-
+                },
+                {
+                    pattern: '<script src="js/yepnope.load.js"></script>',
+                    replacement: function (match, p1, offset, string) {
+                        return "<script>\n"+ grunt.file.read('.tmp/yepnope.load.js') + "</script>";
+                    }
+                },
+                {
+                    //temporaty HACK
+                    pattern: '<script>var DIST = false;</script>',
+                    replacement: "<script>var DIST = true;</script>"
+                },
               ]
             }
         }
@@ -224,8 +233,9 @@ grunt.registerTask('bower', ['copy:bower']);
 //grunt.registerTask('distUsemin', ['watch']);
 grunt.registerTask('dist', [
     'clean:dist',
-    'copy:images', 'copy:index', 'copy:settings', 'copy:bower', 'copy:bowerdist', 'copy:fontsdist',
-    'useminPrepare', 'ngtemplates', 'concat:generated', 'cssmin', /*'uglify', */'usemin', 'requirejs',
+    'copy:bower', 'copy:bowerdist',
+    'copy:tmpindex', 'copy:nouglify',
+    'useminPrepare', 'ngtemplates', 'concat:generated', 'cssmin', 'uglify', 'usemin',
     'concat:templates',
     /*'targethtml:dist',*/ 'htmlmin:index', 'string-replace', 'clean:tmp'
 ]);

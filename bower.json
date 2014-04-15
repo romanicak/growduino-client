@@ -1,9 +1,9 @@
 {
   "name": "growduino",
   "dependencies": {
-    "angular": "1.2.15",
-    "angular-resource": "1.2.15",
-    "angular-route": "1.2.15",
+    "angular": "1.2.16",
+    "angular-resource": "1.2.16",
+    "angular-route": "1.2.16",
     "bootstrap": "3.1.1",
     "highcharts.com": "3.0.9",
     "moment": "2.5.1",
