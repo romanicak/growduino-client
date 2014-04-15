@@ -27,9 +27,9 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'partials/alerts.html',
             controller: 'AlertsController'
         }).
-        when('/network', {
-            templateUrl: 'partials/network.html',
-            controller: 'NetworkConfigController'
+        when('/settings', {
+            templateUrl: 'partials/settings.html',
+            controller: 'SettingsController'
         }).
         otherwise({
            redirectTo: '/'

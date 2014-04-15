@@ -6,7 +6,7 @@ define([
     "services/Alert",
     "controllers/NavigationController",
     "controllers/ChartController",
-    "controllers/NetworkConfigController",
+    "controllers/SettingsController",
     "controllers/RelayController",
     "controllers/TriggersController",
     "controllers/AlertsController",
