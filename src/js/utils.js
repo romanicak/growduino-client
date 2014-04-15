@@ -47,7 +47,7 @@ utils.seq = function(size) {
     var r = [];
     for (var i = 0; i < size; i++) r.push(i);
     return r;
-}
+};
 
 //http://stackoverflow.com/questions/1068834/object-comparison-in-javascript
 utils.deepCompare = function() {

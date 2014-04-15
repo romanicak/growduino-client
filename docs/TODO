@@ -1,0 +1,5 @@
+- error handling for save triggers / alers. Better use promises then async.series to propagate errors
+- utils as service
+
+- requires.js -> yepnope ?
+- clean grunt tasks

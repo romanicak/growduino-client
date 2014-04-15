@@ -1,4 +1,4 @@
-<form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="config.$save()">
+<form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()">
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <div class="checkbox">
@@ -71,7 +71,10 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-          <button type="submit" class="btn btn-primary">Save</button>
+            <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
+            <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
+            <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
         </div>
     </div>
+</div>
 </form>
