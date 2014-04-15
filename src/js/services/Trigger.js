@@ -101,7 +101,7 @@ app.factory('Trigger', ['$http', 'settings', 'utils', function($http, settings, 
         if (!this.match(this.triggerClass)) return null;
         if (this.off.important) {
             //in ui no field for off value, it should have same value as on val
-            this.on.val = this.off.val;
+            this.on = { val: this.off.val, op: this.off.op === '<' ? '>' : '<', important: false};
         }
         raw = {
             t_since: this.since === null ? -1 : utils.timeToMinutes(this.since),
