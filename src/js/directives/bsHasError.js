@@ -1,5 +1,3 @@
-define(['app'], function(app) {
-
 app.directive('bsHasError', [function() {
     return {
         restrict: "A",
@@ -15,5 +13,3 @@ app.directive('bsHasError', [function() {
         }
     };
 }]);
-
-});

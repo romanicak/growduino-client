@@ -1,6 +1,5 @@
-define(['app'], function(app) {
-
-app.controller('ChartController', ['$scope', '$rootScope', '$location', 'SensorHistory', 'settings', function($scope, $rootScope, $location, SensorHistory, settings) {
+app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils', 'SensorHistory', 'settings',
+    function($scope, $rootScope, $location, utils, SensorHistory, settings) {
     var charts = [];
     var chartDefs = settings.charts;
 
@@ -286,5 +285,3 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'SensorH
         //$scope.formattedDate += ' ' + $scope.dt.unix() + ' / ' + $scope.dt.format();
     });
 }]);
-
-});

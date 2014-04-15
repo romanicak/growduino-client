@@ -1,5 +1,3 @@
-define(['jquery', 'bootstrap'], function() {
-
 /* =========================================================
  * bootstrap-datetimepicker.js
  * =========================================================
@@ -1652,5 +1650,3 @@ define(['jquery', 'bootstrap'], function() {
     });
 
 }(window.jQuery);
-
-});

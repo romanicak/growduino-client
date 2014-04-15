@@ -1,6 +1,4 @@
-define(['app', 'async'], function(app, async) {
-
-app.factory('Trigger', ['$http', 'settings', function($http, settings) {
+app.factory('Trigger', ['$http', 'settings', 'utils', function($http, settings, utils) {
 
     var patterns = [
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],
@@ -240,5 +238,3 @@ app.factory('Trigger', ['$http', 'settings', function($http, settings) {
 
     return Trigger;
 }]);
-
-});

@@ -1,5 +1,3 @@
-define([], function() {
-
 /* some keys are loaded from sensor status
     tzOffset
     triggerCount
@@ -80,5 +78,3 @@ window.settings = {
         },
     ]
 };
-
-});

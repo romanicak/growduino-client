@@ -1,5 +1,3 @@
-define(['app'], function(app) {
-
 app.controller('SettingsController', ['$scope', '$timeout', 'BackendConfig', function($scope, $timeout, BackendConfig) {
     $scope.loading = true;
     $scope.saving = false;
@@ -24,5 +22,3 @@ app.controller('SettingsController', ['$scope', '$timeout', 'BackendConfig', fun
         });
     };
 }]);
-
-});

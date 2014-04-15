@@ -1,5 +1,3 @@
-define(['app', 'async'], function(app, async) {
-
 app.controller('AlertController', ['$scope', function($scope) {
     $scope.init = function(name) {
         $scope.alert = $scope.$parent.getAlert(name);
@@ -11,7 +9,8 @@ app.controller('AlertController', ['$scope', function($scope) {
 }]);
 
 
-app.controller('AlertsController', ['$scope', '$timeout', 'Alert', 'Trigger', 'ClientConfig', function($scope, $timeout, Alert, Trigger, ClientConfig) {
+app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Trigger', 'ClientConfig',
+    function($scope, $timeout, utils, Alert, Trigger, ClientConfig) {
 
     $scope.loadingMessage = 'Loading alerts';
     $scope.loading = true;
@@ -145,5 +144,3 @@ app.controller('AlertsController', ['$scope', '$timeout', 'Alert', 'Trigger', 'C
 
     loadAlerts();
 }]);
-
-});

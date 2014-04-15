@@ -1,5 +1,3 @@
-define(['app'], function(app) {
-
 app.factory('divisors', function() {
     // var percentDivisor = function(values) {
     //     return values.map(function(val) {
@@ -26,6 +24,4 @@ app.factory('divisors', function() {
             };
         }
     };
-});
-
 });

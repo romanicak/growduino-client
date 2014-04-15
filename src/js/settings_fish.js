@@ -1,5 +1,3 @@
-define([], function() {
-
 window.settings = {
 
     title: 'Fish & Tomatoes',
@@ -67,5 +65,3 @@ window.settings = {
         },
     ]
 };
-
-});

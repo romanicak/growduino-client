@@ -12,55 +12,8 @@
     <link rel="stylesheet" href="css/base.css">
     <!-- endbuild -->
 
-    <script src="/bower/require.js"></script>
-    <script>
-        require.config({
-            baseUrl: 'js',
-            paths: {
-                jquery: [
-                    "//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min",
-                    "../bower/jquery"
-                ],
-                angular: [
-                    "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min",
-                    "../bower/angular"
-                ],
-                angular_resource: [
-                    "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-resource.min",
-                    "../bower/ngres"
-                ],
-                angular_route: [
-                    "//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min",
-                    "../bower/ngroute"
-                ],
-                bootstrap: [
-                    "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min",
-                    "../bower/bs"
-                ],
-                highcharts: [
-                    "//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.10/highcharts",
-                    "../bower/hicharts"
-                ],
-                moment: [
-                    "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min",
-                    "../bower/moment"
-                ],
-                bootstrap_datetimepicker: '../libs/bootstrap-datetimepicker/bootstrap-datetimepicker',
-                async: '../libs/async'
-            },
-            shim: {
-                'angular': ['jquery'],
-                'angular_resource': ['angular'],
-                'angular_route': ['angular'],
-                'highcharts': ['jquery'],
-                'bootstrap': ['jquery']
-            }
-        });
-        //make requests serial, arduino ethernet shild has problem with parallel loads
-        require(['settings'], function() {
-            require(['init']);
-        });
-    </script>
+    <script src="/bower_components/yepnope/yepnope.js"></script>
+    <script src="js/yepnope.load.js"></script>
 </head>
 <body>
     <div id="app-loading" style="margin: 40px; text-align: center">

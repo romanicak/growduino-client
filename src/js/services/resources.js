@@ -1,5 +1,3 @@
-define(['app', 'async'], function(app, async) {
-
 app.factory('BackendConfig', ['$resource', function($resource) {
     return $resource('/config.jso');
 }]);
@@ -8,7 +6,7 @@ app.factory('ClientConfig', ['$resource', function($resource) {
     return $resource('/client.jso');
 }]);
 
-app.factory('sensorResourceFactory', ['$resource', '$http', function($resource, $http) {
+app.factory('sensorResourceFactory', ['$resource', '$http', 'utils', function($resource, $http, utils) {
     return function(name, mapFn) {
         var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
             ['day', 'h', 'min'].forEach(function(key) {
@@ -122,5 +120,3 @@ app.factory('Relay', ['$resource', '$http', 'settings', function($resource, $htt
         },
     });
 }]);
-
-});

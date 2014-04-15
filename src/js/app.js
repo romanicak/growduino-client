@@ -1,9 +1,3 @@
-define([
-    'angular', 'angular_resource', 'angular_route', 'bootstrap', 'highcharts', 'moment',
-    'bootstrap_datetimepicker',
-    'async', 'utils', 'settings'
-], function() {
-
 $.ajaxSetup({
     contentType: 'application/json'
 });
@@ -35,7 +29,3 @@ app.config(['$routeProvider', function($routeProvider) {
            redirectTo: '/'
         });
 }]);
-
-return app;
-
-});

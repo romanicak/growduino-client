@@ -1,5 +1,3 @@
-define(['app'], function(app) {
-
 app.controller('RelayController', ['$scope', '$rootScope', 'settings', 'Relay', function($scope, $rootScope, settings, Relay) {
 
     $scope.loaded = false;
@@ -63,5 +61,3 @@ app.controller('RelayController', ['$scope', '$rootScope', 'settings', 'Relay', 
     });
     $rootScope.relayRequest = req.$promise;
 }]);
-
-});

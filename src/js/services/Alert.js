@@ -1,5 +1,3 @@
-define(['app', 'async'], function(app, async) {
-
 app.factory('Alert', ['$http', function($http) {
 
     var Alert = function() {
@@ -58,5 +56,3 @@ app.factory('Alert', ['$http', function($http) {
 
     return Alert;
 }]);
-
-});

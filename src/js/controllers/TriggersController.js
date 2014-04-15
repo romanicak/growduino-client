@@ -1,5 +1,3 @@
-define(['app', 'async'], function(app, async) {
-
 app.controller('TriggerController', ['$scope', function($scope) {
     $scope.init = function(relay, name) {
         $scope.t = relay.getTrigger(name);
@@ -10,8 +8,8 @@ app.controller('TriggerController', ['$scope', function($scope) {
     };
 }]);
 
-app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 'ClientConfig', 'settings',
-    function($scope, $http, $timeout, Trigger, ClientConfig, settings) {
+app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'Trigger', 'ClientConfig', 'settings',
+    function($scope, $http, $timeout, utils, Trigger, ClientConfig, settings) {
 
     $scope.loadingMessage = 'Loading triggers';
     $scope.loading = true;
@@ -306,5 +304,3 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'Trigger', 
     });
 
 }]);
-
-});

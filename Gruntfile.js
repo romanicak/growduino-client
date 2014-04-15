@@ -57,7 +57,6 @@ grunt.initConfig({
         },
         bower: {
             files: [
-                {dest: 'bower83/require.js', src: 'bower_components/requirejs/require.js'},
                 {dest: 'bower83/jquery.js', src: 'bower_components/jquery/dist/jquery.min.js'},
                 {dest: 'bower83/angular.js', src: 'bower_components/angular/angular.min.js'},
                 {dest: 'bower83/ngres.js', src: 'bower_components/angular-resource/angular-resource.min.js'},
