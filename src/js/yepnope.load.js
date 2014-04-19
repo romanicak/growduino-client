@@ -50,22 +50,39 @@ function onComplete() {
 }
 
 function loadApplication() {
-    yepnope({
-        load: DIST ? [ 'js/minified.js'] : [
-            "js/services/utils.js",
-            "js/services/resources.js",
-            "js/services/divisors.js",
-            "js/services/Trigger.js",
-            "js/services/Alert.js",
-            "js/controllers/NavigationController.js",
-            "js/controllers/ChartController.js",
-            "js/controllers/SettingsController.js",
-            "js/controllers/RelayController.js",
-            "js/controllers/TriggersController.js",
-            "js/controllers/AlertsController.js",
-            "js/directives/bsHasError.js",
-        ],
-        complete: onComplete
+    var libs = [];
+    if (DIST) {
+        libs.push('js/libs.js');
+    } else {
+        libs = libs.concat([
+            'libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js',
+            'libs/async.js'
+        ]);
+    }
+
+    libs = libs.concat([
+        'js/settings.js',
+        'js/app.js'
+    ]);
+
+    loadSerial(libs, function() {
+        yepnope({
+            load: DIST ? [ 'js/minified.js'] : [
+                "js/services/utils.js",
+                "js/services/resources.js",
+                "js/services/divisors.js",
+                "js/services/Trigger.js",
+                "js/services/Alert.js",
+                "js/controllers/NavigationController.js",
+                "js/controllers/ChartController.js",
+                "js/controllers/SettingsController.js",
+                "js/controllers/RelayController.js",
+                "js/controllers/TriggersController.js",
+                "js/controllers/AlertsController.js",
+                "js/directives/bsHasError.js",
+            ],
+            complete: onComplete
+        });
     });
 }
 
@@ -93,14 +110,7 @@ function loadLibsOnline() {
             "//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.10/highcharts.js",
             "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js",
         ],
-        complete: function() {
-            loadSerial([
-                'libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js',
-                'libs/async.js',
-                'js/settings.js',
-                'js/app.js'
-            ], loadApplication);
-        }
+        complete: loadApplication
     });
 }
 
@@ -114,11 +124,7 @@ function loadLibsOffline() {
         "bower/ngroute.js",
         "bower/bs.js",
         "bower/hicharts.js",
-        "bower/moment.js",
-        'libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js',
-        'libs/async.js',
-        'js/settings.js',
-        'js/app.js'
+        "bower/moment.js"
     ], loadApplication);
 }
 

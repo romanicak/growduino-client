@@ -43,12 +43,12 @@ grunt.initConfig({
             files: [
                 {dest: 'dist/js/settings.js', src: 'src/js/settings.js'},
                 {dest: 'dist/js/app.js', src: 'src/js/app.js'},
-                {
-                    cwd: 'src',
-                    src: ['libs/**/*.js'],
-                    dest: 'dist',
-                    expand: true
-                },
+                // {
+                //     cwd: 'src',
+                //     src: ['libs/**/*.js'],
+                //     dest: 'dist',
+                //     expand: true
+                // },
                 {
                     cwd: 'src',
                     src: ['images/*'],
@@ -144,6 +144,9 @@ grunt.initConfig({
         }
     },
     uglify: {
+        // options: {
+        //     beautify: true
+        // },
         app: {
           files: {
             '.tmp/uglify.js': [
@@ -162,6 +165,14 @@ grunt.initConfig({
             ],
             '.tmp/yepnope.load.js': ["src/js/yepnope.load.js"]
           }
+        },
+        libs: {
+            files: {
+                'dist/js/libs.js': [
+                    "src/libs/bootstrap-datetimepicker/bootstrap-datetimepicker.js",
+                    "src/libs/async.js"
+                ]
+            }
         }
     },
     'string-replace': {
