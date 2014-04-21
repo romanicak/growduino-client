@@ -1,4 +1,4 @@
-app.controller('RelayController', ['$scope', '$rootScope', 'settings', 'Relay', function($scope, $rootScope, settings, Relay) {
+app.controller('RelayController', ['$scope', '$rootScope', '$interval', 'settings', 'Relay', function($scope, $rootScope, $interval, settings, Relay) {
 
     $scope.loaded = false;
 
@@ -9,55 +9,59 @@ app.controller('RelayController', ['$scope', '$rootScope', 'settings', 'Relay', 
         return aFromMask;
     }
 
-    $scope.relays = [];
-    var req = Relay.get(function(d) {
-        delete $rootScope.relayRequest;
-        var states = arrayFromMask(d.currentState);
-        settings.outputs.forEach(function(output, i) {
-            $scope.relays.push({
-                name: output.name,
-                state: states.length > i ? states[i] : false
+    function refreshRelays() {
+        return Relay.get(function(d) {
+            delete $rootScope.relayRequest;
+            var states = arrayFromMask(d.currentState);
+            $scope.relays = [];
+            settings.outputs.forEach(function(output, i) {
+                $scope.relays.push({
+                    name: output.name,
+                    state: states.length > i ? states[i] : false
+                });
             });
-        });
 
-        var days = [];
+            var days = [];
 
-        for (var i = 0; i < d.history.length-1; i++) {
-            var curr = arrayFromMask(d.history[i].state),
-                prev = arrayFromMask(d.history[i+1].state),
-                relays = [];
+            for (var i = 0; i < d.history.length-1; i++) {
+                var curr = arrayFromMask(d.history[i].state),
+                    prev = arrayFromMask(d.history[i+1].state),
+                    relays = [];
 
-            //console.log(d.history[i].when.unix(), moment(d.history[i].when).format(), d.history[i], d.history[i+1], curr, prev);
+                //console.log(d.history[i].when.unix(), moment(d.history[i].when).format(), d.history[i], d.history[i+1], curr, prev);
 
-            for (var j = 0; j < Math.max(curr.length, prev.length); j++) {
+                for (var j = 0; j < Math.max(curr.length, prev.length); j++) {
 
-                if ((j < curr.length ? curr[j] : false) !== (j < prev.length ? prev[j] : false)) {
-                    var name = settings.outputs[j] ? settings.outputs[j].name : ''+j;
-                    relays.push({ name: name, on: curr[j]});
+                    if ((j < curr.length ? curr[j] : false) !== (j < prev.length ? prev[j] : false)) {
+                        var name = settings.outputs[j] ? settings.outputs[j].name : ''+j;
+                        relays.push({ name: name, on: curr[j]});
+                    }
+                }
+
+                var when = d.history[i].when,
+                    whenDay = moment(when).startOf('day'),
+                    lastDay = days[days.length-1];
+
+                var item = {
+                    when: when,
+                    relays: relays
+                };
+
+                if (lastDay && lastDay.when.isSame(whenDay)) {
+                    lastDay.items.push(item);
+                } else {
+                    days.push({
+                        when: whenDay,
+                        items: [item]
+                    });
                 }
             }
 
-            var when = d.history[i].when,
-                whenDay = moment(when).startOf('day'),
-                lastDay = days[days.length-1];
+            $scope.history = days;
+            $scope.loaded = true;
+        });
+    }
 
-            var item = {
-                when: when,
-                relays: relays
-            };
-
-            if (lastDay && lastDay.when.isSame(whenDay)) {
-                lastDay.items.push(item);
-            } else {
-                days.push({
-                    when: whenDay,
-                    items: [item]
-                });
-            }
-        }
-
-        $scope.history = days;
-        $scope.loaded = true;
-    });
-    $rootScope.relayRequest = req.$promise;
+    $rootScope.relayRequest = refreshRelays().$promise;
+    $interval(refreshRelays, 30000);
 }]);
