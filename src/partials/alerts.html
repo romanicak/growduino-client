@@ -13,11 +13,21 @@
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control alert-target" ng-model="alert.target"/>
                 </div>
-
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
     </div>
+
+    <hr>
 
     <div ng-controller="AlertController" ng-init="init('temp2High')">
         <div class="row">
@@ -30,13 +40,21 @@
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control alert-target" ng-model="alert.target">
                 </div>
-
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
     </div>
 
-
+    <hr>
 
     <div ng-controller="AlertController" ng-init="init('usndHigh')">
         <div class="row">
@@ -49,7 +67,15 @@
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control alert-target" ng-model="alert.target">
                 </div>
-
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>

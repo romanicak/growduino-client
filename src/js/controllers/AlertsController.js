@@ -48,8 +48,8 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
                 t.index = triggerOffset+alertIndex;
                 triggers.push(t);
                 alerts.push({
-                    on_message: name + ' activated',
-                    off_message: name + ' back to normal',
+                    on_message: alert.on_message,
+                    off_message: alert.off_message,
                     target: alert.target,
                     trigger: t.index,
                     index: alertIndex
@@ -126,6 +126,8 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
                             //console.log(u.triggerClass);
                             var alert = $scope.alerts[u.triggerClass];
                             alert.target = rawAlert.target;
+                            alert.on_message = rawAlert.on_message;
+                            alert.off_message = rawAlert.off_message;
                             alert.trigger = u;
                             alert.active = true;
                         }
