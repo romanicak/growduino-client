@@ -213,6 +213,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
         }
     };
 
+    $scope.relayAuto = function(relay) {
+        if (relay.off) $scope.relayTurnOff(relay);
+        if (relay.manualOn) $scope.relayManualOn(relay);
+    }
+
     $scope.loadingStep = 0;
     $scope.stepCount = Trigger.LENGTH + 1;
 

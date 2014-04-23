@@ -50,11 +50,10 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         chartDefs.forEach(function(chartDef, i) {
             var divId = utils.generateId();
             $('<div class="chart"></div>').attr('id', divId).appendTo('#charts');
-            charts[i] = new Highcharts.Chart({
+            var chartOptions = {
                 chart: {
                     renderTo: divId,
                     type: 'spline',
-                    zoomType: 'x'
                 },
                 title: {
                     text: 'Sensors',
@@ -69,20 +68,28 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                 },
                 yAxis: chartDef.yAxis,
                 series: []
-            });
+            };
+            if (!window.isTouch) {
+                chartOptions.chart.zoomType = 'x';
+            }
+
+            charts[i] = new Highcharts.Chart(chartOptions);
 
             chartDef.series.forEach(function(s) {
-                charts[i].addSeries({
+                var seriesOptions = {
                     name: s.name,
                     color: colors[colorIndex++],
-                    yAxis: s.yAxis,
-                    events: {
+                    yAxis: s.yAxis
+                };
+                if (!window.isTouch) {
+                    seriesOptions.events = {
                         click: function(ev) {
                             if ($scope.zoom === 'H') return; //should never happen
                             updateChart($scope.zoom === 'M' ? 'D' : 'H', moment(ev.point.x));
                         }
-                    }
-                });
+                    };
+                }
+                charts[i].addSeries(seriesOptions);
             });
 
         });

@@ -3,6 +3,8 @@
 function onComplete() {
     document.title = settings.title;
 
+    window.isTouch = 'ontouchstart' in document.documentElement;
+
     $(function() {
         if ($('#bootstrap-css-check').css('display') !== 'none') {
             $('<link rel="stylesheet" href="/bower/bs.css">').appendTo('head');

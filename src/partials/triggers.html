@@ -6,14 +6,20 @@
     <div class="col-sm-3 relay-header">
         <div class="name">{{relay.name}}</div>
         <div class="number">relay {{$index}}</div>
-        <button type="button" class="btn btn-info btn-xs" ng-click="relayManualOn(relay)">
+        <div class="btn-group btn-group-xs">
+            <button type="button" class="btn btn-default" ng-class="{active: relay.manualOn}" ng-click="relayManualOn(relay)">On</button>
+            <button type="button" class="btn btn-default" ng-class="{active: relay.off}" ng-click="relayTurnOff(relay)">Off</button>
+            <button type="button" class="btn btn-default" ng-class="{active: !relay.manualOn && !relay.off}" ng-click="relayAuto(relay)">Auto</button>
+        </div>
+
+        <!--button type="button" class="btn btn-info btn-xs" ng-click="relayManualOn(relay)">
             <span ng-hide="relay.manualOn">Manual On</span>
             <span ng-hide="!relay.manualOn">Stop</span>
         </button>
         <button type="button" class="btn btn-info btn-xs" ng-click="relayTurnOff(relay)">
             <span ng-hide="relay.off">Disable</span>
             <span ng-hide="!relay.off">Enable</span>
-        </button>
+        </button-->
     </div>
     <div class="col-sm-9 relay-body">
         <div ng-show="relay.manualOn && !relay.manualOnSaved" class="alert alert-warning">

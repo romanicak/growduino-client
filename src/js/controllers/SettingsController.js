@@ -7,6 +7,10 @@ app.controller('SettingsController', ['$scope', '$timeout', 'BackendConfig', fun
         $scope.loading = false;
     });
 
+    // $scope.tzOptions = {
+
+    // }
+
     $scope.save = function() {
         if ($scope.saving) return;
         $scope.saving = true;

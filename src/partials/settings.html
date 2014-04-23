@@ -40,7 +40,34 @@
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">Time zone</label>
         <div class="col-sm-10">
-            <input name="time_zone" type="text" ng-model="config.time_zone" ng-pattern="/^\d*$/" class="form-control"/>
+            <!--input name="time_zone" type="text" ng-model="config.time_zone" ng-pattern="/^\d*$/" class="form-control"/-->
+            <select name="time_zone" ng-model="config.time_zone" class="form-control">
+                <option value="-12">GMT -12:00</option>
+                <option value="-11">GMT -11:00</option>
+                <option value="-10">GMT -10:00</option>
+                <option value="-9">GMT -9:00</option>
+                <option value="-8">GMT -8:00</option>
+                <option value="-7">GMT -7:00</option>
+                <option value="-6">GMT -6:00</option>
+                <option value="-5">GMT -5:00</option>
+                <option value="-4">GMT -4:00</option>
+                <option value="-3">GMT -3:00</option>
+                <option value="-2">GMT -2:00</option>
+                <option value="-1">GMT -1:00</option>
+                <option value="0">GMT</option>
+                <option value="1">GMT +1:00</option>
+                <option value="2">GMT +2:00</option>
+                <option value="3">GMT +3:00</option>
+                <option value="4">GMT +4:00</option>
+                <option value="5">GMT +5:00</option>
+                <option value="6">GMT +6:00</option>
+                <option value="7">GMT +7:00</option>
+                <option value="8">GMT +8:00</option>
+                <option value="9">GMT +9:00</option>
+                <option value="10">GMT +10:00</option>
+                <option value="11">GMT +11:00</option>
+                <option value="12">GMT +12:00</option>
+            </select>
         </div>
     </div>
 
