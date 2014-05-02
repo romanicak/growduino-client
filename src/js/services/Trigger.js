@@ -1,4 +1,4 @@
-app.factory('Trigger', ['$http', 'settings', 'utils', function($http, settings, utils) {
+app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function($http, $q, requests, settings, utils) {
 
     var patterns = [
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],
@@ -173,20 +173,21 @@ app.factory('Trigger', ['$http', 'settings', 'utils', function($http, settings, 
                 success();
                 return;
             }
-            var q = async.queue(function(index, done) {
-                $http.get('/triggers/'+index+'.jso', {cache: false}).success(function(data) {
-                    console.log('trigger #'+index+' loaded', data);
-                    data.index = index;
-                    triggerLoaded(data);
-                }).finally(done);
-            }, 1);
-            q.drain = function() {
-                if ($.isFunction(success)) success();
-            };
 
+            var last;
             triggerIndexes.forEach(function(index) {
-                q.push(index);
+                last = requests.push(function() {
+                    return $http.get('/triggers/'+index+'.jso', {cache: false}).success(function(data) {
+                        console.log('trigger #'+index+' loaded', data);
+                        data.index = index;
+                        triggerLoaded(data);
+                    });
+                });
             });
+
+            if ($.isFunction(success)) {
+                last.finally(success);
+            }
         },
 
         save: function(triggers, success)  {
@@ -194,17 +195,19 @@ app.factory('Trigger', ['$http', 'settings', 'utils', function($http, settings, 
                 success();
                 return;
             }
-            var q = async.queue(function(trigger, done) {
-                var index = trigger.index;
-                console.log('Trigger #'+index+' saved', trigger);
-                $http.post('/triggers/'+index+'.jso', trigger).finally(done);
-            }, 1);
-            q.drain = function() {
-                success();
-            };
+
+            var last;
             triggers.forEach(function(trigger) {
-                q.push(trigger);
+                last = requests.push(function() {
+                    var index = trigger.index;
+                    console.log('Trigger #'+index+' saved', trigger);
+                    return $http.post('/triggers/'+index+'.jso', trigger);
+                });
             });
+
+            if ($.isFunction(success)) {
+                last.finally(success);
+            }
         },
 
         create: function(triggerClass) {

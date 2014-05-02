@@ -106,11 +106,6 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
             $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
         }
 
-        //var cfg = ClientConfig.get();
-        //cfg.$promise.finally(function() {
-        //     step();
-        //});
-
         var loadTasks = [];
 
         $scope.stepCount = settings.alertLimit * 2;

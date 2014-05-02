@@ -71,6 +71,7 @@ function loadApplication() {
         yepnope({
             load: DIST ? [ 'js/minified.js'] : [
                 "js/services/utils.js",
+                "js/services/requests.js",
                 "js/services/resources.js",
                 "js/services/divisors.js",
                 "js/services/Trigger.js",

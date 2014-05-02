@@ -1,4 +1,4 @@
-app.controller('RelayController', ['$scope', '$rootScope', '$interval', 'settings', 'Relay', function($scope, $rootScope, $interval, settings, Relay) {
+app.controller('RelayController', ['$scope', '$interval', 'settings', 'Relay', function($scope, $interval, settings, Relay) {
 
     $scope.loaded = false;
 
@@ -10,8 +10,7 @@ app.controller('RelayController', ['$scope', '$rootScope', '$interval', 'setting
     }
 
     function refreshRelays() {
-        return Relay.get(function(d) {
-            delete $rootScope.relayRequest;
+        Relay.get(function(d) {
             var states = arrayFromMask(d.currentState);
             $scope.relays = [];
             settings.outputs.forEach(function(output, i) {
@@ -62,6 +61,6 @@ app.controller('RelayController', ['$scope', '$rootScope', '$interval', 'setting
         });
     }
 
-    $rootScope.relayRequest = refreshRelays().$promise;
+    refreshRelays();
     $interval(refreshRelays, 30000);
 }]);

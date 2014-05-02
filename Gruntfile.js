@@ -54,13 +54,14 @@ grunt.initConfig({
                     src: ['images/*'],
                     dest: 'dist',
                     expand: true
-                },
-                {
-                    cwd: 'bower_components/bootstrap/fonts',
-                    src: ['*'],
-                    dest: 'dist/fonts/',
-                    expand: true
                 }
+                //TODO need 8.3 names
+                // {
+                //     cwd: 'bower_components/bootstrap/fonts',
+                //     src: ['*'],
+                //     dest: 'dist/fonts/',
+                //     expand: true
+                // }
             ]
         },
         bower: {
@@ -151,6 +152,7 @@ grunt.initConfig({
           files: {
             '.tmp/uglify.js': [
                 "src/js/services/utils.js",
+                "src/js/services/requests.js",
                 "src/js/services/resources.js",
                 "src/js/services/divisors.js",
                 "src/js/services/Trigger.js",

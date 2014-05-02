@@ -1,9 +1,19 @@
-app.factory('BackendConfig', ['$resource', function($resource) {
-    return $resource('/config.jso');
+app.factory('BackendConfig', ['$resource', 'requests', function($resource, requests) {
+    return requests.adapt($resource('/config.jso'));
 }]);
 
-app.factory('ClientConfig', ['$resource', function($resource) {
-    return $resource('/client.jso');
+app.factory('ClientConfig', ['$resource', 'requests', function($resource, requests) {
+    var resource = $resource('/client.jso'),
+        proxy = requests.adapt(resource),
+        unsageGet = proxy.get;
+
+    //when config doen't exists, create new empty resource instead
+    proxy.get = function() {
+        return unsageGet.apply(this, arguments).catch(function() {
+            return new resource();
+        });
+    };
+    return proxy;
 }]);
 
 app.factory('sensorResourceFactory', ['$resource', '$http', 'utils', function($resource, $http, utils) {
@@ -47,7 +57,7 @@ app.factory('sensorResourceFactory', ['$resource', '$http', 'utils', function($r
     };
 }]);
 
-app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settings', function($q, sensorResourceFactory, divisors, settings) {
+app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settings', 'requests', function($q, sensorResourceFactory, divisors, settings, requests) {
     var sensorResources = [];
 
     settings.sensors.forEach(function(sensor) {
@@ -57,49 +67,34 @@ app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settin
         });
     });
 
-    function load(resourceMethod, queryArgs) {
-        var d = $q.defer();
-        var result = { $promise: d.promise }; //use resoure like result
-        var queue = async.queue(function(sensor, done) {
-            sensor.resource[resourceMethod](queryArgs, function(data) {
-                result[sensor.name] = data;
-            }).$promise.finally(function() {
-                d.notify(sensor.name);
-                done();
-            });
-        }, 1);
-
-        queue.drain = function() {
-            d.resolve(result);
-        };
-
+    function load(resourceMethod, queryArgs, callback) {
         sensorResources.forEach(function(sensor) {
-            queue.push(sensor);
+            requests.push(function() {
+                return sensor.resource[resourceMethod](queryArgs, function(data) {
+                    callback(sensor.name, data);
+                }).$promise;
+            });
         });
 
-        result.stop = function() {
-            queue.tasks.splice(0, queue.tasks.length);
-        };
-        return result;
     }
 
     return {
-        get: function() {
-            return load('get', {});
+        get: function(queryArgs, callback) {
+            return load('get', queryArgs, callback);
         },
-        getMonth: function(queryArgs) {
-            return load('getMonth', queryArgs);
+        getMonth: function(queryArgs, callback) {
+            return load('getMonth', queryArgs, callback);
         },
-        getDay: function(queryArgs) {
-            return load('getDay', queryArgs);
+        getDay: function(queryArgs, callback) {
+            return load('getDay', queryArgs, callback);
         },
-        getHour: function(queryArgs) {
-            return load('getHour', queryArgs);
+        getHour: function(queryArgs, callback) {
+            return load('getHour', queryArgs, callback);
         }
     };
 }]);
 
-app.factory('Relay', ['$resource', '$http', 'settings', function($resource, $http, settings) {
+app.factory('Relay', ['$resource', '$http', 'settings', 'requests', function($resource, $http, settings, requests) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
         var history = [];
         for (var ts in data.state) {
@@ -113,10 +108,10 @@ app.factory('Relay', ['$resource', '$http', 'settings', function($resource, $htt
         data.history = history;
         return data;
     }]);
-    return $resource('/sensors/outputs.jso', {}, {
+    return requests.adapt($resource('/sensors/outputs.jso', {}, {
         get: {
             method: 'GET',
             transformResponse: transformers
         },
-    });
+    }));
 }]);

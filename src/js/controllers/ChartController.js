@@ -1,5 +1,5 @@
-app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils', 'SensorHistory', 'settings',
-    function($scope, $rootScope, $location, utils, SensorHistory, settings) {
+app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils', 'SensorHistory', 'settings', 'requests',
+    function($scope, $rootScope, $location, utils, SensorHistory, settings, requests) {
     var charts = [];
     var chartDefs = settings.charts;
 
@@ -41,8 +41,6 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             urlFormat: 'YYYY-MM-DD',
         }
     };
-
-    var lastRequest = null;
 
     function initCharts() {
         var colorIndex = 0, colors = Highcharts.getOptions().colors;
@@ -98,11 +96,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function cleanCharts() {
-        //q.tasks.splice(0, q.tasks.length);
-        //TODO call stop
-        if (lastRequest) {
-            lastRequest.stop();
-        }
+        requests.clear(); //in fact it clear all queued requests, TODO to stop only chart ones
         charts.forEach(function(chart) {
             chart.series.forEach(function(s) {
                 s.hide();
@@ -141,42 +135,30 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             });
         });
 
-        //HACK - use service to serialize instead promise on $rootScope
-        var makeRequest = function() {
-            lastRequest = SensorHistory[resourceMethod](queryArgs);
-            lastRequest.$promise.then(null, null, function(sensor) {
-                var data = lastRequest[sensor],
-                    chart = null,
-                    chartSeries = null;
+        SensorHistory[resourceMethod](queryArgs, function(sensor, data) {
+            var chart = null,
+                chartSeries = null;
 
-                chloop:
-                for (var ci = 0; ci < charts.length; ci++) {
-                    for (var i = 0; i < chartDefs[ci].series.length; i++) {
-                        if (chartDefs[ci].series[i].resource === sensor) {
-                            chart = charts[ci];
-                            chartSeries = chart.series[i];
-                            break chloop;
-                        }
+            chloop:
+            for (var ci = 0; ci < charts.length; ci++) {
+                for (var i = 0; i < chartDefs[ci].series.length; i++) {
+                    if (chartDefs[ci].series[i].resource === sensor) {
+                        chart = charts[ci];
+                        chartSeries = chart.series[i];
+                        break chloop;
                     }
                 }
-                if (chartSeries === null) {
-                    console.warn('No series for ' + sensor);
-                } else {
-                    if (data) {
-                        chartSeries.setData(padValues(data[dataKey]));
-                    }
-                    chart.hideLoading();
-                    chartSeries.show();
+            }
+            if (chartSeries === null) {
+                console.warn('No series for ' + sensor);
+            } else {
+                if (data) {
+                    chartSeries.setData(padValues(data[dataKey]));
                 }
-            });
-        };
-
-        if ($rootScope.relayRequest) {
-            //wait for history
-            $rootScope.relayRequest.finally(makeRequest);
-        } else {
-            makeRequest();
-        }
+                chart.hideLoading();
+                chartSeries.show();
+            }
+        });
     }
 
     function updateChart(zoom, dt) {
@@ -202,7 +184,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             args[arg] = dt.format(zt.dateComponents[arg]);
         }
 
-        show(zt.dataKey, isNow ? 'get' : zt.resourceMethod, args, {
+        show(zt.dataKey, isNow ? 'get' : zt.resourceMethod, isNow ? {} : args, {
             pointStart: dt.valueOf(),
             pointInterval: zt.pointInterval
         });

@@ -216,7 +216,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
     $scope.relayAuto = function(relay) {
         if (relay.off) $scope.relayTurnOff(relay);
         if (relay.manualOn) $scope.relayManualOn(relay);
-    }
+    };
 
     $scope.loadingStep = 0;
     $scope.stepCount = Trigger.LENGTH + 1;
@@ -284,9 +284,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
         }
     }
 
-    var cfg = ClientConfig.get();
-    cfg.$promise.finally(function() {
-        parseConfig(cfg || {});
+    ClientConfig.get().then(function(cfg) {
+        parseConfig(cfg);
         step();
         Trigger.loadMany(usedTriggers, function(raw) {
                 step();
