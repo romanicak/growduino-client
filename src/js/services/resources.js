@@ -5,27 +5,28 @@ app.factory('BackendConfig', ['$resource', 'requests', function($resource, reque
 app.factory('ClientConfig', ['$resource', 'requests', function($resource, requests) {
     var resource = $resource('/client.jso'),
         proxy = requests.adapt(resource),
-        unsageGet = proxy.get;
+        unsafeGet = proxy.get;
 
     //when config doen't exists, create new empty resource instead
     proxy.get = function() {
-        return unsageGet.apply(this, arguments).catch(function() {
+        return unsafeGet.apply(this, arguments).catch(function() {
             return new resource();
         });
     };
     return proxy;
 }]);
 
-app.factory('sensorResourceFactory', ['$resource', '$http', 'utils', function($resource, $http, utils) {
+app.factory('sensorResourceFactory', ['$resource', 'requests', '$http', 'utils', function($resource, requests, $http, utils) {
     return function(name, mapFn) {
         var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
             ['day', 'h', 'min'].forEach(function(key) {
                 if ($.isArray(data[key])) {
+                    d = data[key];
                     //invalid backend data temporary fix
-                    d = data[key].map(function(item) {
-                        if (item && item > 25000) return item - 32768;
-                        return item;
-                    });
+                    // d = data[key].map(function(item) {
+                    //     if (item && item > 25000) return item - 32768;
+                    //     return item;
+                    // });
                     //end of fix
                     d = utils.fixNull(d);
                     data[key] = mapFn ? mapFn(d) : d;

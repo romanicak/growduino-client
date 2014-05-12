@@ -22,18 +22,23 @@ app.factory('requests', ['$q', function($q) {
         queue.tasks.splice(0, queue.tasks.length);
     };
 
-    requests.adapt = function(resource) {
-        return {
-            get: function() {
+    requests.adapt = function(resource, methods) {
+        if (typeof methods === "undefined") {
+            methods = ['get', 'save', 'post'];
+        }
+        var proxy = {};
+        methods.forEach(function(method) {
+            proxy[method] = function() {
                 var a = arguments;
                 return requests.push(function() {
-                    return resource.get.apply(resource, a).$promise;
+                    return resource[method].apply(resource, a).$promise;
                 });
-            },
-            post: function() {
-                return resource.post.apply(resource, arguments);
-            }
-        };
+            };
+        });
+        // proxy.post = function() {
+        //     return resource.post.apply(resource, arguments);
+        // }
+        return proxy;
     };
 
     return requests;

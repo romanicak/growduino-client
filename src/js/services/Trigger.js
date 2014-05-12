@@ -34,11 +34,14 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
     }
 
     function getSensorDivisor(sensorIndex) {
+        if (sensorIndex < 0) {
+            return 1;
+        }
         var sensor = settings.sensors[sensorIndex];
         if (sensor) {
             return sensor.divisor;
         } else {
-            console.warn('Storing value for undeclared sensor: '+sensorIndex);
+            console.warn('Value for undeclared sensor: '+sensorIndex);
             return 10;
         }
     }
@@ -227,15 +230,18 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
                 }
             }
             t.triggerClass = triggerClass;
-            //console.log('Created', t);
             return t;
         },
 
         unpack: function(raw) {
             var t = new Trigger();
             t.unpack(raw);
-            t.triggerClass = t.getName();
-            return t;
+            var triggerClass = t.getName();
+            if (triggerClass) {
+                t.triggerClass = triggerClass;
+                return t;
+            }
+            return null;
         }
     });
 

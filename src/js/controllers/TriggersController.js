@@ -69,6 +69,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
                     deleted.push(u.origin);
                 }
             }
+
+            u.origin = raw;
         }
 
         function containsIndex(arr, idx) {
@@ -158,6 +160,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
             //console.log('Saving ', saveData); done();
         });
 
+        //TODO async is not needed now
         async.series(steps, function() {
             $scope.relays.forEach(function(r) {
                 for (var i = 0; i < r.intervals.length; i++) {
@@ -245,7 +248,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
                     }
                 }
             } else {
-                console.warn('Loaded trigger for undefined output '+ u.output);
+                console.warn('Loaded trigger for undefined output '+ u.output, raw);
                 return null;
             }
         }
