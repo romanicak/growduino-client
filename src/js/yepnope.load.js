@@ -82,6 +82,7 @@ function loadApplication() {
                 "js/controllers/RelayController.js",
                 "js/controllers/TriggersController.js",
                 "js/controllers/AlertsController.js",
+                "js/controllers/ClientUploadController.js",
                 "js/directives/bsHasError.js",
             ],
             complete: onComplete

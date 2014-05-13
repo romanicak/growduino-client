@@ -163,6 +163,7 @@ grunt.initConfig({
                 "src/js/controllers/RelayController.js",
                 "src/js/controllers/TriggersController.js",
                 "src/js/controllers/AlertsController.js",
+                "src/js/controllers/ClientUploadController.js",
                 "src/js/directives/bsHasError.js",
             ],
             '.tmp/yepnope.load.js': ["src/js/yepnope.load.js"]

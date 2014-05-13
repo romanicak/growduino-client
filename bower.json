@@ -8,7 +8,8 @@
     "highcharts.com": "3.0.9",
     "moment": "2.5.1",
     "jquery": "2.1.0",
-    "yepnope": "1.5.4"
+    "yepnope": "1.5.4",
+    "zip.js": "*"
   },
    "private": true
 }

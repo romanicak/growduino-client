@@ -18,6 +18,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
 
     $scope.relays = [];
 
+    var slots = utils.newArray(Trigger.LENGTH, null),
+        remote = utils.newArray(Trigger.LENGTH, null);
+
     settings.outputs.forEach(function(output, i) {
         var relay = {
             name: output.name,
@@ -39,79 +42,75 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
         $scope.relays.push(relay);
     });
 
-    function serializeTriggers() {
-        var modified = [], deleted = [], created = [], unmodified = [], inactive = [];
-
-        function pack(u, relay) {
-            var raw = u.pack();
-            //console.log(u.triggerClass, u, raw);
-            if (u.triggerClass == 'manualOn') {
-                if (!relay.manualOn) raw = null;
-            } else if (relay.off || relay.manualOn || !u.active) {
-                if (raw !== null) {
-                    raw.active = u.active;
-                    inactive.push(raw);
-                }
-                raw = null;
-            }
-
-            if (!u.origin) {
-                if (raw) created.push(raw);
-            } else {
-                if (raw) {
-                    //console.log('Comparing', u.origin, raw);
-                    if (utils.deepCompare(u.origin, raw)) {
-                        unmodified.push(raw);
-                    } else {
-                        modified.push(raw);
-                    }
-                } else {
-                    deleted.push(u.origin);
-                }
-            }
-
-            u.origin = raw;
-        }
-
-        function containsIndex(arr, idx) {
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i].index == idx) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        function getUnusedId() {
-            for (var i = 0; i < Trigger.LENGTH; i++) {
-                if (containsIndex(modified, i)) continue;
-                if (containsIndex(unmodified, i)) continue;
-                return i;
-            }
-            //TODO
-            alert('Too many triggers!');
-        }
-
+    function forEachTrigger(fn) {
         $scope.relays.forEach(function(r) {
             r.intervals.forEach(function(u) {
-                pack(u, r);
+                fn(u, r);
             });
             for (var tc in r.triggers) {
-                pack(r.triggers[tc], r);
+                fn(r.triggers[tc], r);
+            }
+        });
+    }
+
+    function serializeTriggers() {
+        var inactive = [], modified = [];
+        var mRemote = remote.slice();
+
+        function isActive(u, relay) {
+            if (u.triggerClass === 'manualOn') {
+                return relay.manualOn;
+            } else {
+                return !(relay.off || relay.manualOn || !u.active);
+            }
+        }
+
+        forEachTrigger(function(u, relay) {
+            if (!isActive(u, relay)) {
+                var index = slots.indexOf(u);
+                if (index !== -1) {
+                    slots[index] = null;
+                    mRemote[index] = Trigger.createDisabled(index);
+                }
+                if (u.triggerClass !== 'manualOn' && u.triggerClass !== 'timer') {
+                    var raw = u.pack();
+                    if (raw) {
+                        raw.active = u.active;
+                        delete raw.index;
+                        inactive.push(raw);
+                    }
+                }
             }
         });
 
-        while (created.length) {
-            var t = created.pop();
-            t.index = deleted.length ? deleted.pop().index : getUnusedId();
-            modified.push(t);
+        forEachTrigger(function(u, relay) {
+            if (isActive(u, relay)) {
+                var index = slots.indexOf(u);
+                if (index === -1) {
+                    index = slots.indexOf(null);
+                    if (index === -1) {
+                        //TODO
+                        alert('Too many triggers!'); throw 'Too many triggers!';
+                    }
+                    slots[index] = u;
+                }
+                var raw = u.pack();
+                raw.index = index;
+                mRemote[index] = raw;
+            }
+        });
+
+        var usedIds = [];
+        for (var i = 0; i < remote.length; i++) {
+            if (!utils.deepCompare(remote[i], mRemote[i])) {
+                modified.push(mRemote[i]);
+            }
+            if (slots[i] !== null) {
+                usedIds.push(i);
+            }
         }
 
-        var usedIds = modified.concat(unmodified).map(function(t) { return t.index; });
-
-        while (deleted.length) {
-            modified.push(Trigger.createDisabled(deleted.pop().index));
-        }
+        remote = mRemote;
 
         return {
             modified: modified,
@@ -154,7 +153,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
             var saveData = getInactiveRelays();
             saveData.triggers = ser.inactive;
             if (settings.fastTriggerLoad) {
-                saveData.usedTriggers = ser.usedIds;
+                saveData.usedTriggers = utils.arrayUnique(ser.usedIds);
             }
             ClientConfig.save(saveData, function() { done(); /*do not pas err arg */ });
             //console.log('Saving ', saveData); done();
@@ -189,10 +188,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
 
     $scope.toggleInterval = function(relay, idx) {
         var interval = relay.intervals[idx];
-        if (interval.origin) {
-            interval.active = !interval.active;
-        } else {
+        if (slots.indexOf(interval) === -1) {
             relay.intervals.splice(idx, 1);
+        } else {
+            interval.active = !interval.active;
         }
     };
 
@@ -252,11 +251,16 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
                 return null;
             }
         }
+        if ('index' in raw) {
+            remote[raw.index] = raw;
+            slots[raw.index] = u;
+        }
         return u;
     }
 
     function parseConfig(data) {
         (data.triggers || []).forEach(function(trigger) {
+            delete trigger.index; //fix old data
             var u = processTrigger(trigger);
             if (u) {
                 u.active = !!trigger.active;
@@ -306,6 +310,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'T
                     });
                 });
                 $scope.loading = false;
+                //console.log('Triggers', remote, slots);
             }
         );
     });

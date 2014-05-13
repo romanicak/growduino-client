@@ -25,6 +25,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'partials/settings.html',
             controller: 'SettingsController'
         }).
+        when('/client-upload', {
+            templateUrl: 'partials/client-upload.html',
+            controller: 'ClientUploadController'
+        }).
         otherwise({
            redirectTo: '/'
         });

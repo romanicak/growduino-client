@@ -49,6 +49,17 @@ app.factory('utils', function() {
         return r;
     };
 
+    utils.arrayUnique = function(a) {
+        return a.reduce(function(p, c) {
+            if (p.indexOf(c) < 0) p.push(c);
+            return p;
+        }, []);
+    };
+
+    utils.newArray = function(n, val) {
+        return Array.apply(null, new Array(n)).map(function() { return val; })
+    }
+
     //http://stackoverflow.com/questions/1068834/object-comparison-in-javascript
     utils.deepCompare = function() {
       var leftChain, rightChain;
