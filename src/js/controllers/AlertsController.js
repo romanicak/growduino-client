@@ -22,12 +22,15 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
     $scope.getAlert = function(name) {
         if ($scope.alerts[name]) return $scope.alerts[name];
 
-        var t = Trigger.create(name);
-        t.output = -1;
-
         var alert = new Alert();
-        alert.trigger = t;
         alert.active = false;
+        alert.name = name;
+
+        if (name !== 'powerDown') {
+            var t = Trigger.create(name);
+            t.output = -1;
+            alert.trigger = t;
+        }
 
         $scope.alerts[name] = alert;
         return alert;
@@ -42,23 +45,30 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 
         $.each($scope.alerts, function(name, alert) {
             if (alert.active) {
-                //alert triggers has off val same to on val
-                alert.trigger.off.val = alert.trigger.on.val;
-                var t = alert.trigger.pack();
-                t.index = triggerOffset+alertIndex;
-                triggers.push(t);
+                var triggerIndex;
+                if (alert.name === 'powerDown') {
+                    triggerIndex = -2; //special value for power down
+                } else {
+                    //alert triggers has off val same to on val
+                    alert.trigger.off.val = alert.trigger.on.val;
+
+                    var t = alert.trigger.pack();
+                    t.index = triggerOffset+alertIndex;
+                    triggers.push(t);
+                    triggerIndex = t.index;
+                }
                 alerts.push({
                     on_message: alert.on_message,
                     off_message: alert.off_message,
                     target: alert.target,
-                    trigger: t.index,
+                    trigger: triggerIndex,
                     index: alertIndex
                 });
                 alertIndex++;
             }
         });
 
-        while (alertIndex < settings.alertLimit) {
+        while (alertIndex < settings.alertLimit+1) {
             alerts.push(Alert.createDisabled(alertIndex));
             triggers.push(Trigger.createDisabled(triggerOffset+alertIndex));
             alertIndex++;
@@ -106,29 +116,40 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
             $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
         }
 
+        function initAlert(rawAlert, triggerClass) {
+            var alert = $scope.alerts[triggerClass];
+            alert.target = rawAlert.target;
+            alert.on_message = rawAlert.on_message;
+            alert.off_message = rawAlert.off_message;
+            alert.active = true;
+            return alert;
+        }
+
         var loadTasks = [];
 
-        $scope.stepCount = settings.alertLimit * 2;
-        Alert.loadMany(utils.seq(settings.alertLimit), function(rawAlert) {
+        //+1 special alert for power down
+        $scope.stepCount = settings.alertLimit * 2 + 1;
+        Alert.loadMany(utils.seq(settings.alertLimit + 1), function(rawAlert) {
             step(); //one step for alert
             if (rawAlert.trigger === -1) {
                 step(); //second for trigger
             } else {
                 loadTasks.push(function(done) {
-                    Trigger.loadMany([rawAlert.trigger], function(rawTrigger) {
-                        u = Trigger.unpack(rawTrigger);
-                        if (u) {
-                            //console.log(u.triggerClass);
-                            var alert = $scope.alerts[u.triggerClass];
-                            alert.target = rawAlert.target;
-                            alert.on_message = rawAlert.on_message;
-                            alert.off_message = rawAlert.off_message;
-                            alert.trigger = u;
-                            alert.active = true;
-                        }
+                    if (rawAlert.trigger === -2) {
+                        initAlert(rawAlert, 'powerDown');
                         step();
                         done();
-                    });
+                    } else {
+                        Trigger.loadMany([rawAlert.trigger], function(rawTrigger) {
+                            u = Trigger.unpack(rawTrigger);
+                            if (u) {
+                                var alert = initAlert(rawAlert, u.triggerClass);
+                                alert.trigger = u;
+                            }
+                            step();
+                            done();
+                        });
+                    }
                 });
             }
         }, function() {

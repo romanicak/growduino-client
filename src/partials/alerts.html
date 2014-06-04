@@ -81,6 +81,27 @@
         </div>
     </div>
 
+    <div ng-controller="AlertController" ng-init="init('powerDown')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>power is down</b> send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-sm-offset-1 col-sm-11 form-group">
             <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
