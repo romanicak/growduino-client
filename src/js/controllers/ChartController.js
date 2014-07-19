@@ -184,7 +184,8 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             args[arg] = dt.format(zt.dateComponents[arg]);
         }
 
-        show(zt.dataKey, isNow ? 'get' : zt.resourceMethod, isNow ? {} : args, {
+        var isNowHour = isNow && zoom === 'H';
+        show(zt.dataKey, isNowHour ? 'get' : zt.resourceMethod, isNowHour ? {} : args, {
             pointStart: dt.valueOf(),
             pointInterval: zt.pointInterval
         });
