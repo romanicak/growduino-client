@@ -1,6 +1,6 @@
 <div ng-controller="TriggerController" ng-init="init(relay, 'temp1LowDisallow')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Never turn on when <b>Temperature</b> is below
+        Never turn on when <b>Air Temperature</b> is below
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
         </div>
@@ -11,7 +11,7 @@
 
 <div ng-controller="TriggerController" ng-init="init(relay, 'temp1High')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when <b>Temperature</b> is over
+        Turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
         </div> then keep it on till
@@ -25,7 +25,7 @@
 
 <div ng-controller="TriggerController" ng-init="init(relay, 'humidityHigh')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when  <b>Humidity</b> is over
+        Turn on when  <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
         </div> then keep it on till

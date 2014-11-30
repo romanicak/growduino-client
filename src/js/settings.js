@@ -1,10 +1,7 @@
-/* some keys are loaded from sensor status
-    tzOffset
-    triggerCount
-*/
 window.settings = {
 
     title: 'Growduino',
+
 
     /*limit number of used triggers on client side
       null = no limit (all firmaware triggers are used, usually 32)
@@ -17,63 +14,56 @@ window.settings = {
     fastTriggerLoad: true,
 
     /* number of triggers reserved for alerts */
-    alertLimit: 0,
+    alertLimit: 11,
 
     outputs: [
-        {name: 'Timer 1'},
-        {name: 'Timer 2'},
-        {name: 'Pump'},
+        {name: 'Light', partial: 'light.html'},
         {name: 'Fan', partial: 'fan.html'},
         {name: 'Humidifier', partial: 'humidifier.html'},
+        {name: 'Watering', partial: 'watering.html'},
+        {name: 'Refill', partial: 'refill.html'},
         {name: 'Heating', partial: 'heating.html'}
     ],
 
-    sensors: [
-        {resource: 'Humidity', divisor: 10},
-        {resource: 'Temp1', divisor: 10},
-        {resource: 'Light', divisor: 10},
-        {resource: 'Usnd', divisor: 1},
-        {resource: 'Temp2', divisor: 10},
-        {resource: 'Temp3', divisor: 10}
-    ],
-
     sensors: {
-        'Humidity': { divisor: 10},
-        'Temp1': { divisor: 10},
-        'Temp2': { divisor: 10},
-        'Temp3': { divisor: 10},
-        'Light': { divisor: 10},
-        'Usnd': { divisor: 1}
+        'Humidity': { divisor: 10, name: 'Relative Humidity'},
+        'Temp1': { divisor: 10, name: 'Air Temperature'},
+        'Temp2': { divisor: 10, name: 'Water Temperature'},
+        'Light1': { divisor: 10, name: 'Lighting Outdoor'},
+        'Light2': { divisor: 10, name: 'Lighting Indoor'},
+        'Usnd': { divisor: 1, name: 'Water Level'}
     },
 
     //axis conf is Highcharts configuration
     charts: [
         {
             series: [
-                {name: 'Temperature', resource: 'Temp1', yAxis: 0},
-                {name: 'Humidity', resource: 'Humidity', yAxis: 1},
-                {name: 'Lighting', resource: 'Light', yAxis: 1},
+                {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
+                {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
+                {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1}
             ],
             yAxis: [
-                { title: { text: '°C' }, minRange: 5},
-                { title: { text: '' }, min: 0, minRange: 5},
+                { title: { text: '°C' },  minRange: 5},
+                { title: { text: '%' }, opposite: true, min: 0, minRange: 5}
             ]
         },
         {
             series: [
-                {name: 'Temperature 2', resource: 'Temp2', yAxis: 0},
-                {name: 'Temperature 3', resource: 'Temp3', yAxis: 0},
+                {name: 'Lighting Outdoor', resource: 'Light1', yAxis: 0},
+                {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0}
             ],
             yAxis: [
-                { title: { text: '°C' }, minRange: 5}
+                { title: {
+                    text: ' ' //em-space to keep all charts aligned
+                }, minRange: 5}
             ]
         },
         {
             series: [
-                {name: 'Ultrasound', resource: 'Usnd', yAxis: 0}
+                {name: 'Water Level', resource: 'Usnd', yAxis: 0}
             ],
             yAxis: [
-                { title: { text: 'cm' }, min: 0, minRange: 5},
+                { title: { text: 'cm' }, min: 0, minRange: 5}
             ]
         },
     ]

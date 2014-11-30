@@ -29,6 +29,33 @@
 
     <hr>
 
+    <div ng-controller="AlertController" ng-init="init('temp1Low')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>Air Temperature</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
     <div ng-controller="AlertController" ng-init="init('temp2High')">
         <div class="row">
             <fieldset class="form-group" ng-disabled="!alert.active">
@@ -56,10 +83,91 @@
 
     <hr>
 
+    <div ng-controller="AlertController" ng-init="init('temp2Low')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>Water Temperature</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('humidityHigh')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>Relative Humidity</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> %
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('humidityLow')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>Relative Humidity</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> %
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
     <div ng-controller="AlertController" ng-init="init('usndHigh')">
         <div class="row">
             <fieldset class="form-group" ng-disabled="!alert.active">
-                When sensor distance from <b>Water Level</b> is more than
+                When sensor distance from <b>Water Level</b> is over
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> cm
                 </div>
@@ -81,6 +189,107 @@
         </div>
     </div>
 
+    <hr>
+
+   <div ng-controller="AlertController" ng-init="init('usndLow')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When sensor distance from <b>Water Level</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> cm
+                </div>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('light2LowTimer')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When  <b>Lighting Indoor</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> 
+                </div>
+                and time is from 
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                </div>
+                to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>...
+                </div>
+                <br>
+                ...send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('light2HighTimer')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When  <b>Lighting Indoor</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> 
+                </div>
+                and time is from 
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                </div>
+                to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" ng-model="alert.trigger.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>...
+                </div>
+                <br>
+                ...send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
     <div ng-controller="AlertController" ng-init="init('powerDown')">
         <div class="row">
             <fieldset class="form-group" ng-disabled="!alert.active">
@@ -101,6 +310,8 @@
             </fieldset>
         </div>
     </div>
+
+    <hr>    
 
     <div class="row">
         <div class="col-sm-offset-1 col-sm-11 form-group">

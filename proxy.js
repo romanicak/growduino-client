@@ -6,7 +6,7 @@ var bodyParser = connect.bodyParser();
 var request = require('request');
 
 //var TARGET = 'arduino.natur.cuni.cz';
-var TARGET = '78.108.106.180';
+var TARGET = '192.168.1.100';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
 
@@ -44,7 +44,7 @@ app.use('/bower', express.static(__dirname + '/bower83'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/fonts', express.static(__dirname + '/bower_components/bootstrap/fonts'));
 app.get('/js/settings.js', function(req, res) {
-    res.sendfile('./src/js/settings_fish.js');
+    res.sendfile('./src/js/settings.js');
 });
 app.use(express.static(__dirname + '/src'));
 

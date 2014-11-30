@@ -7,6 +7,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         ['High', { since: null, on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['LowNoStopTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '<', val: Number.NEGATIVE_INFINITY}}],
         ['LowTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
+        ['HighTimer', { since: '**:**', until: '**:**', on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['Low', { since: null, on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
         ['ManualOn', { since: '00:00', until: '24:00', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}],
         ['Timer', { since: '**:**', until: '**:**', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}]

@@ -14,13 +14,13 @@ window.settings = {
     fastTriggerLoad: true,
 
     /* number of triggers reserved for alerts */
-    alertLimit: 3,
+    alertLimit: 11,
 
     outputs: [
         {name: 'Light', partial: 'fish/light.html'},
-        {name: 'Valve', partial: 'fish/valve.html'},
-        {name: 'Fan', partial: 'fish/fan.html'}
-    ],
+        {name: 'Fan', partial: 'fish/fan.html'},
+        {name: 'Refill', partial: 'fish/refill.html'}
+             ],
 
     sensors: {
         'Humidity': { divisor: 10, name: 'Relative Humidity'},

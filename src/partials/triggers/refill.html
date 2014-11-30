@@ -1,6 +1,6 @@
 <div ng-controller="TriggerController" ng-init="init(relay, 'usndHigh')">
     <fieldset class="form-group sentinel-line"  ng-disabled="!t.active">
-        Open when sensor distance from <b>Water level </b>…<br>
+        Refill when sensor distance from <b>Water level </b>…<br>
         …is more than
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;cm
@@ -16,10 +16,10 @@
 
 <div ng-controller="TriggerController" ng-init="init(relay, 'temp2High')">
     <fieldset class="form-group sentinel-line" ng-init="t = relay.getTrigger('temp2High')" ng-disabled="!t.active">
-        Turn on when <b>Water Temperature</b> is over
+        Refill when <b>Water Temperature</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
-        </div> then keep it on till
+        </div> then keep it open till
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
         </div> is reached.
