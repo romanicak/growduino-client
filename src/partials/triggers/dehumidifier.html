@@ -1,0 +1,14 @@
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHigh')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Turn on when  <b>Humidity</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
+        is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
