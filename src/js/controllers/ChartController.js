@@ -12,9 +12,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             pickerMaxView: 1,
             pickerFormat: 'd. MM yyyy hh:ii',
             momentFormat: function(m) {
-                //return m.format('D. MMMM YYYY HH:mm') + ' - ' + moment(m).add('h', 1).format('HH:mm');
-                return moment(m).subtract('h',1).format('HH:mm') + ' - ' + m.format('HH:mm');
-                
+                return m.format('D. MMMM YYYY HH:mm') + ' - ' + moment(m).add('h', 1).format('HH:mm');
             },
             momentUnit: 'hour',
             urlFormat: 'YYYY-MM-DDTHH:mm',
@@ -119,7 +117,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function padDate(d, zoom) {
-        //d.startOf(zoomTypes[zoom].momentUnit);
+        d.startOf(zoomTypes[zoom].momentUnit);
     }
 
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
@@ -168,10 +166,9 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             isNow = dt === 'now';
 
         if (isNow) {
-            console.log('TZ' + settings.tzOffset);
             dt = moment().zone(settings.tzOffset);
             $scope.isCurrent = true;
-            //if (zoom === 'H')  dt.subtract('hour', 1).startOf('minute');
+            if (zoom === 'H')  dt.subtract('hour', 1).startOf('minute');
         }
 
         if (!isNow || zoom !== 'H') padDate(dt, zoom);
@@ -188,12 +185,8 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         }
 
         var isNowHour = isNow && zoom === 'H';
-
-        var cdt = moment($scope.dt.valueOf());
-        cdt.zone(settings.tzOffset);
-
         show(zt.dataKey, isNowHour ? 'get' : zt.resourceMethod, isNowHour ? {} : args, {
-            pointStart:  zoom === 'H' ? cdt.subtract('hour',1).startOf('minute').valueOf() : cdt.valueOf(),
+            pointStart: dt.valueOf(),
             pointInterval: zt.pointInterval
         });
 
@@ -275,7 +268,6 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         return $scope.zoom + '-' + $scope.dt.unix();
     }, function() {
         var fmt = zoomTypes[$scope.zoom].momentFormat;
-
         $scope.formattedDate = $.isFunction(fmt) ? fmt($scope.dt) : $scope.dt.format(fmt);
         $scope.forwardAllowed = !$scope.isCurrent && shiftByUnit($scope.dt, $scope.zoom, 1).unix() <= moment().unix();
 

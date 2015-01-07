@@ -22,13 +22,16 @@ window.settings = {
         {name: 'Humidifier', partial: 'humidifier.html'},
         {name: 'Watering', partial: 'watering.html'},
         {name: 'Refill', partial: 'refill.html'},
-        {name: 'Heating', partial: 'heating.html'}
+        {name: 'Heating', partial: 'heating.html'},
+        {name: 'Dehumidifier', partial: 'dehumidifier.html'},
+        {name: 'FreeTimer', partial: 'freetimer.html'}
     ],
 
     sensors: {
         'Humidity': { divisor: 10, name: 'Relative Humidity'},
         'Temp1': { divisor: 10, name: 'Air Temperature'},
         'Temp2': { divisor: 10, name: 'Water Temperature'},
+        'Temp3': { divisor: 10, name: 'Bulb Temperature'},
         'Light1': { divisor: 10, name: 'Lighting Outdoor'},
         'Light2': { divisor: 10, name: 'Lighting Indoor'},
         'Usnd': { divisor: 1, name: 'Water Level'}
