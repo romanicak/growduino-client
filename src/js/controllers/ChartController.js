@@ -180,7 +180,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         $location.search('d', isNow && zoom === 'H' ? null : dt.format(zt.urlFormat));
 
         var queryArgs = {};
-	var startingMoment = moment().zone(settings.tzOffset);
+	var startingMoment = isNow ? moment().zone(settings.tzOffset) : dt;
         for (var arg in zt.dateComponents) {
             queryArgs[arg] = startingMoment.format(zt.dateComponents[arg]);
         }
