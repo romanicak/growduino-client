@@ -179,16 +179,21 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         $location.search('z', zoom);
         $location.search('d', isNow && zoom === 'H' ? null : dt.format(zt.urlFormat));
 
-        args = {};
+        var queryArgs = {};
+	var startingMoment = moment().zone(settings.tzOffset);
         for (var arg in zt.dateComponents) {
-            args[arg] = dt.format(zt.dateComponents[arg]);
+            queryArgs[arg] = startingMoment.format(zt.dateComponents[arg]);
         }
 
-        var isNowHour = isNow && zoom === 'H';
-        show(zt.dataKey, isNowHour ? 'get' : zt.resourceMethod, isNowHour ? {} : args, {
-            pointStart: dt.valueOf(),
-            pointInterval: zt.pointInterval
-        });
+	var seriesOptions = {
+		pointStart: dt.valueOf(),
+		pointInterval: zt.pointInterval
+	};
+	if (isNow){
+		show(zt.dataKey, 'get', {}, seriesOptions);
+	} else {
+		show(zt.dataKey, zt.resourceMethod, queryArgs, seriesOptions);
+	}
 
         if (zoomChanged) {
             setupPicker();

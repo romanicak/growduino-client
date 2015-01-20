@@ -56,9 +56,8 @@ window.settings = {
                 {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0}
             ],
             yAxis: [
-                { title: {
-                    text: ' ' //em-space to keep all charts aligned
-                }, minRange: 5}
+                { title: { text: 'sun' }, min: 0, minRange: 5},
+                { title: { text: 'sun' }, linkedTo: 0, opposite: true}
             ]
         },
         {
@@ -66,7 +65,8 @@ window.settings = {
                 {name: 'Water Level', resource: 'Usnd', yAxis: 0}
             ],
             yAxis: [
-                { title: { text: 'cm' }, min: 0, minRange: 5}
+                { title: { text: 'cm' }, min: 0, minRange: 5},
+                { title: { text: 'cm' }, linkedTo: 0, opposite: true}
             ]
         },
     ]
