@@ -52,6 +52,24 @@ app.factory('Alert', ['$http', function($http) {
                 q.push(alert);
             });
         },
+
+	saveInactive: function(alerts, success) {
+	    if (!alerts.length) {
+		success();
+		return;
+	    }
+	    var q = async.queue(function(alert, done) {
+		var index = alert.index;
+		console.log('Inactive alert #'+index+' saved', alert);
+		$http.post('/alerts/alert'+index+'.jso', alert).finally(done);
+	    }, 1);
+	    q.drain = function() {
+		success();
+	    };
+	    alerts.forEach(function(alert) {
+		q.push(alert);
+	    });
+	},
     });
 
     return Alert;

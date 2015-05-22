@@ -156,6 +156,7 @@ grunt.initConfig({
                 "src/js/services/resources.js",
                 "src/js/services/divisors.js",
                 "src/js/services/Trigger.js",
+                "src/js/services/Relay.js",
                 "src/js/services/Alert.js",
                 "src/js/controllers/NavigationController.js",
                 "src/js/controllers/ChartController.js",

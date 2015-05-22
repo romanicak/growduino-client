@@ -7,38 +7,29 @@
         <div class="name">{{relay.name}}</div>
         <div class="number">relay {{$index}}</div>
         <div class="btn-group btn-group-xs">
-            <button type="button" class="btn btn-default" ng-class="{active: relay.manualOn}" ng-click="relayManualOn(relay)">On</button>
-            <button type="button" class="btn btn-default" ng-class="{active: relay.off}" ng-click="relayTurnOff(relay)">Off</button>
-            <button type="button" class="btn btn-default" ng-class="{active: !relay.manualOn && !relay.off}" ng-click="relayAuto(relay)">Auto</button>
+            <button type="button" class="btn btn-default" ng-class="{active: relay.isPermOn()}" ng-click="relay.setPermOn()">On</button>
+            <button type="button" class="btn btn-default" ng-class="{active: relay.isPermOff()}" ng-click="relay.setPermOff()">Off</button>
+            <button type="button" class="btn btn-default" ng-class="{active: relay.isPermAuto()}" ng-click="relay.setPermAuto()">Auto</button>
         </div>
-
-        <!--button type="button" class="btn btn-info btn-xs" ng-click="relayManualOn(relay)">
-            <span ng-hide="relay.manualOn">Manual On</span>
-            <span ng-hide="!relay.manualOn">Stop</span>
-        </button>
-        <button type="button" class="btn btn-info btn-xs" ng-click="relayTurnOff(relay)">
-            <span ng-hide="relay.off">Disable</span>
-            <span ng-hide="!relay.off">Enable</span>
-        </button-->
     </div>
     <div class="col-sm-9 relay-body">
-        <div ng-show="relay.manualOn && !relay.manualOnSaved" class="alert alert-warning">
+        <div ng-show="relay.isPermOn() && relay.permStatusSaveNeeded()" class="alert alert-warning">
             <b>Save</b> triggers to turn on permanently!
         </div>
-        <div ng-show="relay.manualOn && relay.manualOnSaved" class="alert alert-success">
+        <div ng-show="relay.isPermOn() && !relay.permStatusSaveNeeded()" class="alert alert-success">
             Relay is permanently turned on.
         </div>
-        <div ng-show="relay.off && !relay.offSaved" class="alert alert-warning">
+        <div ng-show="relay.isPermOff() && relay.permStatusSaveNeeded()" class="alert alert-warning">
             <b>Save</b> triggers to disable permanently!
         </div>
-        <div ng-show="relay.off && relay.offSaved" class="alert alert-info">
+        <div ng-show="relay.isPermOff() && !relay.permStatusSaveNeeded()" class="alert alert-info">
             Relay is permanently disabled.
         </div>
-        <div ng-show="!relay.manualOn && !relay.off && (relay.manualOnSaved || relay.offSaved)" class="alert alert-warning">
+        <div ng-show="relay.isPermAuto() && relay.permStatusSaveNeeded()" class="alert alert-warning">
             <b>Save</b> triggers to enable!
         </div>
 
-        <div class="form-group" ng-hide="relay.off || relay.manualOn">
+        <div class="form-group" ng-show="relay.isPermAuto()">
             <div ng-if="relay.partial" ng-include="'partials/triggers/'+relay.partial"></div>
             <div class="timer-line" ng-repeat="range in relay.intervals">
                 <fieldset ng-disabled="!range.active">
@@ -50,12 +41,12 @@
                     <div class="form-group" bs-has-error>
                         <input type="text" class="form-control" ng-model="range.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
                     </div>
-                    <a ng-click="toggleInterval(relay, $index)">
+                    <a ng-click="relay.toggleInterval($index)">
                         <span class="glyphicon" ng-class="{'glyphicon-remove': range.active, 'glyphicon-arrow-left': !range.active}"></span>
                     </a>
                 </fieldset>
             </div>
-            <a ng-click="addInterval(relay)"><span class="glyphicon glyphicon-plus"></span> add interval</a>
+            <a ng-click="relay.addInterval()"><span class="glyphicon glyphicon-plus"></span> add interval</a>
         </div>
     </div>
 </div>

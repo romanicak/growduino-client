@@ -121,6 +121,9 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
+	console.log("Show");
+	console.log(resourceMethod);
+	console.log(queryArgs);
         cleanCharts();
         charts.forEach(function(chart) {
             chart.showLoading('Loading…');
@@ -153,6 +156,8 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                 console.warn('No series for ' + sensor);
             } else {
                 if (data) {
+		    console.log("Data, dataKey = " + dataKey);
+		    console.log(data);
                     chartSeries.setData(padValues(data[dataKey]));
                 }
                 chart.hideLoading();
@@ -189,9 +194,13 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
 		pointStart: dt.valueOf(),
 		pointInterval: zt.pointInterval
 	};
-	if (isNow){
+	if (isNow && zoom === 'H'){
+		console.log("show 1");
+		console.log(zt);
 		show(zt.dataKey, 'get', {}, seriesOptions);
 	} else {
+		console.log("show 2");
+		console.log(queryArgs);
 		show(zt.dataKey, zt.resourceMethod, queryArgs, seriesOptions);
 	}
 
