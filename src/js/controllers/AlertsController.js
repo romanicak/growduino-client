@@ -12,14 +12,97 @@ app.controller('AlertController', ['$scope', function($scope) {
 app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Trigger', 'ClientConfig',
     function($scope, $timeout, utils, Alert, Trigger, ClientConfig) {
 
+    $scope.getAlert = function(name) {
+        if ($scope.alerts[name] == null){
+            var alert = new Alert();
+            alert.active = false;
+            alert.name = name;
+
+            if (name !== 'powerDown') {
+                var t = Trigger.create(name);
+                t.output = -1;
+                alert.trigger = t;
+            }
+
+            $scope.alerts[name] = alert;
+	}
+ 	return $scope.alerts[name];
+    };
+
     $scope.loadingMessage = 'Loading alerts';
-    $scope.loading = true;
+    $scope.loading = false;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0;
 
     $scope.alerts = {};
 
-    var remoteAlerts = utils.newArray(settings.alertLimit),
+    var slots = utils.newArray(settings.alertLimit, -1),
+	clientConfigData = {},
+        triggerOffset = settings.triggerCount - settings.alertLimit;
+
+    ClientConfig.get().then(function(cfg) {
+	clientConfigData = cfg;
+	$scope.stepCount = clientConfigData.usedAlerts ? clientConfigData.usedAlerts.length : 0;
+
+	//prectu z configu, ktery alerty musim cist; postupne je ctu
+	(clientConfigData.usedAlert || []).forEach(function(alertIndex) {
+	    var alertData = Alert.loadRaw(alertIndex,
+		function(alertData) {
+		    console.log("Read alert data:");
+		    console.log(alertData);
+		}
+	    );
+	});
+    });
+
+//New Saving:
+    function findAvailableSlotIndex(){
+	var result = slots.indexOf(-1);
+	if (result != -1){
+	    return result;
+	}
+	console.log(slots);
+	alert('Too many alerts!'); throw 'Too many alerts!';
+    }
+
+    $scope.saveAlerts = function(){
+        $.each($scope.alerts, function(name, alert) {
+	    alert.prepareSave();
+	});
+	//releasnout uz nepotrebne indexy
+        $.each($scope.alerts, function(name, alert) {
+	    var releasedIndex = alert.getReleasedIndexes();
+	    if (releasedIndex > -1){
+		slots[releadesIndex] = -1;
+	    }
+	});
+	//pridelit nove indexy, kde jsou treba
+        $.each($scope.alerts, function(name, alert) {
+	    do {
+		var availIndex = findAvailableSlotIndex();
+		var indexUsed = alert.useSlotIndex(availIndex);
+		if (indexUsed){
+		    slots[availIndex] = alert;
+		}
+	    } while (indexUsed);
+	});
+	var usedAlerts = [];
+        $.each($scope.alerts, function(name, alert) {
+	    var savedIndex = alert.save();
+	    if (savedIndex != -1){
+		usedAlerts.push(savedIndex);
+	    }
+	});
+	if (!utils.deepCompare(usedAlerts, clientConfigData.usedAlerts)){
+	    clientConfigData.usedAlerts = usedAlerts;
+	    console.log("About to save client config");
+	    console.log(clientConfigData.usedAlerts);
+	    //ClientConfig.save(clientConfigData);
+	}
+    };
+}]);
+//Old Saving starts here
+/*    var remoteAlerts = utils.newArray(settings.alertLimit),
 	remoteTriggers = utils.newArray(settings.alertLimit),
 	alertSlots = utils.newArray(settings.alertLimit, null),
 	remoteCfg = null,
@@ -163,24 +246,24 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
         if (ser.modifiedTriggers.length) {
             steps.push(function(done) {
 		console.log("Saving triggers " + ser.modifiedTriggers + " , length: " + ser.modifiedTriggers.length); 
-                Trigger.save(ser.modifiedTriggers, function() { done(); /*do not pass err arg */ });
+                Trigger.save(ser.modifiedTriggers, function() { done(); });
                 //console.log('Saving T ', ser.triggers); done();
             });
         }
         if (ser.modifiedAlerts.length) {
             steps.push(function(done) {
-                Alert.save(ser.modifiedAlerts, function() { done(); /*do not pass err arg */ });
+                Alert.save(ser.modifiedAlerts, function() { done(); });
                 //console.log('Saving A ', ser.alerts); done();
             });
         }
 	if (ser.inactiveTriggers.length) {
 	    steps.push(function(done) {
-		Trigger.saveInactive(ser.inactiveTriggers, function() { done(); /*do not pass err arg */ });
+		Trigger.saveInactive(ser.inactiveTriggers, function() { done(); });
 	    });
 	}
 	if (ser.inactiveAlerts.length) {
 	    steps.push(function(done) {
-		Alert.saveInactive(ser.inactiveAlerts, function() { done(); /*do not pass err arg */ });
+		Alert.saveInactive(ser.inactiveAlerts, function() { done(); });
 	    });
 	}
 	steps.push(function(done) {
@@ -203,10 +286,10 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 		cfgData.inactiveAlertTriggers = ser.inactiveTriggers;
 		//cfgData.alerts = ser.inactiveAlerts;
 	    }
-	    /*cfgData.usedAlerts = [];
+	    cfgData.usedAlerts = [];
 	    cfgData.inactiveAlertIds = [];
 	    cfgData.inactiveAlerts = [];
-	    cfgData.inactiveAlertTriggers = [];*/
+	    cfgData.inactiveAlertTriggers = [];
 	    ClientConfig.save(cfgData, function() { done(); });
 });
 
@@ -314,4 +397,4 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
     }
 
     loadAlerts();
-}]);
+}]);*/

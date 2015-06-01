@@ -1,12 +1,64 @@
 app.factory('Alert', ['$http', function($http) {
 
     var Alert = function() {
-        this.messages = {
-            on: '',
-            off: ''
-        };
+        this.on_message = '';
+	this.off_message = '';
         this.target = null;
         this.trigger = null;
+    };
+
+    Alert.prototype.pack = function(){
+	if (this.target === null && this.on_message === ""
+		&& this.off_message === ""){
+	    return null;
+	} else {
+	    return {
+		on_message: this.on_message,
+		off_message: this.off_message,
+		target: this.target
+	    };
+	}
+    }
+
+    Alert.prototype.prepareSave = function(){
+	if (this.name !== "powerDown"){
+	    this.trigger.off.val = this.trigger.on.val;
+	    this.trigger.prepareSave();
+	}
+	this.actualPack = this.pack();
+	console.log("Packed");
+	console.log(this.actualPack);
+    };
+
+    Alert.prototype.getReleasedIndexes = function(){
+	if (this.index != undefined && this.actualPack == null){
+	    return this.index;
+	} else {
+	    return -1;
+	}
+    };
+
+    Alert.prototype.useSlotIndex = function(freeIndex){
+	if (this.index == undefined && this.actualPack != null){
+	    this.index = freeIndex;
+	    return true;
+	}
+	return false;
+    };
+
+    Alert.prototype.save = function(){
+	if (this.index > -1){
+	    if (!utils.deepCompare(this.actualPack, this.origin)){
+	        console.log(this.actualPack);
+	        $http.post('/alerts'+this.index+'.jso', this.actualPack);
+	    }
+	    if (this.trigger){
+		this.trigger.saveTrigger();
+	    }
+	    return this.index;
+	} else {
+	    return -1;
+	}
     };
 
     $.extend(Alert, {
