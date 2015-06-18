@@ -1,6 +1,7 @@
-app.controller('RelayController', ['$scope', '$interval', 'settings', 'Relay', function($scope, $interval, settings, Relay) {
+app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'RelayData', function($scope, $interval, settings, RelayData) {
 
     $scope.loaded = false;
+    console.log("RelayController");
 
     function arrayFromMask(nMask) {
         // nMask must be between -2147483648 and 2147483647
@@ -10,7 +11,7 @@ app.controller('RelayController', ['$scope', '$interval', 'settings', 'Relay', f
     }
 
     function refreshRelays() {
-        Relay.get(function(d) {
+        RelayData.get(function(d) {
             var states = arrayFromMask(d.currentState);
             $scope.relays = [];
             settings.outputs.forEach(function(output, i) {

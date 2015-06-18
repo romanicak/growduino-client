@@ -80,7 +80,7 @@ function loadApplication() {
                 "js/controllers/NavigationController.js",
                 "js/controllers/ChartController.js",
                 "js/controllers/SettingsController.js",
-                //"js/controllers/RelayController.js",
+                "js/controllers/RelayController.js",
                 "js/controllers/TriggersController.js",
                 "js/controllers/AlertsController.js",
                 "js/controllers/ClientUploadController.js",

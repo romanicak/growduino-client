@@ -11,6 +11,7 @@ app.controller('AlertController', ['$scope', function($scope) {
 
 app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Trigger', 'ClientConfig',
     function($scope, $timeout, utils, Alert, Trigger, ClientConfig) {
+    console.log("AlertController");
 
     $scope.getAlert = function(name) {
         if ($scope.alerts[name] == null){
@@ -30,7 +31,7 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
     };
 
     $scope.loadingMessage = 'Loading alerts';
-    $scope.loading = false;
+    $scope.loading = true;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0;
 
@@ -40,18 +41,42 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 	clientConfigData = {},
         triggerOffset = settings.triggerCount - settings.alertLimit;
 
+    function initAlert(rawAlert, triggerClass) {
+        var alert = $scope.alerts[triggerClass];
+        alert.target = rawAlert.target;
+        alert.on_message = rawAlert.on_message;
+        alert.off_message = rawAlert.off_message;
+        alert.active = rawAlert.active == 1;
+	alert.origin = rawAlert;
+        return alert;
+    }
+
     ClientConfig.get().then(function(cfg) {
 	clientConfigData = cfg;
 	$scope.stepCount = clientConfigData.usedAlerts ? clientConfigData.usedAlerts.length : 0;
 
 	//prectu z configu, ktery alerty musim cist; postupne je ctu
-	(clientConfigData.usedAlert || []).forEach(function(alertIndex) {
-	    var alertData = Alert.loadRaw(alertIndex,
-		function(alertData) {
-		    console.log("Read alert data:");
-		    console.log(alertData);
-		}
-	    );
+	async.forEachSeries(clientConfigData.usedAlerts || [], 
+	    function(alertIndex, callback) {
+	        var alertData = Alert.loadRaw(alertIndex,
+		    function(alertData) {
+		        //console.log("Read alert data:");
+		        //console.log(alertData);
+		        //console.log(alertData.triggerData);
+		        if (alertData.triggerData){
+			    var trigger = Trigger.unpack(alertData.triggerData);
+			    delete alertData.triggerData;
+			    var alert = initAlert(alertData, trigger.triggerClass);
+			    alert.trigger = trigger;
+		        } else {
+			    var alert = initAlert(alertData, 'powerDown');
+		        }
+			$scope.loadingStep += 1;
+			$scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+		    }, callback
+	        );
+	    }, function (err){
+		$scope.loading = false;
 	});
     });
 
@@ -78,27 +103,43 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 	});
 	//pridelit nove indexy, kde jsou treba
         $.each($scope.alerts, function(name, alert) {
-	    do {
-		var availIndex = findAvailableSlotIndex();
-		var indexUsed = alert.useSlotIndex(availIndex);
-		if (indexUsed){
-		    slots[availIndex] = alert;
-		}
-	    } while (indexUsed);
-	});
-	var usedAlerts = [];
-        $.each($scope.alerts, function(name, alert) {
-	    var savedIndex = alert.save();
-	    if (savedIndex != -1){
-		usedAlerts.push(savedIndex);
+  	    var availIndex = findAvailableSlotIndex();
+	    var indexUsed = alert.useSlotIndex(availIndex, availIndex + triggerOffset);
+	    if (indexUsed){
+	        slots[availIndex] = alert;
 	    }
 	});
-	if (!utils.deepCompare(usedAlerts, clientConfigData.usedAlerts)){
-	    clientConfigData.usedAlerts = usedAlerts;
-	    console.log("About to save client config");
-	    console.log(clientConfigData.usedAlerts);
-	    //ClientConfig.save(clientConfigData);
-	}
+	var usedAlerts = [];
+	var alertsArray = [];
+	var alertsSaved = false;
+        $.each($scope.alerts, function(name, alert) {
+	    //tady triggery existujou
+	    alertsArray.push(alert);
+	});
+	async.series([
+	    function(callback){
+		async.forEachSeries(alertsArray,
+	    	    function(alert, innerCallback){
+	    		var savedIndex = alert.save(innerCallback);
+	    		if (savedIndex != -1){
+		    	usedAlerts.push(savedIndex);
+	    		}
+	        }, function(err){
+		    callback();
+		});
+	    },
+	    function(callback){
+		if (!utils.deepCompare(usedAlerts, clientConfigData.usedAlerts)){
+	            clientConfigData.usedAlerts = usedAlerts;
+	            ClientConfig.save(clientConfigData);
+		    callback();
+		}
+	    },
+	    function(callback){
+        	$scope.saveSuccess = true;
+		callback();
+	    }
+	]);
     };
 }]);
 //Old Saving starts here

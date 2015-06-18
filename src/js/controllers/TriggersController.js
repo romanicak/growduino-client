@@ -2,6 +2,7 @@ app.controller('RelayController', ['$scope', function($scope) {
 }]);
 app.controller('TriggerController', ['$scope', function($scope) {
     $scope.init = function(relay, name) {
+	//if (name != 'temp3HighDisallow')
         $scope.t = relay.getTrigger(name);
     };
 
@@ -28,7 +29,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	clientConfigData = {};
 
     $scope.loadingMessage = 'Loading triggers';
-    $scope.loading = false;
+    $scope.loading = true;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0;
 
@@ -43,20 +44,25 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	});
 
 	//prectu z configu, ktere triggery musim cist; postupne je ctu
-	(clientConfigData.usedTriggers || []).forEach(function(triggerIndex) {
-	    var triggerData = Trigger.loadRaw(triggerIndex, 
-	        function(triggerData) {
-	    	    //podle indexu poznam, ke kteremu rele patri
-	            var relay = $scope.relays[triggerData.output];
-		    if (relay){
-    	                //reknu rele, inicializuj trigger(rawTrigger) 
-	                relay.initTrigger(triggerData, triggerIndex);
-			slots[triggerIndex] = relay.outputIndex;
-		    } else {
-                	console.warn('Loaded trigger for undefined output ' + triggerData);
-		    }
-		}
-	    );
+	async.forEachSeries(clientConfigData.usedTriggers || [],
+	    function(triggerIndex, callback) {
+	        var triggerData = Trigger.loadRaw(triggerIndex, 
+	            function(triggerData) {
+	    	        //podle indexu poznam, ke kteremu rele patri
+	                var relay = $scope.relays[triggerData.output];
+		        if (relay){
+    	                    //reknu rele, inicializuj trigger(rawTrigger) 
+	                    relay.initTrigger(triggerData, triggerIndex);
+			    slots[triggerIndex] = relay.outputIndex;
+		        } else {
+                	    console.warn('Loaded trigger for undefined output ' + triggerData);
+		        }
+			$scope.loadingStep += 1;
+			$scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+		    }, callback
+		);
+	    }, function (err){
+		$scope.loading = false;;
 	});
     });
 
@@ -100,16 +106,27 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	    }
 	});
 	var usedTriggers = [];
-	//zavolat na kazdem rele save
-	$scope.relays.forEach(function(r) {
-	    Array.prototype.push.apply(usedTriggers, r.saveTriggers());
-	});
-	//prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
-	if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
-		|| !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)){
-	    clientConfigData.permOffRelays = permOffRelays;
-	    clientConfigData.usedTriggers = usedTriggers;
-	    ClientConfig.save(clientConfigData);
-	}
+	async.series([
+	    function(callback){
+	        //zavolat na kazdem rele save
+	        async.forEachSeries($scope.relays,
+	            function(r, callback){
+	                Array.prototype.push.apply(usedTriggers, r.saveTriggers(callback));
+	            }, function(err){
+			callback();
+	        });
+	    },
+	    function(callback){
+	        //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
+	        if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
+		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)){
+	            clientConfigData.permOffRelays = permOffRelays;
+	            clientConfigData.usedTriggers = usedTriggers;
+	            ClientConfig.save(clientConfigData);
+		    callback();
+	        }
+	    }
+	]);
+	$scope.saveSuccess = true;
     };
 }]);

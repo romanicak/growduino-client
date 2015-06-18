@@ -95,7 +95,7 @@ app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settin
     };
 }]);
 
-app.factory('Relay', ['$resource', '$http', 'settings', 'requests', function($resource, $http, settings, requests) {
+app.factory('RelayData', ['$resource', '$http', 'settings', 'requests', function($resource, $http, settings, requests) {
     var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
         var history = [];
         for (var ts in data.state) {

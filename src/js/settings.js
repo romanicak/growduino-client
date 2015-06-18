@@ -42,7 +42,7 @@ window.settings = {
         {
             series: [
                 {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
-                {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
+                {name: 'Bulb Temperature', resource: 'Temp3', yAxis: 0},
                 {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1}
             ],
             yAxis: [
@@ -62,11 +62,12 @@ window.settings = {
         },
         {
             series: [
-                {name: 'Water Level', resource: 'Usnd', yAxis: 0}
+                {name: 'Water Level', resource: 'Usnd', yAxis: 0},
+                {name: 'Water Temperature', resource: 'Temp2', yAxis: 1}
             ],
             yAxis: [
                 { title: { text: 'cm' }, min: 0, minRange: 5},
-                { title: { text: 'cm' }, linkedTo: 0, opposite: true}
+                { title: { text: '°C' }, opposite: true, min: 0, minRange: 5}
             ]
         },
     ]

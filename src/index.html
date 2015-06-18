@@ -5,6 +5,7 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>Loading…</title>
 
+    <link rel="icon" type="image/png" href="images/favicon.png" sizes="32x32" />
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <!-- build:css css/minified.css -->
@@ -31,7 +32,7 @@
                     <li ng-class="{ active: isActive('/settings')}"><a href="#/settings">Settings</a></li>
                 </ul>
 
-                <div class="relays" ng-controller="RelayController">
+                <div class="relays" ng-controller="RelayDataController">
                     <span ng-repeat="relay in relays">
                       <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ relay.name }}</span>
                     </span>

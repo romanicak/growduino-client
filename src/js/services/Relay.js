@@ -31,14 +31,21 @@ app.factory('Relay', ['Trigger', function(Trigger){
     }
 
     //ulozi triggery a vrati indexy vsech ulozenych triggeru
-    Relay.prototype.saveTriggers = function() {
+    Relay.prototype.saveTriggers = function(outerCallback) {
 	var usedIndexes = [];
-	//ulozit vsechny nereleasle triggery do souboru, odpovidajicich jejich indexum
-	this.getTriggersAndIntervals().forEach(function(trig) {
-	    var usedIndex = trig.saveTrigger();
-	    if (usedIndex != -1){
-		usedIndexes.push(usedIndex);
+	this.getTriggersAndIntervals().forEach(
+	    function(trig){
+		if (trig.index > -1){
+		    usedIndexes.push(trig.index);
+		}
 	    }
+	);
+	//ulozit vsechny nereleasle triggery do souboru, odpovidajicich jejich indexum
+	async.forEachSeries(this.getTriggersAndIntervals(),
+	    function(trig, innerCallback){
+	        trig.saveTrigger(innerCallback);
+	    }, function(err){
+		outerCallback();
 	});
 	this.permStatusSaved();
 	return usedIndexes;
