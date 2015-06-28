@@ -198,25 +198,26 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
     Trigger.prototype.saveTrigger = function(asyncCallback) {
 	if (this.index > -1){
 	    if (!utils.deepCompare(this.actualPack, this.origin)){
-                console.log('Saving trigger #' + this.index + ", named " + this.triggerClass);
-		console.log("Actual:");
-	        console.log(this.actualPack);
-		console.log("Origin:");
-		console.log(this.origin);
+                //console.log('Saving trigger #' + this.index + ", named " + this.triggerClass);
+		//console.log("Actual:");
+	        //console.log(this.actualPack);
+		//console.log("Origin:");
+		//console.log(this.origin);
+		this.origin = this.actualPack;
                 $http.post('/triggers/' + this.index + '.jso', this.actualPack).success(function(){
 		    asyncCallback();
 		});
 	    } else {
-		console.log("No need to save trigger #" + this.index);
-		console.log("Actual:");
-		console.log(this.actualPack);
-		console.log("Origin:");
-		console.log(this.origin);
+		//console.log("No need to save trigger #" + this.index);
+		//console.log("Actual:");
+		//console.log(this.actualPack);
+		//console.log("Origin:");
+		//console.log(this.origin);
 		asyncCallback();
 	    }
 	    return this.index;
 	} else {
-	    console.log("Not saving trigger #" + this.index);
+	    //console.log("Not saving trigger #" + this.index);
 	    asyncCallback();
 	    return -1;
 	}

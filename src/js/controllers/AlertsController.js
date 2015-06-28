@@ -11,7 +11,6 @@ app.controller('AlertController', ['$scope', function($scope) {
 
 app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Trigger', 'ClientConfig',
     function($scope, $timeout, utils, Alert, Trigger, ClientConfig) {
-    console.log("AlertController");
 
     $scope.getAlert = function(name) {
         if ($scope.alerts[name] == null){
@@ -38,16 +37,19 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
     $scope.alerts = {};
 
     var slots = utils.newArray(settings.alertLimit, -1),
+	triggerSlots = utils.newArray(settings.alertLimit, -1),
 	clientConfigData = {},
         triggerOffset = settings.triggerCount - settings.alertLimit;
 
-    function initAlert(rawAlert, triggerClass) {
+    function initAlert(rawAlert, triggerClass, alertIndex) {
         var alert = $scope.alerts[triggerClass];
         alert.target = rawAlert.target;
         alert.on_message = rawAlert.on_message;
         alert.off_message = rawAlert.off_message;
         alert.active = rawAlert.active == 1;
 	alert.origin = rawAlert;
+	alert.index = alertIndex;
+	slots[alertIndex] = alert;
         return alert;
     }
 
@@ -55,21 +57,27 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 	clientConfigData = cfg;
 	$scope.stepCount = clientConfigData.usedAlerts ? clientConfigData.usedAlerts.length : 0;
 
+	console.log("Alerts to read:");
+	console.log(clientConfigData.usedAlerts);
 	//prectu z configu, ktery alerty musim cist; postupne je ctu
 	async.forEachSeries(clientConfigData.usedAlerts || [], 
 	    function(alertIndex, callback) {
 	        var alertData = Alert.loadRaw(alertIndex,
 		    function(alertData) {
-		        //console.log("Read alert data:");
-		        //console.log(alertData);
-		        //console.log(alertData.triggerData);
+		        console.log("Read alert data:");
+		        console.log(alertData);
+		        console.log(alertData.triggerData);
 		        if (alertData.triggerData){
+			    alertData.triggerData.index = alertData.trigger;
 			    var trigger = Trigger.unpack(alertData.triggerData);
+			    triggerSlots[alertData.trigger - triggerOffset] = trigger;
+			    console.log("TriggerSlots:");
+			    console.log(triggerSlots);
 			    delete alertData.triggerData;
-			    var alert = initAlert(alertData, trigger.triggerClass);
+			    var alert = initAlert(alertData, trigger.triggerClass, alertIndex);
 			    alert.trigger = trigger;
 		        } else {
-			    var alert = initAlert(alertData, 'powerDown');
+			    var alert = initAlert(alertData, 'powerDown', alertIndex);
 		        }
 			$scope.loadingStep += 1;
 			$scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
@@ -86,8 +94,14 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 	if (result != -1){
 	    return result;
 	}
-	console.log(slots);
-	alert('Too many alerts!'); throw 'Too many alerts!';
+	//alert('Too many alerts!'); throw 'Too many alerts!';
+    }
+
+    function findAvailableTriggerIndex(){
+	var result = triggerSlots.indexOf(-1);
+	if (result != -1){
+	    return result + triggerOffset;
+	}
     }
 
     $scope.saveAlerts = function(){
@@ -98,40 +112,56 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
         $.each($scope.alerts, function(name, alert) {
 	    var releasedIndex = alert.getReleasedIndexes();
 	    if (releasedIndex > -1){
+		console.log("Index was released: " + releasedIndex);
 		slots[releadesIndex] = -1;
 	    }
 	});
 	//pridelit nove indexy, kde jsou treba
         $.each($scope.alerts, function(name, alert) {
   	    var availIndex = findAvailableSlotIndex();
-	    var indexUsed = alert.useSlotIndex(availIndex, availIndex + triggerOffset);
+	    var availTriggerIndex = findAvailableTriggerIndex();
+	    var indexUsed = alert.useSlotIndex(availIndex, availTriggerIndex);
 	    if (indexUsed){
 	        slots[availIndex] = alert;
+		if (alert.trigger){
+		    triggerSlots[availTriggerIndex - triggerOffset] = alert.trigger;
+		}
 	    }
 	});
+	console.log("slots:");
+	console.log(slots);
+	var trIndicesStr = "";
+	for (i = 0; i < slots.length; i++){
+	    if (slots[i] && slots[i].trigger){
+  	    	trIndicesStr += slots[i].trigger.index + " ";
+	    } else {
+		trIndicesStr += "- ";
+	    }
+	}
+	console.log(trIndicesStr);
 	var usedAlerts = [];
 	var alertsArray = [];
 	var alertsSaved = false;
         $.each($scope.alerts, function(name, alert) {
-	    //tady triggery existujou
 	    alertsArray.push(alert);
 	});
 	async.series([
 	    function(callback){
 		async.forEachSeries(alertsArray,
 	    	    function(alert, innerCallback){
-	    		var savedIndex = alert.save(innerCallback);
-	    		if (savedIndex != -1){
-		    	usedAlerts.push(savedIndex);
-	    		}
+	    		alert.save(innerCallback, usedAlerts);
 	        }, function(err){
 		    callback();
 		});
 	    },
 	    function(callback){
+		console.log("usedAlerts:");
+		console.log(usedAlerts);
 		if (!utils.deepCompare(usedAlerts, clientConfigData.usedAlerts)){
 	            clientConfigData.usedAlerts = usedAlerts;
 	            ClientConfig.save(clientConfigData);
+		    callback();
+		} else {
 		    callback();
 		}
 	    },

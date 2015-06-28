@@ -25,6 +25,8 @@ app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
 	if (this.name !== "powerDown"){
 	    this.trigger.off.val = this.trigger.on.val;
 	    this.trigger.prepareSave(activity);
+	} else {
+	    console.log("Power down.prepare save");
 	}
 	this.actualPack = this.pack();
 	if (this.actualPack){
@@ -42,6 +44,8 @@ app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
 
     Alert.prototype.useSlotIndex = function(freeIndex, triggerFreeIndex){
 	if (this.actualPack == null) return false;
+	console.log("Use slot index: " + freeIndex + " " + triggerFreeIndex + ", this.index = " + this.index);
+	console.log(this.actualPack);
 	if (this.index == undefined){
 	    this.index = freeIndex;
 	    if (this.trigger){
@@ -50,37 +54,43 @@ app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
 	    } else {
 		this.actualPack.trigger = -2;
 	    }
+   	    console.log(this.actualPack);
 	    return true;
 	} else {
 	    if (this.trigger){
 	        this.actualPack.trigger = this.trigger.index;
-	        return false;
+	    } else {
+		this.actualPack.trigger = -2;
 	    }
+   	    console.log(this.actualPack);
+	    return false;
 	}
     };
 
-    Alert.prototype.save = function(asyncCallback){
+    Alert.prototype.save = function(asyncCallback, usedAlertIndexes){
 	var alert = this;
 	if (this.index > -1){
+	    usedAlertIndexes.push(this.index);
 	    if (!utils.deepCompare(this.actualPack, this.origin)){
-		console.log("Saving alert");
-		console.log("ACTUAL:");
-		console.log(this.actualPack);
-		console.log("ORIGIN:");
-		console.log(this.origin);
+		//console.log("Saving alert");
+		//console.log("ACTUAL:");
+		//console.log(this.actualPack);
+		//console.log("ORIGIN:");
+		//console.log(this.origin);
 		async.series([
 		    function(callback) {
+			alert.origin = alert.actualPack;
 	        	$http.post('/alerts/'+alert.index+'.jso', alert.actualPack).success(function(data) {
 			    callback();
 			});
 		    },
 		    function(callback) {
 	    	        if (alert.trigger){
-			    console.log("Calling save trigger");
+			    //console.log("Calling save trigger");
 			    alert.trigger.saveTrigger(asyncCallback);
 	    	        } else {
-			    console.log("Not calling save trigger, have no trigger");
-			    console.log(alert.trigger);
+			    //console.log("Not calling save trigger, have no trigger");
+			    //console.log(alert.trigger);
 			    callback();
 			    asyncCallback();
 		        }
@@ -88,18 +98,16 @@ app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
 		], function(err){});
 	    } else {
 		if (alert.trigger){
-		    console.log("Calling save trigger 2");
+		    //console.log("Calling save trigger 2");
 		    alert.trigger.saveTrigger(asyncCallback);
 		} else {
-		    console.log("Not calling save trigger2");
-	   	    console.log(this.trigger);
+		    //console.log("Not calling save trigger2");
+	   	    //console.log(this.trigger);
 		    asyncCallback();
 		}
 	    }
-	    return this.index;
 	} else {
 	    asyncCallback();
-	    return -1;
 	}
     };
 
@@ -141,13 +149,13 @@ app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
 	    var loadedData = $http.get('/alerts/' + index + '.jso', {cache: false}).success(function(data) {
 		if (data.trigger > -1){
 		    var loadedTrigger = $http.get('/triggers/' + data.trigger + '.jso', {cache: false}).success(function(triggerData) {
-		    	asyncCallback();
 		    	data.triggerData = triggerData;
 		    	loadedCallback(data);
+		    	asyncCallback();
 		    });
 		} else {
-		    asyncCallback();
 		    loadedCallback(data);
+		    asyncCallback();
 		}
 	    });
 	},
@@ -159,7 +167,7 @@ app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
             }
             var q = async.queue(function(alert, done) {
                 var index = alert.index;
-                console.log('Alert #'+index+' saved', alert);
+                //console.log('Alert #'+index+' saved', alert);
                 $http.post('/alerts/'+index+'.jso', alert).finally(done);
             }, 1);
             q.drain = function() {
