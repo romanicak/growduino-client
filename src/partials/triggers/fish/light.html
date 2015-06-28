@@ -23,9 +23,9 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighDisallow')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp3HighDisallow')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Never turn on when <b>Air temperature</b> is over
+        Never turn on when <b>Bulb temperature</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
         </div>

@@ -9,17 +9,9 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighTimer')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1High')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when time is from
-	<div class="form-group" bs-has-error>
-	    <input type="text" class="form-control" ng-model="t.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-	</div>
-	to
-	<div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-        </div>…<br>
-	…and <b>Air Temperature</b> is over
+        Turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
         </div> then keep it on till
@@ -31,17 +23,9 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHighTimer')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHigh')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when time is from 
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
-        </div>
-        to
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-        </div>…<br>
-	…and <b>Relative Humidity</b> is over
+        Turn on when  <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
         </div> then keep it on till
