@@ -9,8 +9,8 @@ app.controller('AlertController', ['$scope', function($scope) {
 }]);
 
 
-app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Trigger', 'ClientConfig',
-    function($scope, $timeout, utils, Alert, Trigger, ClientConfig) {
+app.controller('AlertsController', ['$http', '$scope', '$timeout', 'utils', 'Alert', 'Trigger', 'ClientConfig',
+    function($http, $scope, $timeout, utils, Alert, Trigger, ClientConfig) {
 
     $scope.getAlert = function(name) {
         if ($scope.alerts[name] == null){
@@ -159,8 +159,9 @@ app.controller('AlertsController', ['$scope', '$timeout', 'utils', 'Alert', 'Tri
 		console.log(usedAlerts);
 		if (!utils.deepCompare(usedAlerts, clientConfigData.usedAlerts)){
 	            clientConfigData.usedAlerts = usedAlerts;
-	            ClientConfig.save(clientConfigData);
-		    callback();
+		    $http.post('client.jso', clientConfigData).success(function(){
+			callback();
+		    });
 		} else {
 		    callback();
 		}

@@ -19,7 +19,10 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	    }
 	    trigger = this.triggers[triggerClass];
 	}
-	trigger.active = (triggerData.active > 0);
+	trigger.active = false;
+	/*if (triggerData.active == Relay.PERM_OFF){
+	    this.setPermOff();
+	}*/
 	trigger.index = triggerIndex;
     }
 
@@ -110,13 +113,6 @@ app.factory('Relay', ['Trigger', function(Trigger){
     Relay.prototype.toggleInterval = function(index){
 	var interval = this.intervals[index];
 	interval.active = !interval.active;
-	//puvodni implementace je tato:
-	//var interval = relay.intervals[idx];
-	//if (slots.indexOf(interval) === -1) {//WTF???
-	    //relay.intervals.splice(index, 1);
-	//} else {
-	    //interval.active = !interval.active;
-	//}
     }
 
     Relay.prototype.permStatusSaved = function() {

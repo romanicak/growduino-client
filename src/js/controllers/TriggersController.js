@@ -62,7 +62,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 		    }, callback
 		);
 	    }, function (err){
-		$scope.loading = false;;
+		$scope.loading = false;
 	});
     });
 
@@ -125,8 +125,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	            ClientConfig.save(clientConfigData);
 		    callback();
 	        }
+	    },
+	    function(callback){
+	        $scope.saveSuccess = true;
+		callback();
 	    }
 	]);
-	$scope.saveSuccess = true;
     };
 }]);
