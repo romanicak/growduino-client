@@ -122,12 +122,16 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)){
 	            clientConfigData.permOffRelays = permOffRelays;
 	            clientConfigData.usedTriggers = usedTriggers;
-	            ClientConfig.save(clientConfigData);
-		    callback();
+		    $http.post('client.jso', clientConfigData).success(function(){
+			callback();
+		    });
 	        }
 	    },
 	    function(callback){
 	        $scope.saveSuccess = true;
+		$timeout(function() {
+		    $scope.saveSuccess = false;
+		}, 2000);
 		callback();
 	    }
 	]);

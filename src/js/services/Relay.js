@@ -20,9 +20,10 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	    trigger = this.triggers[triggerClass];
 	}
 	trigger.active = false;
-	/*if (triggerData.active == Relay.PERM_OFF){
-	    this.setPermOff();
-	}*/
+	if (triggerData.active == Relay.FIRM_ACTIVITY_PERM_ON){
+	    this.setPermOn();
+	    this.permStatusSaved();
+	}
 	trigger.index = triggerIndex;
     }
 
@@ -55,20 +56,28 @@ app.factory('Relay', ['Trigger', function(Trigger){
     }
 
     Relay.prototype.useSlotIndex = function(index) {
-	var stillFree = true;
 	this.getTriggersAndIntervals().forEach(function(trig) {
-	    if (stillFree && trig.useSlotIndex(index)){
-		stillFree = false;
+	    if (trig.useSlotIndex(index)){
+		return true;
 	    }
 	});
-	if (!stillFree) return true;
-	if (this.isPermOn() && this.getTriggersAndIntervals().length == 0){
-	    var trig = Trigger.create('manualOn');
-	    trig.output = this.outputIndex;
-	    trig.active = true;
-	    this.triggers['manualOn'] = trig;
-	    trig.useSlotIndex(index);
-	    return true;
+	if (this.isPermOn()){
+	    var needEmptyTrigger = true;
+	    this.getTriggersAndIntervals().forEach(function(trig){
+	        if (trig.actualPack != null){
+		    needEmptyTrigger = false;
+		}
+	    });
+	    if (needEmptyTrigger){
+		console.log("Creating empty trigger");
+	        var trig = Trigger.create('manualOn');
+	        trig.output = this.outputIndex;
+	        trig.active = true;
+	        this.triggers['manualOn'] = trig;
+		trig.prepareSave();
+	        trig.useSlotIndex(index);
+	        return true;
+	    }
 	}
 	return false;
     }
@@ -127,7 +136,7 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	this.permStatus = status;
 	//puvodni implementace je silene zmatena; treba poradne otestit
 	//!!!JE TREBA ZJISTIT, CO SE MA STAT S INTERVALAMA, KDYZ SE
-	//setne nejaka hodnota!!!
+	//setne nejaka hodnota perm statusu (ON nebo OFF)!!!
     }
 
     Relay.prototype.setPermOn = function(){

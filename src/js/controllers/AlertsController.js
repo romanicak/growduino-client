@@ -168,6 +168,9 @@ app.controller('AlertsController', ['$http', '$scope', '$timeout', 'utils', 'Ale
 	    },
 	    function(callback){
         	$scope.saveSuccess = true;
+		$timeout(function() {
+		    $scope.saveSuccess = false;
+		}, 2000);
 		callback();
 	    }
 	]);
