@@ -23,6 +23,8 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	if (triggerData.active == Relay.FIRM_ACTIVITY_PERM_ON){
 	    this.setPermOn();
 	    this.permStatusSaved();
+	} else {
+	    trigger.active = (triggerData.active == Relay.FIRM_ACTIVITY_AUTO);
 	}
 	trigger.index = triggerIndex;
     }
@@ -56,11 +58,15 @@ app.factory('Relay', ['Trigger', function(Trigger){
     }
 
     Relay.prototype.useSlotIndex = function(index) {
+	var used = false;
 	this.getTriggersAndIntervals().forEach(function(trig) {
-	    if (trig.useSlotIndex(index)){
-		return true;
+	    if (!used && trig.useSlotIndex(index)){
+		used = true;
 	    }
 	});
+	if (used){
+	    return true;
+	}
 	if (this.isPermOn()){
 	    var needEmptyTrigger = true;
 	    this.getTriggersAndIntervals().forEach(function(trig){

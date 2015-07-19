@@ -125,7 +125,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 		    $http.post('client.jso', clientConfigData).success(function(){
 			callback();
 		    });
-	        }
+	        } else {
+		    callback();
+		}
 	    },
 	    function(callback){
 	        $scope.saveSuccess = true;
