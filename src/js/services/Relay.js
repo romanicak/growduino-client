@@ -7,7 +7,7 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	if (triggerClass === 'timer'){
 	    this.intervals.push(trigger);
 	} else if (triggerClass === 'manualOn'){
-	    this.intervals.push(trigger);
+	    this.permOnTrigger = trigger;
 	    this.setPermOn();
 	    this.permStatusSaved();
 	} else {
@@ -19,42 +19,47 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	    }
 	    trigger = this.triggers[triggerClass];
 	}
-	trigger.active = false;
-	if (triggerData.active == Relay.FIRM_ACTIVITY_PERM_ON){
-	    this.setPermOn();
-	    this.permStatusSaved();
-	} else {
-	    trigger.active = (triggerData.active == Relay.FIRM_ACTIVITY_AUTO);
-	}
+	trigger.active = (triggerData.active != Relay.FIRM_ACTIVITY_PERM_OFF);
 	trigger.index = triggerIndex;
+    }
+
+    /*Relay.prototype.needPermOnTrigger = function(){
+	if (this.isPermOn()){
+	    var needPermOnTrigger = true;
+	    this.getTriggersAndIntervals().forEach(function(trig){
+	        if (trig.actualPack != null){
+		    needPermOnTrigger = false;
+		}
+	    });
+	    return needPermOnTrigger;
+	} else {
+	    return false;
+	}
+    }*/
+
+    Relay.prototype.getReleasedIndexes = function(){
+	var result = [];
+	this.getTriggersAndIntervals().forEach(function(trig) {
+	    if (trig.isReleased()){
+		result.push(trig.index);
+		trig.index = undefined;
+	    }
+	});
+	if (this.permOnTrigger != null && this.permOnTrigger.index > -1 
+		&& !this.isPermOn()){
+	    result.push(this.permOnTrigger.index);
+	}
+	return result;
     }
 
     Relay.prototype.prepareSave = function() {
 	this.getTriggersAndIntervals().forEach(function(trig) {
-	    var activity = this.getFirmwareActivityCode(trig);
+	    var activity = (this.isPermOn() ? Relay.FIRM_ACTIVITY_PERM_OFF : this.getFirmwareActivityCode(trig));
 	    trig.prepareSave(activity);
 	}, this);
-    }
-
-    //ulozi triggery a vrati indexy vsech ulozenych triggeru
-    Relay.prototype.saveTriggers = function(outerCallback) {
-	var usedIndexes = [];
-	this.getTriggersAndIntervals().forEach(
-	    function(trig){
-		if (trig.index > -1){
-		    usedIndexes.push(trig.index);
-		}
-	    }
-	);
-	//ulozit vsechny nereleasle triggery do souboru, odpovidajicich jejich indexum
-	async.forEachSeries(this.getTriggersAndIntervals(),
-	    function(trig, innerCallback){
-	        trig.saveTrigger(innerCallback);
-	    }, function(err){
-		outerCallback();
-	});
-	this.permStatusSaved();
-	return usedIndexes;
+	if (this.isPermOn()){
+	    this.permOnTrigger.prepareSave(Relay.FIRM_ACTIVITY_PERM_ON);
+	}
     }
 
     Relay.prototype.useSlotIndex = function(index) {
@@ -68,35 +73,49 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	    return true;
 	}
 	if (this.isPermOn()){
-	    var needEmptyTrigger = true;
-	    this.getTriggersAndIntervals().forEach(function(trig){
-	        if (trig.actualPack != null){
-		    needEmptyTrigger = false;
-		}
-	    });
-	    if (needEmptyTrigger){
-		console.log("Creating empty trigger");
-	        var trig = Trigger.create('manualOn');
-	        trig.output = this.outputIndex;
-	        trig.active = true;
-	        this.triggers['manualOn'] = trig;
-		trig.prepareSave();
-	        trig.useSlotIndex(index);
-	        return true;
-	    }
+	    return this.permOnTrigger.useSlotIndex(index);
 	}
 	return false;
     }
 
-    Relay.prototype.getReleasedIndexes = function(){
-	var result = [];
-	this.getTriggersAndIntervals().forEach(function(trig) {
-	    if (trig.isReleased()){
-		result.push(trig.index);
-		trig.index = undefined;
+    //ulozi triggery a vrati indexy vsech ulozenych triggeru
+    Relay.prototype.saveTriggers = function(outerCallback) {
+	var usedIndexes = [];
+	this.getTriggersAndIntervals().forEach(
+	    function(trig){
+		if (trig.index > -1){
+		    usedIndexes.push(trig.index);
+		}
 	    }
-	});
-	return result;
+	);
+	if (this.isPermOn()){
+	    usedIndexes.push(this.permOnTrigger.index);
+	}
+	//ulozit vsechny nereleasle triggery
+	var relay = this;
+	async.series([
+	    function(callback){
+	        async.forEachSeries(relay.getTriggersAndIntervals(),
+	            function(trig, innerCallback){
+	                trig.saveTrigger(innerCallback);
+	            }, function(err){
+		        callback();
+		    });
+	    },
+	    function(callback){
+		if (relay.isPermOn()){
+		    relay.permOnTrigger.saveTrigger(callback);
+		} else {
+		    callback();
+		}
+	    },
+	    function(callback){
+		outerCallback();
+		callback();
+	    }
+	]);
+	this.permStatusSaved();
+	return usedIndexes;
     }
 
     Relay.prototype.getTriggersAndIntervals = function(){
@@ -147,6 +166,11 @@ app.factory('Relay', ['Trigger', function(Trigger){
 
     Relay.prototype.setPermOn = function(){
 	this.setPermStatus(Relay.PERM_ON);
+	if (this.permOnTrigger == null){
+	    this.permOnTrigger = Trigger.create('manualOn');
+	    this.permOnTrigger.output = this.outputIndex;
+	    this.permOnTrigger.active = true;
+	}
     }
 
     Relay.prototype.isPermOn = function(){
@@ -200,6 +224,7 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	    result.savedPermStatus = Relay.AUTO;
 	    result.intervals = [];
 	    result.triggers = {};
+	    result.permOnTrigger = null;
 
 
 	    //nasledujici property jsou provizorni
