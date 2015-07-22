@@ -110,11 +110,30 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	    function(callback){
 	        //zavolat na kazdem rele save
 	        async.forEachSeries($scope.relays,
-	            function(r, callback){
-	                Array.prototype.push.apply(usedTriggers, r.saveTriggers(callback));
+	            function(r, innerCallback){
+	                Array.prototype.push.apply(usedTriggers, r.saveTriggers(innerCallback));
 	            }, function(err){
 			callback();
 	        });
+	    },
+	    function(callback){
+		//je-li treba, prepsat permOn trigger prazdnym stringem
+		async.forEachSeries($scope.relays,
+		    function(r, innerCallback){
+			if (r.permOnTrigger != null){
+			    var relayPermOnTriggerIndex = r.permOnTrigger.index;
+			    if (relayPermOnTriggerIndex > -1 
+					&& slots[relayPermOnTriggerIndex] == -1){
+				r.deletePermOnTrigger(innerCallback);
+			    } else {
+				innerCallback();
+			    }
+			} else {
+			    innerCallback();
+			} 
+		    }, function(err){
+			callback();
+		});
 	    },
 	    function(callback){
 	        //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit

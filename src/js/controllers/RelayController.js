@@ -1,7 +1,6 @@
 app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'RelayData', function($scope, $interval, settings, RelayData) {
 
     $scope.loaded = false;
-    console.log("RelayController");
 
     function arrayFromMask(nMask) {
         // nMask must be between -2147483648 and 2147483647

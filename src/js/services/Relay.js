@@ -23,26 +23,11 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	trigger.index = triggerIndex;
     }
 
-    /*Relay.prototype.needPermOnTrigger = function(){
-	if (this.isPermOn()){
-	    var needPermOnTrigger = true;
-	    this.getTriggersAndIntervals().forEach(function(trig){
-	        if (trig.actualPack != null){
-		    needPermOnTrigger = false;
-		}
-	    });
-	    return needPermOnTrigger;
-	} else {
-	    return false;
-	}
-    }*/
-
     Relay.prototype.getReleasedIndexes = function(){
 	var result = [];
 	this.getTriggersAndIntervals().forEach(function(trig) {
 	    if (trig.isReleased()){
 		result.push(trig.index);
-		trig.index = undefined;
 	    }
 	});
 	if (this.permOnTrigger != null && this.permOnTrigger.index > -1 
@@ -116,6 +101,11 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	]);
 	this.permStatusSaved();
 	return usedIndexes;
+    }
+
+    Relay.prototype.deletePermOnTrigger = function(callback){
+	this.permOnTrigger.deleteTrigger(callback);
+	this.permOnTrigger = null;
     }
 
     Relay.prototype.getTriggersAndIntervals = function(){

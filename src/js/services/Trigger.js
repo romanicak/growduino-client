@@ -223,6 +223,15 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
 	}
     };
 
+    Trigger.prototype.deleteTrigger = function(asyncCallback) {
+	var temp = Trigger.createDisabled(0);
+	temp.active = 0;
+	delete temp.index;
+	$http.post('/triggers/' + this.index + '.jso', temp).success(function(){
+	    asyncCallback();
+	});
+    };
+
     var triggerCount = settings.triggerCount - settings.alertLimit;
     if (settings.triggerLimit) {
         triggerCount = Math.min(triggerCount, settings.triggerLimit);
