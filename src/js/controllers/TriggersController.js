@@ -43,6 +43,15 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	    $scope.relaysHash[relay].permStatusSaved();
 	});
 
+	//prectu z configu data o casech relatka Fan
+	if (clientConfigData.fanTimesInfo != null){
+	    var fan = $scope.relaysHash['Fan'];
+	    fan.day.since = clientConfigData.fanTimesInfo[0] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[0]);
+	    fan.day.until = clientConfigData.fanTimesInfo[0] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[1]);
+	    fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
+	    fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
+	}
+
 	//prectu z configu, ktere triggery musim cist; postupne je ctu
 	async.forEachSeries(clientConfigData.usedTriggers || [],
 	    function(triggerIndex, callback) {
@@ -105,6 +114,14 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 		permOffRelays.push(r.name);
 	    }
 	});
+	//ulozit do clientConfigu info o casech relatka Fan
+	var fan = $scope.relaysHash['Fan'];
+	var fanTimesInfo = [
+	    fan.day.since === null ? -1 : utils.timeToMinutes(fan.day.since),
+	    fan.day.since === null ? 0 : utils.timeToMinutes(fan.day.until),
+	    fan.night.since === null ? -1 : utils.timeToMinutes(fan.night.since),
+	    fan.night.since === null ? 0 : utils.timeToMinutes(fan.night.until),
+	];
 	var usedTriggers = [];
 	async.series([
 	    function(callback){
@@ -138,9 +155,11 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	    function(callback){
 	        //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
 	        if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
-		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)){
+		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)
+			|| !utils.deepCompare(fanTimesInfo, clientConfigData.fanTimesInfo)){
 	            clientConfigData.permOffRelays = permOffRelays;
 	            clientConfigData.usedTriggers = usedTriggers;
+		    clientConfigData.fanTimesInfo = fanTimesInfo;
 		    $http.post('client.jso', clientConfigData).success(function(){
 			callback();
 		    });

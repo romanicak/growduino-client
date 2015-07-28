@@ -1,9 +1,18 @@
-app.factory('Relay', ['Trigger', function(Trigger){
+app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
     var Relay = function(){};
 
     Relay.prototype.initTrigger = function(triggerData, triggerIndex) {
 	var trigger = Trigger.unpack(triggerData);
 	var triggerClass = trigger.triggerClass;
+	var fanDayNightTriggerClasses = ['temp1HighTimer', 'humidityHighTimer', 'inactiveForTimer'];
+	if (this.name == 'Fan' && fanDayNightTriggerClasses.indexOf(triggerClass) != -1){//je tam schvalne vetsi nez 0, protoze triggerClass 'Timer' chci nechat beze zmeny
+	    if (trigger.since == this.day.since && trigger.until == this.day.until){
+		var timeName = 'day';
+	    } else {
+		var timeName = 'night';
+	    }
+	    triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
+	}
 	if (triggerClass === 'timer'){
 	    this.intervals.push(trigger);
 	} else if (triggerClass === 'manualOn'){
@@ -38,6 +47,17 @@ app.factory('Relay', ['Trigger', function(Trigger){
     }
 
     Relay.prototype.prepareSave = function() {
+	if (this.name == 'Fan'){
+	    for (var triggerName in this.triggers){
+		if (triggerName.indexOf("_") != -1){
+		    var trig = this.triggers[triggerName];
+	            var timeName = trig.triggerClass.split("_")[1];
+	            var timeLimits = this[timeName];
+	            trig.since = timeLimits.since;
+	            trig.until = timeLimits.until;
+		}
+            }
+	}
 	this.getTriggersAndIntervals().forEach(function(trig) {
 	    var activity = (this.isPermOn() ? Relay.FIRM_ACTIVITY_PERM_OFF : this.getFirmwareActivityCode(trig));
 	    trig.prepareSave(activity);
@@ -119,7 +139,9 @@ app.factory('Relay', ['Trigger', function(Trigger){
 
     Relay.prototype.getTrigger = function(name){
 	if (this.triggers[name] == null){
-  	    var t = Trigger.create(name);
+	    var splitName = name.split('_')[0];
+  	    var t = Trigger.create(splitName);
+	    t.triggerClass = name;
 	    t.active = false;
 	    t.output = this.outputIndex;
 	    this.triggers[name] = t;
@@ -215,13 +237,17 @@ app.factory('Relay', ['Trigger', function(Trigger){
 	    result.intervals = [];
 	    result.triggers = {};
 	    result.permOnTrigger = null;
+	    if (result.name == 'Fan'){
+		result.day = {since: null, until: null};
+		result.night = {since: null, until: null};
+	    }
 
 
 	    //nasledujici property jsou provizorni
-	    result.manualOn = true;
+	    /*result.manualOn = true;
 	    result.manualOnSaved = true;
 	    result.off = true;
-	    result.offSaved = true;
+	    result.offSaved = true;*/
 
 	    return result;
         }

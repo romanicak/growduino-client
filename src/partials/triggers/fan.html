@@ -9,9 +9,23 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'temp1High')">
+<div class="fanDayNightLabel">
+    Day ventilation
+</div>
+<fieldset class="form-group sentinel-line" ng-enabled="true">
+    When time is from
+    <div class="form-group" bs-has-error>
+        <input type="text" class="form-control" ng-model="relay.day.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+    </div>
+    to
+    <div class="form-group" bs-has-error>
+        <input type="text" class="form-control" ng-model="relay.day.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+    </div>
+    ...
+</fieldset>
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighTimer_day')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when <b>Air Temperature</b> is over
+        ... turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
         </div> then keep it on till
@@ -23,9 +37,9 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHigh')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHighTimer_day')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when  <b>Relative Humidity</b> is over
+        ... turn on when <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
         </div> then keep it on till
@@ -38,9 +52,67 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveFor')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveForTimer_day')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Enable every
+        ... enable every
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+        </div>
+        of inactivity for
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div class="fanDayNightLabel">
+    Night ventilation
+</div>
+<fieldset class="form-group sentinel-line" ng-enabled="true">
+    When time is from
+    <div class="form-group" bs-has-error>
+        <input type="text" class="form-control" ng-model="relay.night.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+    </div>
+    to
+    <div class="form-group" bs-has-error>
+        <input type="text" class="form-control" ng-model="relay.night.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+    </div>
+    ...
+</fieldset>
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighTimer_night')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... turn on when <b>Air Temperature</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+        </div> is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHighTimer_night')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... turn on when <b>Relative Humidity</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
+        is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveForTimer_night')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... enable every
         <div class="form-group" bs-has-error>
             <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
         </div>

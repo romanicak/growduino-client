@@ -4,6 +4,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],
         ['HighDisallow', { off: {important: true, op: '>', val: '*'}}],
         ['InactiveFor', { since: null, on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
+        ['InactiveForTimer', { since: '**:**', until: '**:**', on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
         ['High', { since: null, on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['LowNoStopTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '<', val: Number.NEGATIVE_INFINITY}}],
         ['LowTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
@@ -103,7 +104,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
     };
 
     Trigger.prototype.pack = function(strict) {
-        if (!this.match(this.triggerClass, strict)) return null;
+        if (!this.match(this.triggerClass.split('_')[0], strict)) return null;
         if (this.off.important) {
             //in ui no field for off value, it should have same value as on val
             this.on = { val: this.off.val, op: this.off.op === '<' ? '>' : '<', important: false};
