@@ -9,33 +9,48 @@
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">MAC address</label>
         <div class="col-sm-10">
-            <input name="mac" type="text" ng-model="config.mac" ng-pattern="/^([0-9a-f]{1,2}[\.:-]){5}([0-9a-f]{1,2})$/i" class="form-control"/>
+            <input name="mac" type="text" ng-model="config.mac" ng-pattern="/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.mac.$valid">
+         Please enter valid MAC address. Small letters only, separated by : . Example: de:ad:be:ef:55:44 .
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">IP address</label>
         <div class="col-sm-10">
-            <input name="ip" type="text" ng-model="config.ip" ng-pattern="/^(\d{1,3}\.){3}\d{1,3}$/" class="form-control"/>
+            <input name="ip" type="text" ng-model="config.ip" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ip.$valid">
+         Please enter valid IP address. From 0.0.0.0 to 255.255.255.255.
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">Netmask</label>
         <div class="col-sm-10">
-            <input name="netmask" type="text" ng-model="config.netmask" ng-pattern="/^(\d{1,3}\.){3}\d{1,3}$/" class="form-control"/>
+            <input name="netmask" type="text" ng-model="config.netmask" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.netmask.$valid">
+         Please enter valid IP address mask. From 0.0.0.0 to 255.255.255.255.
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">Gateway</label>
         <div class="col-sm-10">
-            <input name="gateway" type="text" ng-model="config.gateway" ng-pattern="/^(\d{1,3}\.){3}\d{1,3}$/" class="form-control"/>
+            <input name="gateway" type="text" ng-model="config.gateway" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.gateway.$valid">
+         Please enter valid IP address. From 0.0.0.0 to 255.255.255.255.
+        </span>
     </div>
     <br>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">NTP server</label>
         <div class="col-sm-10">
-            <input name="ntp" type="text" ng-model="config.ntp" class="form-control"/>
+            <input name="ntp" type="text" ng-model="config.ntp" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ntp.$valid">
+         Please enter valid IP address. From 0.0.0.0 to 255.255.255.255.
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">Time zone</label>
@@ -75,26 +90,92 @@
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">SMTP server</label>
         <div class="col-sm-10">
-            <input name="smtp" type="text" ng-model="config.smtp" class="form-control"/>
+            <input name="smtp" type="text" ng-model="config.smtp" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.smtp.$valid">
+         Please enter valid IP address. From 0.0.0.0 to 255.255.255.255.
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">SMTP port</label>
         <div class="col-sm-10">
-            <input name="smtp" type="text" ng-model="config.smtp_port" ng-pattern="/^\d*$/" class="form-control"/>
+            <input name="smtpPort" type="text" ng-model="config.smtp_port" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-6][0-5][0-5][0-3][0-5])))))$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.smtpPort.$valid">
+         Please enter valid port number. From 1 to 65535.
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">System name</label>
         <div class="col-sm-10">
-            <input name="smtp" type="text" ng-model="config.sys_name" class="form-control"/>
+            <input name="systemName" type="text" ng-model="config.sys_name" ng-pattern="/^[a-zA-Z0-9]{0,16}$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+         Only numbers and letters allowed, max 16 characters.
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">E-mail from</label>
         <div class="col-sm-10">
-            <input name="mail_from" type="text" ng-model="config.mail_from" ng-pattern="/^\S+@\S+\.\S+$/" class="form-control"/>
+            <input name="mail_from" type="text" ng-model="config.mail_from" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/" class="form-control"/>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.mail_from.$valid">
+         Please enter valid email address.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">CO2 PPM 400</label>
+        <div class="col-sm-10">
+            <input name="co2_400" type="text" ng-model="config.co2_400" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.co2_400.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">CO2 PPM 40k</label>
+        <div class="col-sm-10">
+            <input name="CO2_40k" type="text" ng-model="config.co2_40k" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.CO2_40k.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">pH 4.00 @20&#176C</label>
+        <div class="col-sm-10">
+            <input name="ph_4" type="text" ng-model="config.ph_4" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">pH 7.03 @20&#176C</label>
+        <div class="col-sm-10">
+            <input name="ph_7" type="text" ng-model="config.ph_7" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">EC 1.278 @20&#176C</label>
+        <div class="col-sm-10">
+            <input name="ec_low_ion" type="text" ng-model="config.ec_low_ion" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ec_low_ion.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">EC 4.523 @20&#176C</label>
+        <div class="col-sm-10">
+            <input name="ec_high_ion" type="text" ng-model="config.ec_high_ion" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ec_high_ion.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
