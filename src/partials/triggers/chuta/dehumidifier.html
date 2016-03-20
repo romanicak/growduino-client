@@ -1,0 +1,29 @@
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHigh')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Turn on when  <b>Humidity</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" name="AA" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+	<!--span ng-show="form.AA.$valid">AA</span-->
+        </div> then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+        </div>
+        is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveFor')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Enable every
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+        </div>
+        of inactivity for
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>

@@ -1,0 +1,68 @@
+<!--Don't turn on when Fan is running - user must set same or lower value -->
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighDisallow')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Never turn on when <b>Temperature</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" name="temp1HighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+            <span ng-show="form.temp1HighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+<!--Don't turn on when Fan is running - user must set same or lower value -->
+<div ng-controller="TriggerController" ng-init="init(relay, 'humidityHighDisallow')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Never turn on when <b>Humidity</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" name="humidityHighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+            <span ng-show="form.humidityHighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'cO2LowTimer')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        <!--Turn on when time is from xx:xx to xx.xx and LightOutdoor amount is below xx. -->
+        Turn on when time is from
+        <div class="form-group" bs-has-error>
+            <input type="text" name="cO2LowTimer_Since" class="form-control" ng-model="t.since"  ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+            <span ng-show="form.cO2LowTimer_Since.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        to
+        <div class="form-group" bs-has-error>
+            <input type="text" name="cO2LowTimer_Until" class="form-control" ng-model="t.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+            <span ng-show="form.cO2LowTimer_Until.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>…<br>
+        …and <b>CO2 PPM</b> is below
+        <div class="form-group" bs-has-error>
+            <input type="text" name="cO2LowTimer_OnVal" class="form-control" ng-model="t.on.val" />
+            <span ng-show="form.cO2LowTimer_OnVal.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        then keep it open till
+        <div class="form-group" bs-has-error>
+            <input type="text" name="cO2LowTimer_OffVal" class="form-control" ng-model="t.off.val" />
+            <span ng-show="form.cO2LowTimer_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveFor')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Enable every
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+        </div>
+        of inactivity for
+        <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+        </div>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
