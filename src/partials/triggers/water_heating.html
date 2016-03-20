@@ -1,13 +1,12 @@
-<div ng-controller="TriggerController" ng-init="init(relay, 'humidityLow')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp2Low')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
-        Turn on when  <b>Humidity</b> is below
+        Turn on when <b>Water Temperature</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
         </div> then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-        </div>
-        is reached.
+            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
+        </div> is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>

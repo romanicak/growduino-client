@@ -3,19 +3,23 @@
         <!--Turn on when time is from xx:xx to xx.xx and LightOutdoor amount is below xx. -->
         Turn on when time is from
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.since"  ng-pattern="/^\d{1,2}:\d{2}$/"/>
+            <input type="text" name="light1LowTimer_Since" class="form-control" ng-model="t.since"  ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+	    <span ng-show="form.light1LowTimer_Since.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         to
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+            <input type="text" name="light1LowTimer_Until" class="form-control" ng-model="t.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+	    <span ng-show="form.light1LowTimer_Until.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>…<br>
         …and <b>Outdoor light</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" />
+            <input type="text" name="light1LowTimer_OnVal" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>
+	    <span ng-show="form.light1LowTimer_OnVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         then keep it open till
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" />
+            <input type="text" name="light1LowTimer_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>
+	    <span ng-show="form.light1LowTimer_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         is reached.
 
@@ -27,7 +31,8 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>Bulb temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+            <input type="text" name="temp3HighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+	    <span ng-show="form.temp3HighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
