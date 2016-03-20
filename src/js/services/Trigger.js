@@ -4,6 +4,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         ['LowDisallow', { off: {important: true, op: '<', val: '*'}}],
         ['HighDisallow', { off: {important: true, op: '>', val: '*'}}],
         ['InactiveFor', { since: null, on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
+        ['InactiveForTimer', { since: '**:**', until: '**:**', on: {op: 'T', val: '*'}, off: {op: 'T', val: '*'}}],
         ['High', { since: null, on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['LowNoStopTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '<', val: Number.NEGATIVE_INFINITY}}],
         ['LowTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
@@ -31,6 +32,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
                 }
             }
         }
+	console.warn("No pattern found for " + triggerClass);
         return null;
     }
 
@@ -101,8 +103,8 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         this.origin = raw;
     };
 
-    Trigger.prototype.pack = function() {
-        if (!this.match(this.triggerClass)) return null;
+    Trigger.prototype.pack = function(strict) {
+        if (!this.match(this.triggerClass.split('_')[0], strict)) return null;
         if (this.off.important) {
             //in ui no field for off value, it should have same value as on val
             this.on = { val: this.off.val, op: this.off.op === '<' ? '>' : '<', important: false};
@@ -115,19 +117,21 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
             sensor: this.sensor === null ? -1 : this.sensor,
             output: this.output
         };
-        if (this.index !== null) raw.index = this.index;
+        if (this.index !== null && this.index !== undefined) raw.index = this.index;
         return raw;
     };
 
-    function matchPattern(obj, pattern) {
+    //strict -- refuse "" as valid value for "*" and "**:**"
+    function matchPattern(obj, pattern, strict) {
         for (var key in pattern) {
             var p = pattern[key], v = obj[key];
             if ($.isPlainObject(p)) {
-                if (!matchPattern(v, p)) return false;
+                if (!matchPattern(v, p, strict)) return false;
             } else {
                 if (p === '**:**' || p === '*') {
                     if (v === null || $.type(v) === 'undefined') return false;
                     if (v === Number.NEGATIVE_INFINITY) return false;
+		    if (strict && v === "") return false;
                 } else {
                     if (v != p) return false;
                 }
@@ -136,18 +140,18 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         return true;
     }
 
-    Trigger.prototype.match = function(pattern) {
+    Trigger.prototype.match = function(pattern, strict) {
         if ($.type(pattern) === 'string') {
             pattern = findPattern(pattern).pattern;
         }
-        return matchPattern(this, pattern);
+        return matchPattern(this, pattern, strict);
     };
 
     Trigger.prototype.getName = function() {
         for (var i = 0; i < patterns.length; i++) {
             if (this.match(patterns[i][1])) {
                 var name = (this.sensor !== null ? settings.sensors[this.sensor].resource : '') + patterns[i][0];
-                return name[0].toLowerCase() + name.substring(1);
+                return name[0].toLowerCase() + name.substring(1);//tohle jenom zmeni prvni pismeno na lowercase
             }
         }
         return null;
@@ -158,6 +162,80 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         for (var i = 0; i < keys.length; i++) {
             this[keys[i]] = t[keys[i]];
         }
+    };
+
+    Trigger.prototype.prepareSave = function(activity) {
+	this.actualPack = this.pack(true);
+	if (this.actualPack){
+	    this.actualPack.active = activity;
+	    delete this.actualPack.index;
+	}
+    };
+
+    //tohle ma vratit true, pokud trigger byl inicializovan ze souboru, ma tudiz index, ale
+    //uz ho (ten index) nepotrebuje a tento muze byt recyklovan
+    Trigger.prototype.isReleased = function() {
+	if (this.index != undefined && this.actualPack == null){
+	    return true;
+	} else {
+	    return false;
+	}
+    };
+
+    //pokud trigger nebyl inicializovan ze souboru, a tudiz nema index, ale je nove pouzit,
+    //a tudiz index potrebuje, priradi si index predany co parametr a vrati true
+    //jinak vrati false
+    Trigger.prototype.useSlotIndex = function(freeIndex) {
+	if (this.index == undefined && this.actualPack != null){
+	    this.index = freeIndex;
+	    return true;
+	}
+	return false;
+    };
+
+    //pokud ( trigger neni released && zmenil se ), ulozit
+    //pokud ( neni released ) vratit jeho index, jinak -1
+    //TODO:
+    Trigger.prototype.saveTrigger = function(asyncCallback) {
+	if (this.index > -1){
+	    if (this.origin && this.origin.index){
+	        delete this.origin.index;//hack, ktery resi prave objeveny bug (loadnu stranku s alertama, nic nezmenim, dam save; vsechny triggery se preulozi)
+	    			     //zpusobeno je to tim, ze v origin je pritomen 'index', zatimco v actualPack neni. Uz netusim, jestli je v tom origin
+				     //k necemu dobry.
+	    }
+	    if (!utils.deepCompare(this.actualPack, this.origin)){
+                console.log('Saving trigger #' + this.index + ", named " + this.triggerClass);
+		console.log("Actual:");
+	        console.log(this.actualPack);
+		console.log("Origin:");
+		console.log(this.origin);
+		this.origin = this.actualPack;
+                $http.post('/triggers/' + this.index + '.jso', this.actualPack).success(function(){
+		    asyncCallback();
+		});
+	    } else {
+		//console.log("No need to save trigger #" + this.index);
+		//console.log("Actual:");
+		//console.log(this.actualPack);
+		//console.log("Origin:");
+		//console.log(this.origin);
+		asyncCallback();
+	    }
+	    return this.index;
+	} else {
+	    //console.log("Not saving trigger #" + this.index);
+	    asyncCallback();
+	    return -1;
+	}
+    };
+
+    Trigger.prototype.deleteTrigger = function(asyncCallback) {
+	var temp = Trigger.createDisabled(0);
+	temp.active = 0;
+	delete temp.index;
+	$http.post('/triggers/' + this.index + '.jso', temp).success(function(){
+	    asyncCallback();
+	});
     };
 
     var triggerCount = settings.triggerCount - settings.alertLimit;
@@ -194,6 +272,13 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
             }
         },
 
+	loadRaw: function(index, loadedCallback, asyncCallback) {
+	    var loadedData = $http.get('/triggers/' + index + '.jso', {cache: false}).success(function(data) {
+		loadedCallback(data);
+		asyncCallback();
+	    });
+	},
+
         save: function(triggers, success)  {
             if (!triggers.length) {
                 success();
@@ -204,7 +289,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
             triggers.forEach(function(trigger) {
                 last = requests.push(function() {
                     var index = trigger.index;
-                    console.log('Trigger #'+index+' saved', trigger);
+                    //console.log('Trigger #'+index+' saved', trigger);
                     return $http.post('/triggers/'+index+'.jso', trigger);
                 });
             });
@@ -231,6 +316,7 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
                 }
             }
             t.triggerClass = triggerClass;
+	    t.active = false;
             return t;
         },
 

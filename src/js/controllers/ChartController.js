@@ -1,5 +1,5 @@
-app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils', 'SensorHistory', 'settings', 'requests',
-    function($scope, $rootScope, $location, utils, SensorHistory, settings, requests) {
+app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils', 'SensorHistory', 'settings', 'requests', '$interval', 'RelayData', '$http',
+    function($scope, $rootScope, $location, utils, SensorHistory, settings, requests, $interval, RelayData, $http) {
     var charts = [];
     var chartDefs = settings.charts;
 
@@ -43,6 +43,12 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     };
 
     function initCharts() {
+	Highcharts.setOptions({
+	    global: {
+		useUTC: false
+	    }
+	});
+
         var colorIndex = 0, colors = Highcharts.getOptions().colors;
 
         chartDefs.forEach(function(chartDef, i) {
@@ -83,7 +89,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                     seriesOptions.events = {
                         click: function(ev) {
                             if ($scope.zoom === 'H') return; //should never happen
-                            updateChart($scope.zoom === 'M' ? 'D' : 'H', moment(ev.point.x));
+                            updateChart($scope.zoom === 'M' ? 'D' : 'H', moment(ev.point.x));//.zone(settings.tzOffset));
                         }
                     };
                 }
@@ -121,6 +127,9 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
+	//console.log("Show");
+	//console.log(resourceMethod);
+	//console.log(queryArgs);
         cleanCharts();
         charts.forEach(function(chart) {
             chart.showLoading('Loading…');
@@ -153,8 +162,10 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                 console.warn('No series for ' + sensor);
             } else {
                 if (data) {
+		    //console.log("Data, dataKey = " + dataKey);
+		    //console.log(data);
                     chartSeries.setData(padValues(data[dataKey]));
-                }
+		}
                 chart.hideLoading();
                 chartSeries.show();
             }
@@ -162,16 +173,25 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function updateChart(zoom, dt) {
+
         var zoomChanged = $scope.zoom !== zoom,
             isNow = dt === 'now';
 
         if (isNow) {
-            dt = moment().zone(settings.tzOffset);
+            dt = moment();//.zone(settings.tzOffset);
             $scope.isCurrent = true;
             if (zoom === 'H')  dt.subtract('hour', 1).startOf('minute');
-        }
+        } else {
+	    $scope.isCurrent = false;
+	}
+
+	if (isNow){
+	    console.log("now!!!");
+	}
+	console.log("dt: ", dt.format("YYYY/MM/DD hh:mm:ss"), ", zone: ", dt.zone());
 
         if (!isNow || zoom !== 'H') padDate(dt, zoom);
+	$rootScope.$emit('displayedTimeChanged', moment(dt)/*.zone(settings.tzOffset)*/, zoom, isNow);
         $scope.dt = dt;
         $scope.zoom = zoom;
 
@@ -180,7 +200,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         $location.search('d', isNow && zoom === 'H' ? null : dt.format(zt.urlFormat));
 
         var queryArgs = {};
-	var startingMoment = isNow ? moment().zone(settings.tzOffset) : dt;
+	var startingMoment = isNow ? moment()/*.zone(settings.tzOffset)*/ : dt;
         for (var arg in zt.dateComponents) {
             queryArgs[arg] = startingMoment.format(zt.dateComponents[arg]);
         }
@@ -189,23 +209,31 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
 		pointStart: dt.valueOf(),
 		pointInterval: zt.pointInterval
 	};
-	if (isNow){
+	if (isNow && zoom === 'H'){
+		//console.log("show 1");
+		//console.log(zt);
 		show(zt.dataKey, 'get', {}, seriesOptions);
 	} else {
+		//console.log("show 2");
+		//console.log(queryArgs);
 		show(zt.dataKey, zt.resourceMethod, queryArgs, seriesOptions);
 	}
 
         if (zoomChanged) {
             setupPicker();
-        } else {
-            updatePicker();
         }
+        updatePicker();
+        var fmt = zoomTypes[$scope.zoom].momentFormat;
+        $scope.formattedDate = $.isFunction(fmt) ? fmt($scope.dt) : $scope.dt.format(fmt);
+        $scope.forwardDisallowed = $scope.isCurrent || shiftByUnit($scope.dt, $scope.zoom, 1).unix() > moment().unix();
+
     }
 
     function updatePicker() {
         var picker = $('#picker-date').data('datetimepicker');
         if (picker) {
-            picker.initialDate = $scope.dt.toDate();
+            //picker.initialDate = $scope.dt.toDate();
+            picker.setDate($scope.dt.toDate());
         }
     }
 
@@ -222,7 +250,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             endDate: new Date()
         }).on('changeDate', function(ev){
             //datetime picker return date with selected units in UTC, convert it!
-            var d = moment(ev.date).zone(settings.tzOffset).add('minutes', ev.date.getTimezoneOffset());
+            var d = moment(ev.date)/*.zone(settings.tzOffset)*/.add('minutes', ev.date.getTimezoneOffset());
             updateChart($scope.zoom, d);
             $('#picker-date').datetimepicker('hide');
         });
@@ -241,7 +269,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
 
     function shiftDateUnit(offset) {
         var d;
-        if ($scope.isCurrent) {
+        if ($scope.isCurrent && $scope.zoom == 'H') {
             d = moment($scope.dt);
             padDate(d, $scope.zoom);
         } else {
@@ -265,18 +293,20 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
 
     var search = $location.search();
     $scope.zoom = zoomTypes[search.z] ? search.z : 'H';
-    updateChart($scope.zoom, search.d ? moment(search.d) : 'now');
+    updateChart($scope.zoom, search.d ? moment(search.d)/*.zone(settings.tzOffset)*/ : 'now');
 
     setupPicker();
+    updatePicker();
 
-    $scope.$watch(function() {
+/*    $scope.$watch(function() {
         return $scope.zoom + '-' + $scope.dt.unix();
     }, function() {
         var fmt = zoomTypes[$scope.zoom].momentFormat;
         $scope.formattedDate = $.isFunction(fmt) ? fmt($scope.dt) : $scope.dt.format(fmt);
-        $scope.forwardAllowed = !$scope.isCurrent && shiftByUnit($scope.dt, $scope.zoom, 1).unix() <= moment().unix();
+        $scope.forwardDisallowed = $scope.isCurrent || shiftByUnit($scope.dt, $scope.zoom, 1).unix() > moment().unix();
 
         //debug
         //$scope.formattedDate += ' ' + $scope.dt.unix() + ' / ' + $scope.dt.format();
-    });
+    });*/
+
 }]);

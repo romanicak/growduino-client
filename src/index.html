@@ -5,6 +5,8 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <title>Loading…</title>
 
+    <!--link rel="icon" type="image/png" href="images/favicon.png" sizes="32x32" /-->
+    <link rel="icon" type="image/ico" href="http://growduino.cz/favicon.ico" />
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
     <!-- build:css css/minified.css -->
@@ -18,7 +20,7 @@
 </head>
 <body>
     <div id="app-loading" style="margin: 40px; text-align: center">
-        Loading application…
+        Loading application Growduino, please wait…
         <div id="bootstrap-css-check" class="hidden"></div>
     </div>
     <div class="container" style="display: none">
@@ -29,16 +31,21 @@
                     <li ng-class="{ active: isActive('/triggers')}"><a href="#/triggers">Outputs</a></li>
                     <li ng-class="{ active: isActive('/alerts')}"><a href="#/alerts">Alerts</a></li>
                     <li ng-class="{ active: isActive('/settings')}"><a href="#/settings">Settings</a></li>
+                    <li ng-class="{ active: isActive('/maintenance')}"><a href="#/maintenance">Maintenance</a></li>
                 </ul>
 
-                <div class="relays" ng-controller="RelayController">
+                <div class="relays" ng-controller="RelayDataController">
+		    <h5>Current relays state</h5>
+		    <span class="label label-success">On</span>
+		    <span class="label label-default">Off</span>
+		    <br><br>
                     <span ng-repeat="relay in relays">
                       <span ng-class="{label: true, 'label-default': !relay.state, 'label-success': relay.state }">{{ relay.name }}</span>
                     </span>
 
-                    <div class="relay-history" ng-show="loaded">
+                    <div class="relay-history">
                         <h5>Relay state history</h5>
-                        <ul>
+                        <ul ng-show="!loadingHistory">
                             <li class="relay-history-day" ng-repeat="day in history">{{ day.when.format('Do MMMM') }}
                                 <ul>
                                     <li ng-repeat="item in day.items">{{ item.when.format('HH:mm') }}
@@ -49,7 +56,13 @@
                                 </ul>
                             </li>
                         </ul>
+			<div ng-show="loadingHistory">
+				Loading
+			</div>
                     </div>
+		    <div class="relay-history" ng-show="showMonthMessage">
+		        <h5>Switch to Day/Hour mode to display Relays History</h5>
+		    </div>
                 </div>
             </div>
             <div class="col-xs-10 page-content">

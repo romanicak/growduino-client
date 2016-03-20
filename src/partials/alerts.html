@@ -7,21 +7,34 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Air Temperature</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                    <input type="text" class="form-control" name="temp1High" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1High.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target"/>
+                    <input type="text" name="emailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.emailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" name="messageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.messageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" name="messageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.messageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -34,20 +47,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Air Temperature</b> is below
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                    <input type="text" class="form-control" name="temp1Low" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1Low.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target"/>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -61,20 +78,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Water Temperature</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                    <input type="text" class="form-control" name="temp2High" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2High.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/">
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -88,20 +109,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Water Temperature</b> is below
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+                    <input type="text" class="form-control" name="temp2Low" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2Low.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -115,20 +140,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Relative Humidity</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> %
+                    <input type="text" class="form-control" name="humidityHigh" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> %
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityHigh.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -142,20 +171,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>Relative Humidity</b> is below
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> %
+                    <input type="text" class="form-control" name="humidityLow" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> %
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityLow.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -169,20 +202,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When sensor distance from <b>Water Level</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> cm
+                    <input type="text" class="form-control" name="usndHigh" ng-model="alert.trigger.on.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/"/> cm
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndHigh.$valid">
+                    Invalid! Must be number with max two digits, no decimals.
+                <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -196,56 +233,24 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When sensor distance from <b>Water Level</b> is below
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> cm
+                    <input type="text" class="form-control" name="usndLow" ng-model="alert.trigger.on.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/"/> cm
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndLow.$valid">
+                    Invalid! Must be number with max two digits, no decimals.
+                <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
+                </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
-                </div>
-                <span ng-include="'partials/alerts/toggleButton.html'"></span>
-            </fieldset>
-        </div>
-    </div>
-
-    <hr>
-
-    <div ng-controller="AlertController" ng-init="init('light2LowTimer')">
-        <div class="row">
-            <fieldset class="form-group" ng-disabled="!alert.active">
-                When  <b>Lighting Indoor</b> is below
-                <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> 
-                </div>
-                and time is from 
-                <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
-                </div>
-                to
-                <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>...
-                </div>
-                <br>
-                ...send notification to
-                <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
-                </div>
-                <br>
-                On message:
-                <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
-                </div>
-                Off message:
-                <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -259,29 +264,308 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When  <b>Lighting Indoor</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.on.val" ng-pattern="/^\d+(.\d)?$/"/> 
+                    <input type="text" class="form-control" name="light2HighTimer" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>
                 </div>
-                and time is from 
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimer.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
+                and time is from
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+                    <input type="text" class="form-control" name="light2HighTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerTimeFrom.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
                 to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" ng-model="alert.trigger.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>...
+                    <input type="text" class="form-control" name="light2HighTimerTimeTo"ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerTimeTo.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
                 <br>
                 ...send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('light2LowTimer')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When  <b>Lighting Indoor</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="light2LowTimer" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimer.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
+                and time is from 
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="light2LowTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerTimeFrom.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
+                to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="light2LowTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerTimeTo.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
+                <br>
+                ...send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('eCHigh')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>EC</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="eCHigh" ng-model="alert.trigger.on.val" ng-pattern="/^\d(\.\d{1,2})?$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCHigh.$valid">
+                    Invalid! Must be number with max one digit, optional decimal point(not comma), then max two decimals.
+                <br>Correct: "2" or "2.3" or "2.32" . Incorrect: "2,32" or "23.2" or "3.232" .
+                </span>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('eCLow')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>EC</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="eCLow" ng-model="alert.trigger.on.val" ng-pattern="/^\d(\.\d{1,2})?$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCLow.$valid">
+                    Invalid! Must be number with max one digit, optional decimal point(not comma), then max two decimals.
+                <br>Correct: "2" or "2.3" or "2.32" . Incorrect: "2,32" or "23.2" or "3.232" .
+                </span>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('pHHigh')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>PH</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="pHHigh" ng-model="alert.trigger.on.val" ng-pattern="/^\d(\.\d{1,2})?$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHHigh.$valid">
+                    Invalid! Must be number with max one digit, optional decimal point(not comma), then max two decimals.
+                <br>Correct: "2" or "2.3" or "2.32" . Incorrect: "2,32" or "23.2" or "3.232" .
+                </span>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('pHLow')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>PH</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="pHLow" ng-model="alert.trigger.on.val" ng-pattern="/^\d(\.\d{1,2})?$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHLow.$valid">
+                    Invalid! Must be number with max one digit, optional decimal point(not comma), then max two decimals.
+                <br>Correct: "2" or "2.3" or "2.32" . Incorrect: "2,32" or "23.2" or "3.232" .
+                </span>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+   <div ng-controller="AlertController" ng-init="init('cO2HighTimer')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When  <b>CO2 PPM</b> is over
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="cO2HighTimer" ng-model="alert.trigger.on.val" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-9][0-9][0-9][0-9][0-9])))))$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimer.$valid">
+                    Invalid! Must be number with max five digits, without decimals.
+                <br>Correct: "2" or "23" or "23232" . Incorrect: "2,32" or "23.2" or "232323" .
+                </span>
+                and time is from
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="cO2HighTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerTimeFrom.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
+                to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="cO2HighTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerTimeTo.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
+                <br>
+                ...send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
+    <div ng-controller="AlertController" ng-init="init('cO2LowTimer')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When  <b>CO2 PPM</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="cO2LowTimer" ng-model="alert.trigger.on.val" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-9][0-9][0-9][0-9][0-9])))))$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimer.$valid">
+                    Invalid! Must be number with max five digits, without decimals.
+                <br>Correct: "2" or "23" or "23232" . Incorrect: "2,32" or "23.2" or "232323" .
+                </span>
+                and time is from
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="cO2LowTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerTimeFrom.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
+                to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="cO2LowTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerTimeTo.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+                </span>
+                <br>
+                ...send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
@@ -295,16 +579,16 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>power is down</b> send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target">
+                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.on_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message" ng-model="alert.off_message"/>
+                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>

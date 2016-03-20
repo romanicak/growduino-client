@@ -1,12 +1,122 @@
-app.factory('Alert', ['$http', function($http) {
+app.factory('Alert', ['$http', 'utils', 'Relay', function($http, utils, Relay) {
 
     var Alert = function() {
-        this.messages = {
-            on: '',
-            off: ''
-        };
+        this.on_message = '';
+	this.off_message = '';
         this.target = null;
         this.trigger = null;
+    };
+
+    Alert.prototype.pack = function(){
+	if (this.target === null && this.on_message === ""
+		&& this.off_message === ""){
+	    return null;
+	} else {
+	    return {
+		on_message: this.on_message,
+		off_message: this.off_message,
+		target: this.target
+	    };
+	}
+    }
+
+    Alert.prototype.prepareSave = function(){
+	var activity = this.getFirmwareActivityCode();
+	if (this.name !== "powerDown"){
+	    this.trigger.off.val = this.trigger.on.val;
+	    this.trigger.prepareSave(activity);
+	} else {
+	    console.log("Power down.prepare save");
+	}
+	this.actualPack = this.pack();
+	if (this.actualPack){
+	    this.actualPack.active = activity;
+	}
+    };
+
+    Alert.prototype.getReleasedIndexes = function(){
+	if (this.index != undefined && this.actualPack == null){
+	    return this.index;
+	} else {
+	    return -1;
+	}
+    };
+
+    Alert.prototype.useSlotIndex = function(freeIndex, triggerFreeIndex){
+	if (this.actualPack == null) return false;
+	console.log("Use slot index: " + freeIndex + " " + triggerFreeIndex + ", this.index = " + this.index);
+	console.log(this.actualPack);
+	if (this.index == undefined){
+	    this.index = freeIndex;
+	    if (this.trigger){
+	    	this.trigger.useSlotIndex(triggerFreeIndex);
+		this.actualPack.trigger = triggerFreeIndex;
+	    } else {
+		this.actualPack.trigger = -2;
+	    }
+   	    console.log(this.actualPack);
+	    return true;
+	} else {
+	    if (this.trigger){
+	        this.actualPack.trigger = this.trigger.index;
+	    } else {
+		this.actualPack.trigger = -2;
+	    }
+   	    console.log(this.actualPack);
+	    return false;
+	}
+    };
+
+    Alert.prototype.save = function(asyncCallback, usedAlertIndexes){
+	var alert = this;
+	if (this.index > -1){
+	    usedAlertIndexes.push(this.index);
+	    if (!utils.deepCompare(this.actualPack, this.origin)){
+		//console.log("Saving alert");
+		//console.log("ACTUAL:");
+		//console.log(this.actualPack);
+		//console.log("ORIGIN:");
+		//console.log(this.origin);
+		async.series([
+		    function(callback) {
+			alert.origin = alert.actualPack;
+	        	$http.post('/alerts/'+alert.index+'.jso', alert.actualPack).success(function(data) {
+			    callback();
+			});
+		    },
+		    function(callback) {
+	    	        if (alert.trigger){
+			    //console.log("Calling save trigger");
+			    alert.trigger.saveTrigger(asyncCallback);
+	    	        } else {
+			    //console.log("Not calling save trigger, have no trigger");
+			    //console.log(alert.trigger);
+			    callback();
+			    asyncCallback();
+		        }
+		    }
+		], function(err){});
+	    } else {
+		if (alert.trigger){
+		    //console.log("Calling save trigger 2");
+		    alert.trigger.saveTrigger(asyncCallback);
+		} else {
+		    //console.log("Not calling save trigger2");
+	   	    //console.log(this.trigger);
+		    asyncCallback();
+		}
+	    }
+	} else {
+	    asyncCallback();
+	}
+    };
+
+    Alert.prototype.getFirmwareActivityCode = function() {
+	if (this.active){
+	    return Relay.FIRM_ACTIVITY_AUTO;
+	} else {
+	    return Relay.FIRM_ACTIVITY_PERM_OFF;
+	}
     };
 
     $.extend(Alert, {
@@ -35,6 +145,21 @@ app.factory('Alert', ['$http', function($http) {
             });
         },
 
+	loadRaw: function(index, loadedCallback, asyncCallback) {
+	    var loadedData = $http.get('/alerts/' + index + '.jso', {cache: false}).success(function(data) {
+		if (data.trigger > -1){
+		    var loadedTrigger = $http.get('/triggers/' + data.trigger + '.jso', {cache: false}).success(function(triggerData) {
+		    	data.triggerData = triggerData;
+		    	loadedCallback(data);
+		    	asyncCallback();
+		    });
+		} else {
+		    loadedCallback(data);
+		    asyncCallback();
+		}
+	    });
+	},
+
         save: function(alerts, success)  {
             if (!alerts.length) {
                 success();
@@ -42,7 +167,7 @@ app.factory('Alert', ['$http', function($http) {
             }
             var q = async.queue(function(alert, done) {
                 var index = alert.index;
-                console.log('Alert #'+index+' saved', alert);
+                //console.log('Alert #'+index+' saved', alert);
                 $http.post('/alerts/'+index+'.jso', alert).finally(done);
             }, 1);
             q.drain = function() {
@@ -52,6 +177,24 @@ app.factory('Alert', ['$http', function($http) {
                 q.push(alert);
             });
         },
+
+	saveInactive: function(alerts, success) {
+	    if (!alerts.length) {
+		success();
+		return;
+	    }
+	    var q = async.queue(function(alert, done) {
+		var index = alert.index;
+		console.log('Inactive alert #'+index+' saved', alert);
+		$http.post('/alerts/alert'+index+'.jso', alert).finally(done);
+	    }, 1);
+	    q.drain = function() {
+		success();
+	    };
+	    alerts.forEach(function(alert) {
+		q.push(alert);
+	    });
+	},
     });
 
     return Alert;

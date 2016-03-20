@@ -25,6 +25,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'partials/settings.html',
             controller: 'SettingsController'
         }).
+        when('/maintenance', {
+            templateUrl: 'partials/maintenance.html',
+            controller: 'MaintenanceController'
+        }).
         when('/client-upload', {
             templateUrl: 'partials/client-upload.html',
             controller: 'ClientUploadController'

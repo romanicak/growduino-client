@@ -11,10 +11,10 @@ window.settings = {
     /* load only triggers marked as non-empty on previous save
        if true triggers saved outside app will not be recognized and can be accidentally rewritten
     */
-    fastTriggerLoad: true,
+    fastTriggerLoad: false,
 
     /* number of triggers reserved for alerts */
-    alertLimit: 11,
+    alertLimit: 17,
 
     outputs: [
         {name: 'Light', partial: 'light.html'},
@@ -23,7 +23,9 @@ window.settings = {
         {name: 'Watering', partial: 'watering.html'},
         {name: 'Refill', partial: 'refill.html'},
         {name: 'Heating', partial: 'heating.html'},
+        {name: 'Water Heating', partial: 'water_heating.html'},
         {name: 'Dehumidifier', partial: 'dehumidifier.html'},
+        {name: 'CO2 Dispenser', partial: 'co2.html'},
         {name: 'FreeTimer', partial: 'freetimer.html'}
     ],
 
@@ -34,7 +36,10 @@ window.settings = {
         'Temp3': { divisor: 10, name: 'Bulb Temperature'},
         'Light1': { divisor: 10, name: 'Lighting Outdoor'},
         'Light2': { divisor: 10, name: 'Lighting Indoor'},
-        'Usnd': { divisor: 1, name: 'Water Level'}
+        'Usnd': { divisor: 1, name: 'Water Level'},
+        'EC': { divisor: 100, name: 'Electric Conductivity'},
+        'pH': { divisor: 100, name: 'Acidity'},
+        'CO2': { divisor: 1, name: 'Carbon Dioxyde'}
     },
 
     //axis conf is Highcharts configuration
@@ -62,11 +67,30 @@ window.settings = {
         },
         {
             series: [
-                {name: 'Water Level', resource: 'Usnd', yAxis: 0}
+                {name: 'Water Level Distance', resource: 'Usnd', yAxis: 0}
             ],
             yAxis: [
                 { title: { text: 'cm' }, min: 0, minRange: 5},
-                { title: { text: 'cm' }, linkedTo: 0, opposite: true}
+                { title: { text: 'cm' }, opposite: true, min: 0, minRange: 5},
+            ]
+        },
+        {
+            series: [
+                {name: 'EC', resource: 'EC', yAxis: 0},
+                {name: 'pH', resource: 'pH', yAxis: 1}
+            ],
+            yAxis: [
+                { title: { text: 'EC' },  min: 0, minRange: 5},
+                { title: { text: 'pH' }, opposite: true, min: 0, minRange: 5}
+            ]
+        },
+        {
+            series: [
+                {name: 'CO2 PPM', resource: 'CO2', yAxis: 0}
+            ],
+            yAxis: [
+                { title: { text: 'CO2 PPM' },  min: 0, minRange: 5},
+                { title: { text: 'CO2 PPM' },  opposite: true, min: 0, minRange: 5}
             ]
         },
     ]

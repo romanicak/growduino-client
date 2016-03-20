@@ -61,6 +61,7 @@ app.factory('utils', function() {
     }
 
     //http://stackoverflow.com/questions/1068834/object-comparison-in-javascript
+    //vraci true, kdyz jsou stejne, false, pokud se lisi
     utils.deepCompare = function() {
       var leftChain, rightChain;
 

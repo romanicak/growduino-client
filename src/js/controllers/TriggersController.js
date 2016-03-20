@@ -1,5 +1,8 @@
+app.controller('RelayController', ['$scope', function($scope) {
+}]);
 app.controller('TriggerController', ['$scope', function($scope) {
     $scope.init = function(relay, name) {
+	//if (name != 'temp3HighDisallow')
         $scope.t = relay.getTrigger(name);
     };
 
@@ -8,311 +11,182 @@ app.controller('TriggerController', ['$scope', function($scope) {
     };
 }]);
 
-app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'Trigger', 'ClientConfig', 'settings',
-    function($scope, $http, $timeout, utils, Trigger, ClientConfig, settings) {
+app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'Relay', 'Trigger', 'ClientConfig', 'settings',
+    function($scope, $http, $timeout, utils, Relay, Trigger, ClientConfig, settings) {
+
+    $scope.relays = [];
+    $scope.relaysHash = {};
+    $scope.showInvalids = false;
+
+    settings.outputs.forEach(function(output, i) {
+        var relay = Relay.create(output, i);
+        $scope.relays.push(relay);
+	$scope.relaysHash[output["name"]] = relay;
+    });
+
+//New Loading:
+//Loadovat az pote, co byla inicializovana vsechna rele
+    var slots = utils.newArray(Trigger.LENGTH, -1),
+	clientConfigData = {};
 
     $scope.loadingMessage = 'Loading triggers';
     $scope.loading = true;
     $scope.loadingStep = 0;
     $scope.loadingPercent = 0;
 
-    $scope.relays = [];
-
-    var slots = utils.newArray(Trigger.LENGTH, null),
-        remote = utils.newArray(Trigger.LENGTH, null);
-
-    settings.outputs.forEach(function(output, i) {
-        var relay = {
-            name: output.name,
-            partial: output.partial,
-            index: i,
-            intervals: [],
-            triggers: {},
-
-            getTrigger: function(name) {
-                if (this.triggers[name]) return this.triggers[name];
-
-                var t = Trigger.create(name);
-                t.active = false;
-                t.output = i;
-                this.triggers[name] = t;
-                return t;
-            }
-        };
-        $scope.relays.push(relay);
-    });
-
-    function forEachTrigger(fn) {
-        $scope.relays.forEach(function(r) {
-            r.intervals.forEach(function(u) {
-                fn(u, r);
-            });
-            for (var tc in r.triggers) {
-                fn(r.triggers[tc], r);
-            }
-        });
-    }
-
-    function serializeTriggers() {
-        var inactive = [], modified = [];
-        var mRemote = remote.slice();
-
-        function isActive(u, relay) {
-            if (u.triggerClass === 'manualOn') {
-                return relay.manualOn;
-            } else {
-                return !(relay.off || relay.manualOn || !u.active);
-            }
-        }
-
-        forEachTrigger(function(u, relay) {
-            if (!isActive(u, relay)) {
-                var index = slots.indexOf(u);
-                if (index !== -1) {
-                    slots[index] = null;
-                    mRemote[index] = Trigger.createDisabled(index);
-                }
-                if (u.triggerClass !== 'manualOn' && u.triggerClass !== 'timer') {
-                    var raw = u.pack();
-                    if (raw) {
-                        raw.active = u.active;
-                        delete raw.index;
-                        inactive.push(raw);
-                    }
-                }
-            }
-        });
-
-        forEachTrigger(function(u, relay) {
-            if (isActive(u, relay)) {
-                var index = slots.indexOf(u);
-                if (index === -1) {
-                    index = slots.indexOf(null);
-                    if (index === -1) {
-                        //TODO
-                        alert('Too many triggers!'); throw 'Too many triggers!';
-                    }
-                    slots[index] = u;
-                }
-                var raw = u.pack();
-                raw.index = index;
-                mRemote[index] = raw;
-            }
-        });
-
-        var usedIds = [];
-        for (var i = 0; i < remote.length; i++) {
-            if (!utils.deepCompare(remote[i], mRemote[i])) {
-                modified.push(mRemote[i]);
-            }
-            if (slots[i] !== null) {
-                usedIds.push(i);
-            }
-        }
-
-        remote = mRemote;
-
-        return {
-            modified: modified,
-            inactive: inactive,
-            usedIds: usedIds
-        };
-    }
-
-    function getInactiveRelays() {
-        var disabledRelays = [], manualOnRelays = [];
-        $scope.relays.forEach(function(r) {
-            if (r.off) {
-                disabledRelays.push(r.name);
-            }
-            if (r.manualOn) {
-                manualOnRelays.push(r.name);
-            }
-        });
-        return {
-            disabledRelays: disabledRelays,
-            manualOnRelays: manualOnRelays
-        };
-    }
-
-    $scope.saveTriggers = function() {
-        if ($scope.saving) return;
-        $scope.saving = true;
-
-        var ser = serializeTriggers(),
-            steps = [];
-
-        if (ser.modified.length) {
-            steps.push(function(done) {
-                Trigger.save(ser.modified, function() { done(); /*do not pas err arg */ });
-                //console.log('Saving ', ser.modified); done();
-            });
-        }
-
-        steps.push(function(done) {
-            var saveData = getInactiveRelays();
-            saveData.triggers = ser.inactive;
-            if (settings.fastTriggerLoad) {
-                saveData.usedTriggers = utils.arrayUnique(ser.usedIds);
-            }
-            ClientConfig.save(saveData, function() { done(); /*do not pas err arg */ });
-            //console.log('Saving ', saveData); done();
-        });
-
-        //TODO async is not needed now
-        async.series(steps, function() {
-            $scope.relays.forEach(function(r) {
-                for (var i = 0; i < r.intervals.length; i++) {
-                    if (!r.intervals[i].active) {
-                        r.intervals.splice(i, 1);
-                    }
-                }
-                //clear dirty flags
-                r.offSaved = r.off;
-                r.manualOnSaved = r.manualOn;
-            });
-            $scope.saving = false;
-            $scope.saveSuccess = true;
-            $timeout(function() {
-                $scope.saveSuccess = false;
-            }, 2000);
-        });
-    };
-
-    $scope.addInterval = function(relay) {
-        var u = Trigger.create('timer');
-        u.active = true;
-        u.output = relay.index;
-        relay.intervals.push(u);
-    };
-
-    $scope.toggleInterval = function(relay, idx) {
-        var interval = relay.intervals[idx];
-        if (slots.indexOf(interval) === -1) {
-            relay.intervals.splice(idx, 1);
-        } else {
-            interval.active = !interval.active;
-        }
-    };
-
-    $scope.relayTurnOff = function(relay) {
-        relay.off = !relay.off;
-        if (relay.off) relay.manualOn = false;
-    };
-
-    $scope.relayManualOn = function(relay) {
-        relay.manualOn= !relay.manualOn;
-        var rt = relay.triggers;
-        if (relay.manualOn) {
-            relay.off = false;
-            if (!rt.manualOn) {
-                rt.manualOn = Trigger.create('manualOn');
-                rt.manualOn.output = relay.index;
-            }
-            rt.manualOn.active = true;
-        } else {
-            if (rt.manualOn) rt.manualOn.active = false;
-        }
-    };
-
-    $scope.relayAuto = function(relay) {
-        if (relay.off) $scope.relayTurnOff(relay);
-        if (relay.manualOn) $scope.relayManualOn(relay);
-    };
-
-    $scope.loadingStep = 0;
-    $scope.stepCount = Trigger.LENGTH + 1;
-
-    var usedTriggers = null;
-
-    function step() {
-        $scope.loadingStep += 1;
-        $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
-    }
-
-    function processTrigger(raw) {
-        u = Trigger.unpack(raw);
-        if (u) {
-            var relay = $scope.relays[u.output];
-            if (relay) {
-                if (u.triggerClass === 'timer' || (u.triggerClass === 'manualOn' && !relay.manualOn)) {
-                    relay.intervals.push(u);
-                } else {
-                    var exists = relay.triggers[u.triggerClass];
-                    if (exists) {
-                        exists.update(u); //updated needed because TriggerController already refs existing record in it's scope
-                        u = exists;
-                    } else {
-                        relay.triggers[u.triggerClass] = u;
-                    }
-                }
-            } else {
-                console.warn('Loaded trigger for undefined output '+ u.output, raw);
-                return null;
-            }
-        }
-        if ('index' in raw) {
-            remote[raw.index] = raw;
-            slots[raw.index] = u;
-        }
-        return u;
-    }
-
-    function parseConfig(data) {
-        (data.triggers || []).forEach(function(trigger) {
-            delete trigger.index; //fix old data
-            var u = processTrigger(trigger);
-            if (u) {
-                u.active = !!trigger.active;
-                delete u.origin;
-            }
-        });
-        (data.disabledRelays || []).forEach(function(relayName)  {
-            $scope.relays.forEach(function(r) {
-                if (r.name === relayName) {
-                    r.off = true;
-                    r.offSaved = true;
-                }
-            });
-        });
-        (data.manualOnRelays || []).forEach(function(relayName)  {
-            $scope.relays.forEach(function(r) {
-                if (r.name === relayName) {
-                    r.manualOn = true;
-                    r.manualOnSaved = true;
-                }
-            });
-        });
-        if (settings.fastTriggerLoad) {
-            usedTriggers = data.usedTriggers;
-        }
-        if (!usedTriggers) {
-            usedTriggers = utils.seq(Trigger.LENGTH);
-        }
-    }
-
     ClientConfig.get().then(function(cfg) {
-        parseConfig(cfg);
-        step();
-        Trigger.loadMany(usedTriggers, function(raw) {
-                step();
-                var u = processTrigger(raw);
-                if (u) u.active = true;
-            }, function() {
-                $scope.loadingPercent = 100;
-                $scope.relays.forEach(function(r) {
-                    r.intervals.sort(function(a, b) {
-                        if (a.since != b.since) {
-                            return utils.timeToMinutes(a.since) - utils.timeToMinutes(b.since);
-                        } else {
-                            return utils.timeToMinutes(a.until) - utils.timeToMinutes(b.until);
-                        }
-                    });
-                });
-                $scope.loading = false;
-                //console.log('Triggers', remote, slots);
-            }
-        );
+	clientConfigData = cfg;
+    	$scope.stepCount = clientConfigData.usedTriggers ? clientConfigData.usedTriggers.length : 0;
+
+	//prectu z configu, ktera rele jsou permOff
+	(clientConfigData.permOffRelays || []).forEach(function(relay) {
+	    $scope.relaysHash[relay].setPermOff();
+	    $scope.relaysHash[relay].permStatusSaved();
+	});
+
+	//prectu z configu data o casech relatka Fan
+	if (clientConfigData.fanTimesInfo != null){
+	    var fan = $scope.relaysHash['Fan'];
+	    fan.day.since = clientConfigData.fanTimesInfo[0] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[0]);
+	    fan.day.until = clientConfigData.fanTimesInfo[0] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[1]);
+	    fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
+	    fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
+	}
+
+	//prectu z configu, ktere triggery musim cist; postupne je ctu
+	async.forEachSeries(clientConfigData.usedTriggers || [],
+	    function(triggerIndex, callback) {
+	        var triggerData = Trigger.loadRaw(triggerIndex, 
+	            function(triggerData) {
+	    	        //podle indexu poznam, ke kteremu rele patri
+	                var relay = $scope.relays[triggerData.output];
+		        if (relay){
+    	                    //reknu rele, inicializuj trigger(rawTrigger) 
+	                    relay.initTrigger(triggerData, triggerIndex);
+			    slots[triggerIndex] = relay.outputIndex;
+		        } else {
+                	    console.warn('Loaded trigger for undefined output ' + triggerData);
+		        }
+			$scope.loadingStep += 1;
+			$scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+		    }, callback
+		);
+	    }, function (err){
+		$scope.loading = false;
+	});
     });
 
+
+//New Saving:
+    function findAvailableSlotIndex(){
+	var result = slots.indexOf(-1);
+	if (result != -1){
+	    return result;
+	}
+        alert('Too many triggers!'); throw 'Too many triggers!';
+    }
+
+    $scope.saveTriggers = function(){
+	var invalidInputs = document.getElementsByClassName("ng-invalid");
+	if (invalidInputs.length != 0){
+		var invalidInput = invalidInputs[1];//invalidInputs[0] is the save button itself
+		invalidInput.scrollIntoView(true);
+		invalidInput.focus();
+		$scope.showInvalids = true;
+		return;
+	}
+
+	$scope.saving = true;
+
+	$scope.relays.forEach(function(r) {
+	    r.prepareSave();
+	});
+	//vyzadat od kazdeho rele indexy uz nepouzitych triggeru
+	$scope.relays.forEach(function(r) {
+	    r.getReleasedIndexes().forEach(function(index) {
+		slots[index] = -1;
+	    });
+	});
+	//pridelit kazdemu rele indexy pro nove pouzite triggery
+	$scope.relays.forEach(function(r) {
+	    do {
+	    	//zjistit vhodny volny index anebo zarvat, pokud zadny neexistuje
+		var availIndex = findAvailableSlotIndex();
+	    	//dat ho relatku, at ho pouzije, jestli chce
+		var indexUsed = r.useSlotIndex(availIndex);
+		if (indexUsed){
+		    slots[availIndex] = r.outputIndex;
+		}
+	    } while (indexUsed);//pokud ho pouzilo, zopakovat
+	});
+	//ulozit do clientConfigu info o permaDisabled relatkach
+	var permOffRelays = [];
+	$scope.relays.forEach(function(r) {
+	    if (r.isPermOff()){
+		permOffRelays.push(r.name);
+	    }
+	});
+	//ulozit do clientConfigu info o casech relatka Fan
+	var fan = $scope.relaysHash['Fan'];
+	var fanTimesInfo = [
+	    fan.day.since === null ? -1 : utils.timeToMinutes(fan.day.since),
+	    fan.day.since === null ? 0 : utils.timeToMinutes(fan.day.until),
+	    fan.night.since === null ? -1 : utils.timeToMinutes(fan.night.since),
+	    fan.night.since === null ? 0 : utils.timeToMinutes(fan.night.until),
+	];
+	var usedTriggers = [];
+	async.series([
+	    function(callback){
+	        //zavolat na kazdem rele save
+	        async.forEachSeries($scope.relays,
+	            function(r, innerCallback){
+	                Array.prototype.push.apply(usedTriggers, r.saveTriggers(innerCallback));
+	            }, function(err){
+			callback();
+	        });
+	    },
+	    function(callback){
+		//je-li treba, prepsat permOn trigger prazdnym stringem
+		async.forEachSeries($scope.relays,
+		    function(r, innerCallback){
+			if (r.permOnTrigger != null){
+			    var relayPermOnTriggerIndex = r.permOnTrigger.index;
+			    if (relayPermOnTriggerIndex > -1 
+					&& slots[relayPermOnTriggerIndex] == -1){
+				r.deletePermOnTrigger(innerCallback);
+			    } else {
+				innerCallback();
+			    }
+			} else {
+			    innerCallback();
+			} 
+		    }, function(err){
+			callback();
+		});
+	    },
+	    function(callback){
+	        //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
+	        if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
+		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)
+			|| !utils.deepCompare(fanTimesInfo, clientConfigData.fanTimesInfo)){
+	            clientConfigData.permOffRelays = permOffRelays;
+	            clientConfigData.usedTriggers = usedTriggers;
+		    clientConfigData.fanTimesInfo = fanTimesInfo;
+		    $http.post('client.jso', clientConfigData).success(function(){
+			callback();
+		    });
+	        } else {
+		    callback();
+		}
+	    },
+	    function(callback){
+		$scope.saving = false;
+	        $scope.saveSuccess = true;
+		$timeout(function() {
+		    $scope.saveSuccess = false;
+		}, 2000);
+		callback();
+	    }
+	]);
+    };
 }]);

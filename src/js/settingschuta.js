@@ -48,6 +48,7 @@ window.settings = {
             series: [
                 {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
                 {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
+                {name: 'Bulb Temperature', resource: 'Temp3', yAxis: 0},
                 {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1}
             ],
             yAxis: [
@@ -73,25 +74,25 @@ window.settings = {
                 { title: { text: 'cm' }, min: 0, minRange: 5},
                 { title: { text: 'cm' }, opposite: true, min: 0, minRange: 5},
             ]
-        },
-        {
-            series: [
-                {name: 'EC', resource: 'EC', yAxis: 0},
-                {name: 'pH', resource: 'pH', yAxis: 1}
-            ],
-            yAxis: [
-                { title: { text: 'EC' },  min: 0, minRange: 5},
-                { title: { text: 'pH' }, opposite: true, min: 0, minRange: 5}
-            ]
-        },
-        {
-            series: [
-                {name: 'CO2 PPM', resource: 'CO2', yAxis: 0}
-            ],
-            yAxis: [
-                { title: { text: 'CO2 PPM' },  min: 0, minRange: 5},
-                { title: { text: 'CO2 PPM' },  opposite: true, min: 0, minRange: 5}
-            ]
-        },
+        }
+        //{
+        //   series: [
+        //      {name: 'EC', resource: 'EC', yAxis: 0},
+        //        {name: 'pH', resource: 'pH', yAxis: 1}
+        //    ],
+        //    yAxis: [
+        //        { title: { text: 'EC' },  min: 0, minRange: 5},
+        //        { title: { text: 'pH' }, opposite: true, min: 0, minRange: 5}
+        //    ]
+        //},
+        //{
+        //    series: [
+        //        {name: 'CO2 PPM', resource: 'CO2', yAxis: 0}
+        //    ],
+        //    yAxis: [
+        //        { title: { text: 'CO2 PPM' },  min: 0, minRange: 5},
+        //        { title: { text: 'CO2 PPM' },  opposite: true, min: 0, minRange: 5}
+        //    ]
+        //},
     ]
 };

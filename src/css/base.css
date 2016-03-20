@@ -6,6 +6,11 @@ a[ng-click] {
     margin-top: 10px;
 }
 
+.nav li a {
+    text-align: center;
+    padding: 10px 0;
+}
+
 .page-content {
     padding-top: 10px;
 }
@@ -23,6 +28,7 @@ a[ng-click] {
     opacity: 1;
 }
 
+.relays h5,
 .relay-history h5 {
     font-style: italic;
 }
@@ -80,6 +86,7 @@ a[ng-click] {
     width: 70px;
 }
 
+.maintenance-form .form-control,
 .triggers-form .form-control.alert-target {
     width: 200px;
 }
@@ -144,4 +151,14 @@ a[ng-click] {
 
 .relay-save .text-success {
     padding-left: 20px;
+}
+
+.fanDayNightLabel {
+    font-size: 18px;
+    padding-top: 8px;
+}
+
+.formError {
+    color: red;
+    font-weight: bold;
 }

@@ -39,7 +39,7 @@ function onComplete() {
                     weekdays: $.fn.datetimepicker.dates.cs.days
                 },*/
                 global: {
-                    timezoneOffset: settings.tzOffset
+                    timezoneOffset: 0//settings.tzOffset
                 }
             });
 
@@ -76,6 +76,7 @@ function loadApplication() {
                 "js/services/divisors.js",
                 "js/services/Trigger.js",
                 "js/services/Alert.js",
+                "js/services/Relay.js",
                 "js/controllers/NavigationController.js",
                 "js/controllers/ChartController.js",
                 "js/controllers/SettingsController.js",
@@ -83,6 +84,7 @@ function loadApplication() {
                 "js/controllers/TriggersController.js",
                 "js/controllers/AlertsController.js",
                 "js/controllers/ClientUploadController.js",
+                "js/controllers/MaintenanceController.js",
                 "js/directives/bsHasError.js",
             ],
             complete: onComplete

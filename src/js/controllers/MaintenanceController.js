@@ -30,14 +30,16 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   $scope.backupTriggers = function(){
     $scope.$parent.loadingMessage = 'Loading';
-    $scope.loading = true;
+    $scope.$parent.loading = true;
     $scope.$parent.loadingStep = 0;
     $scope.$parent.loadingPercent = 0;
     ClientConfig.get().then(function(cfg) {
       $scope.$parent.stepCount = cfg.usedAlerts ? cfg.usedAlerts.length : 0;
       $scope.$parent.stepCount += cfg.usedTriggers ? cfg.usedTriggers.length : 0;
+      cfg.$promise = undefined;
+      cfg.$resolved = undefined;
       var saveData = {
-        config: cfg
+        client: cfg
       };
       async.forEachSeries(cfg.usedAlerts || [],
         function(alertIndex, callback) {
@@ -64,7 +66,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
               );
             }, function (err){
               save(JSON.stringify(saveData), $scope.form2Data.fileName);
-              $scope.loading = false;
+              $scope.$parent.loading = false;
           });
       });
     });
@@ -93,12 +95,16 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
           async.forEachSeries(cfg.usedAlerts || [],
             function(alertIndex, callback) {
               $http.post("/alerts/" + alertIndex + ".jso", "").success(function(){
+                $scope.$parent.loadingStep += 1;
+                $scope.$parent.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
                 callback();
               });
             }, function (err){
               async.forEachSeries(cfg.usedTriggers || [],
                 function(triggerIndex, callback) {
                   $http.post("/triggers/" + triggerIndex + ".jso", "").success(function() {
+                  $scope.$parent.loadingStep += 1;
+                  $scope.$parent.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
                     callback();
                   });
                 }, function (err){
@@ -132,7 +138,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
     $scope.$parent.loading = true;
     $scope.$parent.loadingStep = 0;
     $scope.$parent.loadingPercent = 0;
-    $http.post('config.jso', data).success(function() {
+    $http.post('client.jso', data).success(function() {
       $scope.$parent.loading = false;
     });
   };
