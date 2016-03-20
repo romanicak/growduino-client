@@ -156,6 +156,7 @@ grunt.initConfig({
                 "src/js/services/resources.js",
                 "src/js/services/divisors.js",
                 "src/js/services/Trigger.js",
+                "src/js/services/Relay.js",
                 "src/js/services/Alert.js",
                 "src/js/controllers/NavigationController.js",
                 "src/js/controllers/ChartController.js",
@@ -163,6 +164,7 @@ grunt.initConfig({
                 "src/js/controllers/RelayController.js",
                 "src/js/controllers/TriggersController.js",
                 "src/js/controllers/AlertsController.js",
+                "src/js/controllers/MaintenanceController.js",
                 "src/js/controllers/ClientUploadController.js",
                 "src/js/directives/bsHasError.js",
             ],
@@ -254,6 +256,7 @@ grunt.registerTask('dist', [
     /*'targethtml:dist',*/ 'htmlmin:index', 'string-replace', 'clean:tmp'
 ]);
 grunt.registerTask('distfish', ['dist', 'copy:distfish']);
+grunt.registerTask('distchuta', ['dist', 'copy:distchuta']);
 
 //TODO remove htmlmin, it is now quite useless when using string-replace!
 
