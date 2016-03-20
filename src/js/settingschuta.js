@@ -58,23 +58,23 @@ window.settings = {
         },
         {
             series: [
-                {name: 'Lighting Outdoor', resource: 'Light1', yAxis: 0},
+                //{name: 'Lighting Outdoor', resource: 'Light1', yAxis: 0},
                 {name: 'Lighting Indoor', resource: 'Light2', yAxis: 0}
             ],
             yAxis: [
                 { title: { text: 'sun' }, min: 0, minRange: 5},
                 { title: { text: 'sun' }, linkedTo: 0, opposite: true}
             ]
-        },
-        {
-            series: [
-                {name: 'Water Level Distance', resource: 'Usnd', yAxis: 0}
-            ],
-            yAxis: [
-                { title: { text: 'cm' }, min: 0, minRange: 5},
-                { title: { text: 'cm' }, opposite: true, min: 0, minRange: 5},
-            ]
-        }
+        }//,
+        //{
+        //    series: [
+        //        {name: 'Water Level Distance', resource: 'Usnd', yAxis: 0}
+        //    ],
+        //    yAxis: [
+        //        { title: { text: 'cm' }, min: 0, minRange: 5},
+        //        { title: { text: 'cm' }, opposite: true, min: 0, minRange: 5},
+        //    ]
+        //},
         //{
         //   series: [
         //      {name: 'EC', resource: 'EC', yAxis: 0},
