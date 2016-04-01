@@ -272,7 +272,7 @@
                 </span>
                 and time is from
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="light2HighTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                    <input type="text" class="form-control" name="light2HighTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerTimeFrom.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -280,7 +280,7 @@
                 </span>
                 to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="light2HighTimerTimeTo"ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                    <input type="text" class="form-control" name="light2HighTimerTimeTo"ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>...
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerTimeTo.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -320,7 +320,7 @@
                 </span>
                 and time is from 
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="light2LowTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                    <input type="text" class="form-control" name="light2LowTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerTimeFrom.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -328,7 +328,7 @@
                 </span>
                 to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="light2LowTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                    <input type="text" class="form-control" name="light2LowTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>...
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerTimeTo.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -483,15 +483,15 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When  <b>CO2 PPM</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="cO2HighTimer" ng-model="alert.trigger.on.val" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-9][0-9][0-9][0-9][0-9])))))$/"/>
+                    <input type="text" class="form-control" name="cO2HighTimer" ng-model="alert.trigger.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimer.$valid">
-                    Invalid! Must be number with max five digits, without decimals.
-                <br>Correct: "2" or "23" or "23232" . Incorrect: "2,32" or "23.2" or "232323" .
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
                 </span>
                 and time is from
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="cO2HighTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                    <input type="text" class="form-control" name="cO2HighTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerTimeFrom.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -499,7 +499,7 @@
                 </span>
                 to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="cO2HighTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                    <input type="text" class="form-control" name="cO2HighTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>...
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerTimeTo.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -531,15 +531,15 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When  <b>CO2 PPM</b> is below
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="cO2LowTimer" ng-model="alert.trigger.on.val" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-9][0-9][0-9][0-9][0-9])))))$/"/>
+                    <input type="text" class="form-control" name="cO2LowTimer" ng-model="alert.trigger.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimer.$valid">
-                    Invalid! Must be number with max five digits, without decimals.
-                <br>Correct: "2" or "23" or "23232" . Incorrect: "2,32" or "23.2" or "232323" .
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
                 </span>
                 and time is from
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="cO2LowTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+                    <input type="text" class="form-control" name="cO2LowTimerTimeFrom" ng-model="alert.trigger.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerTimeFrom.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -547,7 +547,7 @@
                 </span>
                 to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="cO2LowTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>...
+                    <input type="text" class="form-control" name="cO2LowTimerTimeTo" ng-model="alert.trigger.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>...
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerTimeTo.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
