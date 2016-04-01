@@ -3,11 +3,22 @@
         Refill when sensor distance from <b>Water level </b>…<br>
         …is more than
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/>&nbsp;cm
-        </div> then keep it open till
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/>&nbsp;cm
+            <input type="text" name="usndHighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/"/>&nbsp;cm
+            <span ng-show="form.usndHighOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.usndHighOn.$valid">
+                    Invalid! Must be number with max two digits, no decimals.
+                <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
+                </span>
+        then keep it open till
+        <div class="form-group" bs-has-error>
+            <input type="text" name="usndHighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/"/>&nbsp;cm
+            <span ng-show="form.usndHighOff.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.usndHighOff.$valid">
+                    Invalid! Must be number with max two digits, no decimals.
+                <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
+                </span>
         is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
@@ -18,11 +29,23 @@
     <fieldset class="form-group sentinel-line" ng-init="t = relay.getTrigger('temp2High')" ng-disabled="!t.active">
         Refill when <b>Water Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
-        </div> then keep it open till
+            <input type="text" name="temp2HighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp2HighOn.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighOn.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it open till
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-        </div> is reached.
+            <input type="text" name="temp2HighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp2HighOff.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighOff.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
@@ -31,13 +54,22 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+            <input type="text" name="refillEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <span ng-show="form.refillEveryMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.refillEveryMinute.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+            <input type="text" name="refillForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes...
+            <span ng-show="form.refillForMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-
+        <span style="color:#B40404" class="help-block" ng-show="!form.refillForMinute.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
 </div>
