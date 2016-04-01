@@ -47,10 +47,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	//prectu z configu data o casech relatka Fan
 	if (clientConfigData.fanTimesInfo != null){
 	    var fan = $scope.relaysHash['Fan'];
-	    fan.day.since = clientConfigData.fanTimesInfo[0] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[0]);
-	    fan.day.until = clientConfigData.fanTimesInfo[0] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[1]);
-	    fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
-	    fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? null : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
+	    fan.day.since = clientConfigData.fanTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[0]);
+	    fan.day.until = clientConfigData.fanTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[1]);
+	    fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
+	    fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
 	}
 
 	//prectu z configu, ktere triggery musim cist; postupne je ctu
