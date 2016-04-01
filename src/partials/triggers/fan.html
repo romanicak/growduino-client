@@ -2,8 +2,12 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>Air Temperature</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/> °C
+            <input type="text" name="temp1LowDisallow" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowDisallow.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
@@ -15,12 +19,22 @@
 <fieldset class="form-group sentinel-line" ng-disabled="relay.dayDisabled()">
     When time is from
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.day.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+        <input type="text" name="fanDay_Since" class="form-control" ng-model="relay.day.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+        <span ng-show="form.relay.day.since.$invalid && showInvalids" class="formError">Incorrect value</span>
     </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.fanDay_Since.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
     to
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.day.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+        <input type="text" name="fanDay_Until" class="form-control" ng-model="relay.day.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
+        <span ng-show="form.relay.day.until.$invalid && showInvalids" class="formError">Incorrect value</span>
     </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.fanDay_Until.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
     ...
 </fieldset>
 <div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighTimer_day')">
