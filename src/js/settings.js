@@ -72,7 +72,7 @@ window.settings = {
             ],
             yAxis: [
                 { title: { text: 'cm' }, min: 0, minRange: 5},
-                { title: { text: 'cm' }, opposite: true, min: 0, minRange: 5},
+                { title: { text: 'cm' }, linkedTo: 0, opposite: true, min: 0, minRange: 5}
             ]
         },
         {
@@ -91,7 +91,7 @@ window.settings = {
             ],
             yAxis: [
                 { title: { text: 'CO2 PPM' },  min: 0, minRange: 5},
-                { title: { text: 'CO2 PPM' },  opposite: true, min: 0, minRange: 5}
+                { title: { text: 'CO2 PPM' },  linkedTo: 0, opposite: true, min: 0, minRange: 5}
             ]
         },
     ]
