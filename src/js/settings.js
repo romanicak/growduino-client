@@ -48,7 +48,8 @@ window.settings = {
             series: [
                 {name: 'Air Temperature', resource: 'Temp1', yAxis: 0},
                 {name: 'Water Temperature', resource: 'Temp2', yAxis: 0},
-                {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1}
+                {name: 'Relative Humidity', resource: 'Humidity', yAxis: 1},
+                {name: 'Bulb Temperature', resource: 'Temp3', yAxis: 0},
             ],
             yAxis: [
                 { title: { text: '°C' },  minRange: 5},
