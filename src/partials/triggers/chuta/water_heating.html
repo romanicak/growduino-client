@@ -2,11 +2,23 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Turn on when <b>Water Temperature</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
-        </div> then keep it on till
+            <input type="text" name="temp2LowOn" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp2LowOn.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp2LowOn.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-        </div> is reached.
+            <input type="text" name="temp2LowOff" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp2LowOff.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp2LowOff.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
@@ -15,13 +27,22 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+            <input type="text" name="waterHeatEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <span ng-show="form.waterHeatEveryMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.waterHeatEveryMinute.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+            <input type="text" name="waterHeatForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes...
+            <span ng-show="form.waterHeatForMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-
+        <span style="color:#B40404" class="help-block" ng-show="!form.waterHeatForMinute.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
 </div>
