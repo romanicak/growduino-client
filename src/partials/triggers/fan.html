@@ -3,6 +3,7 @@
         Never turn on when <b>Air Temperature</b> is below
         <div class="form-group" bs-has-error>
             <input type="text" name="temp1LowDisallow" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
+            <span ng-show="form.temp1LowDisallow.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowDisallow.$valid">
                     Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
@@ -19,8 +20,8 @@
 <fieldset class="form-group sentinel-line" ng-disabled="relay.dayDisabled()">
     When time is from
     <div class="form-group" bs-has-error>
-        <input type="text" name="fanDay_Since" class="form-control" ng-model="relay.day.since" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
-        <span ng-show="form.relay.day.since.$invalid && showInvalids" class="formError">Incorrect value</span>
+        <input type="text" name="fanDay_Since" class="form-control" ng-model="relay.day.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
+        <span ng-show="form.fanDay_Since.$invalid && showInvalids" class="formError">Incorrect value</span>
     </div>
     <span style="color:#B40404" class="help-block" ng-show="!form.fanDay_Since.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -28,8 +29,8 @@
     </span>
     to
     <div class="form-group" bs-has-error>
-        <input type="text" name="fanDay_Until" class="form-control" ng-model="relay.day.until" ng-pattern="/^((([0-1][0-9])|([2][0-3])):([0-5][0-9]))|(24:00)$/"/>
-        <span ng-show="form.relay.day.until.$invalid && showInvalids" class="formError">Incorrect value</span>
+        <input type="text" name="fanDay_Until" class="form-control" ng-model="relay.day.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
+        <span ng-show="form.fanDay_Until.$invalid && showInvalids" class="formError">Incorrect value</span>
     </div>
     <span style="color:#B40404" class="help-block" ng-show="!form.fanDay_Until.$valid">
                     Invalid! Must be in hh:mm format from 00:00 to 24:00.
@@ -41,11 +42,23 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
-        </div> then keep it on till
+            <input type="text" name="temp1HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;°C
+            <span ng-show="form.temp1HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighTimer_day.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-        </div> is reached.
+            <input type="text" name="temp1LowTimer_day" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp1LowTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowTimer_day.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
@@ -55,11 +68,22 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-        </div> then keep it on till
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+            <input type="text" name="hum1HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <span ng-show="form.hum1HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.hum1HighTimer_day.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" name="hum1LowTimer_day"class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <span ng-show="form.hum1LowTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.hum1LowTimer_day.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
         is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
@@ -70,12 +94,22 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... enable every
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+            <input type="text" name="fanEveryMinute_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <span ng-show="form.fanEveryMinute_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.fanEveryMinute_day.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+            <input type="text" name="fanForMinute_day" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes.
+            <span ng-show="form.fanForMinute_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.fanForMinute_day.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
@@ -87,23 +121,45 @@
 <fieldset class="form-group sentinel-line" ng-disabled="relay.nightDisabled()">
     When time is from
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.night.since" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+        <input type="text" name="fanNight_Since" class="form-control" ng-model="relay.night.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
+        <span ng-show="form.fanNight_Since.$invalid && showInvalids" class="formError">Incorrect value</span>
     </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.fanNight_Since.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
     to
     <div class="form-group" bs-has-error>
-        <input type="text" class="form-control" ng-model="relay.night.until" ng-pattern="/^\d{1,2}:\d{2}$/"/>
+        <input type="text" name="fanNight_Until" class="form-control" ng-model="relay.night.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/"/>
+        <span ng-show="form.fanNight_Until.$invalid && showInvalids" class="formError">Incorrect value</span>
     </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.fanNight_Until.$valid">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
     ...
 </fieldset>
 <div ng-controller="TriggerController" ng-init="init(relay, 'temp1HighTimer_night')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" />&nbsp;°C
-        </div> then keep it on till
+            <input type="text" name="temp1HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp1HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighTimer_night.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/" />&nbsp;°C
-        </div> is reached.
+            <input type="text" name="temp1LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <span ng-show="form.temp1LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowTimer_night.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
@@ -113,11 +169,23 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
-        </div> then keep it on till
-        <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+(.\d)?$/"/>&nbsp;%
+            <input type="text" name="hum1HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <span ng-show="form.hum1HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+
+        <span style="color:#B40404" class="help-block" ng-show="!form.hum1HighTimer_night.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" name="hum1LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <span ng-show="form.hum1LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.hum1LowTimer_night.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
         is reached.
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
@@ -128,12 +196,22 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... enable every
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.on.val" ng-pattern="/^\d+$/"/> minutes
+            <input type="text" name="fanEveryMinute_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <span ng-show="form.fanEveryMinute_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.fanEveryMinute_night.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" class="form-control" ng-model="t.off.val" ng-pattern="/^\d+$/"/> minutes.
+            <input type="text" name="fanForMinute_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes.
+            <span ng-show="form.fanForMinute_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.fanForMinute_night.$valid">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
 
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
