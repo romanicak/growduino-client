@@ -23,9 +23,9 @@ window.settings = {
         {name: 'Watering', partial: 'watering.html'},
         {name: 'Refill', partial: 'refill.html'},
         {name: 'Heating', partial: 'heating.html'},
-        {name: 'Water Heating', partial: 'water_heating.html'},
+        {name: 'Water_Heating', partial: 'water_heating.html'},
         {name: 'Dehumidifier', partial: 'dehumidifier.html'},
-        {name: 'CO2 Dispenser', partial: 'co2.html'},
+        {name: 'CO2_Dispenser', partial: 'co2.html'},
         {name: 'FreeTimer', partial: 'freetimer.html'}
     ],
 
