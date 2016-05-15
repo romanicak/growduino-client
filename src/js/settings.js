@@ -39,7 +39,7 @@ window.settings = {
         'Usnd': { divisor: 1, name: 'Water Level'},
         'EC': { divisor: 100, name: 'Electric Conductivity'},
         'pH': { divisor: 100, name: 'Acidity'},
-        'CO2': { divisor: 1, name: 'Carbon Dioxyde'}
+        'CO2': { divisor: 0.1, name: 'Carbon Dioxyde'}
     },
 
     //axis conf is Highcharts configuration
