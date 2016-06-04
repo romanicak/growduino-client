@@ -1,3 +1,4 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
 <div ng-include="'partials/loadingProgress.html'"></div>
 
 <form novalidate class="form-inline triggers-form alerts" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="saveAlerts()">
@@ -15,24 +16,24 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" name="emailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="temp1HighEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
-                <span style="color:#B40404" class="help-block" ng-show="!form.emailAddress.$valid">
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighEmailAddress.$valid">
                     Please enter valid email address.
                 </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" name="messageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp1HighMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
-                <span style="color:#B40404" class="help-block" ng-show="!form.messageOn.$valid">
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighMessageOn.$valid">
                     Only numbers, letters and '!.-_ allowed, max 32 characters.
                 </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" name="messageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp1HighMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
-                <span style="color:#B40404" class="help-block" ng-show="!form.messageOff.$valid">
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighMessageOff.$valid">
                     Only numbers, letters and '!.-_ allowed, max 32 characters.
                 </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
@@ -55,17 +56,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="temp1LowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp1LowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp1LowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -86,17 +96,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/">
+                    <input type="text" name="temp2HighEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/">
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp2HighMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp2HighMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -117,17 +136,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="temp2LowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2LowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp2LowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2LowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="temp2LowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.temp2LowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -148,17 +176,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="humidityHighEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityHighEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="humidityHighMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityHighMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="humidityHighMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityHighMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -179,17 +216,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="humidityLowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="humidityLowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="humidityLowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -210,17 +256,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="usndHighEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndHighEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="usndHighMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndHighMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="usndHighMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndHighMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -241,17 +296,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="usndLowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndLowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="usndLowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndLowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="usndLowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.usndLowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -289,17 +353,26 @@
                 <br>
                 ...send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="light2HighTimerEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="light2HighTimerMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="light2HighTimerMessageOff"  class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimerMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -337,17 +410,26 @@
                 <br>
                 ...send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="light2LowTimerEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="light2LowTimerMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="light2LowTimerMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimerMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -368,17 +450,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="eCHighEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCHighEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="eCHighMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCHighMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="eCHighMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCHighMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -399,17 +490,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="eCLowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCLowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="eCLowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCLowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="eCLowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.eCLowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -430,17 +530,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="pHHighEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHHighEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="pHHighMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHHighMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="pHHighMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHHighMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -461,17 +570,26 @@
                 </span>
                 send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="pHLowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHLowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="pHLowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHLowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="pHLowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.pHLowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -508,17 +626,26 @@
                 <br>
                 ...send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="cO2HighTimerEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="cO2HighTimerMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="cO2HighTimerMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimerMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -556,17 +683,26 @@
                 <br>
                 ...send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="cO2LowTimerEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="cO2LowTimerMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="cO2LowTimerMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimerMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
@@ -579,17 +715,26 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When <b>power is down</b> send notification to
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                    <input type="text" name="powerDownEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.powerDownEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
                 <br>
                 On message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="powerDownMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.powerDownMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 Off message:
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                    <input type="text" name="powerDownMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
                 </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.powerDownMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
                 <span ng-include="'partials/alerts/toggleButton.html'"></span>
             </fieldset>
         </div>
