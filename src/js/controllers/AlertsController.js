@@ -104,12 +104,20 @@ app.controller('AlertsController', ['$http', '$scope', '$timeout', 'utils', 'Ale
 	}
     }
 
-    $scope.saveAlerts = function(){
-	$scope.saving = true;
+		$scope.saveAlerts = function(){
+			var invalidInputs = document.getElementsByClassName("ng-invalid");
+			if (invalidInputs.length != 0){
+				var invalidInput = invalidInputs[1];//invalidInputs[0] is the save button itself
+				invalidInput.scrollIntoView(true);
+				invalidInput.focus();
+				$scope.showInvalids = true;
+				return;
+			}
+			$scope.saving = true;
 
-        $.each($scope.alerts, function(name, alert) {
-	    alert.prepareSave();
-	});
+			$.each($scope.alerts, function(name, alert) {
+				alert.prepareSave();
+			});
 	//releasnout uz nepotrebne indexy
         $.each($scope.alerts, function(name, alert) {
 	    var releasedIndex = alert.getReleasedIndexes();
