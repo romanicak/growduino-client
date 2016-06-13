@@ -9,6 +9,7 @@
                 When <b>Air Temperature</b> is over
                 <div class="form-group" bs-has-error>
                     <input type="text" class="form-control" name="temp1High" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
+                    <span ng-show="form.temp1High.$invalid && showInvalids" class="formError">Incorrect value</span>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.temp1High.$valid">
                     Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
