@@ -13,8 +13,8 @@ window.settings = {
     */
     fastTriggerLoad: false,
 
-    /* number of triggers reserved for alerts */
-    alertLimit: 17,
+    /* number of triggers reserved for alerts, 20160613 battery % alert included */
+    alertLimit: 18,
 
     outputs: [
         {name: 'Light', partial: 'light.html'},
@@ -39,7 +39,8 @@ window.settings = {
         'Usnd': { divisor: 1, name: 'Water Level'},
         'EC': { divisor: 100, name: 'Electric Conductivity'},
         'pH': { divisor: 100, name: 'Acidity'},
-        'CO2': { divisor: 0.1, name: 'Carbon Dioxyde'}
+        'CO2': { divisor: 0.1, name: 'Carbon Dioxyde'},
+        'Battery': { divisor: 0, name: 'Battery percent'}
     },
 
     //axis conf is Highcharts configuration
