@@ -711,6 +711,46 @@
 
     <hr>
 
+    <div ng-controller="AlertController" ng-init="init('batteryLow')">
+        <div class="row">
+            <fieldset class="form-group" ng-disabled="!alert.active">
+                When <b>Battery capacity</b> is below
+                <div class="form-group" bs-has-error>
+                    <input type="text" class="form-control" name="batteryLow" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> %
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.batteryLow.$valid">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                </span>
+                send notification to
+                <div class="form-group" bs-has-error>
+                    <input type="text" name="batteryLowEmailAddress" class="form-control alert-target" ng-model="alert.target" ng-pattern="/^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.batteryLowEmailAddress.$valid">
+                    Please enter valid email address.
+                </span>
+                <br>
+                On message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" name="batteryLowMessageOn" class="form-control alert-message"  ng-model="alert.on_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.batteryLowMessageOn.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
+                Off message:
+                <div class="form-group" bs-has-error>
+                    <input type="text" name="batteryLowMessageOff" class="form-control alert-message"  ng-model="alert.off_message" ng-pattern="/^['!._-\w ]{1,32}$/"/>
+                </div>
+                <span style="color:#B40404" class="help-block" ng-show="!form.batteryLowMessageOff.$valid">
+                    Only numbers, letters and '!.-_ allowed, max 32 characters.
+                </span>
+                <span ng-include="'partials/alerts/toggleButton.html'"></span>
+            </fieldset>
+        </div>
+    </div>
+
+    <hr>
+
     <div ng-controller="AlertController" ng-init="init('powerDown')">
         <div class="row">
             <fieldset class="form-group" ng-disabled="!alert.active">
