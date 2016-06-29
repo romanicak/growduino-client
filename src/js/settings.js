@@ -40,7 +40,7 @@ window.settings = {
         'EC': { divisor: 100, name: 'Electric Conductivity'},
         'pH': { divisor: 100, name: 'Acidity'},
         'CO2': { divisor: 0.1, name: 'Carbon Dioxyde'},
-        'Battery': { divisor: 0, name: 'Battery percent'}
+        'Battery': { divisor: 1, name: 'Battery percent'}
     },
 
     //axis conf is Highcharts configuration
@@ -93,6 +93,15 @@ window.settings = {
             yAxis: [
                 { title: { text: 'CO2 PPM' },  min: 0, minRange: 5},
                 { title: { text: 'CO2 PPM' },  linkedTo: 0, opposite: true, min: 0, minRange: 5}
+            ]
+        },
+        {
+            series: [
+                {name: 'Battery', resource: 'Battery', yAxis: 0}
+            ],
+            yAxis: [
+                { title: { text: '%' },  min: 0, minRange: 5},
+                { title: { text: '%' },  linkedTo: 0, opposite: true, min: 0, minRange: 5}
             ]
         },
     ]
