@@ -48,7 +48,8 @@ a[ng-click] {
 }
 
 .loading {
-    background: url('/images/loading.gif') center center no-repeat;
+    /*background: url('/images/loading.gif') center center no-repeat; -- nahrazuju natahnutim z webu*/
+    background: url('http://growduino.cz/002_nemazat/loading.gif') center center no-repeat;
 }
 
 .loading > * {
