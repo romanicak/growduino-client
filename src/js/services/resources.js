@@ -68,11 +68,13 @@ app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settin
         });
     });
 
-    function load(resourceMethod, queryArgs, callback) {
+    function load(resourceMethod, queryArgs, callback, errorCallback) {
         sensorResources.forEach(function(sensor) {
             requests.push(function() {
                 return sensor.resource[resourceMethod](queryArgs, function(data) {
                     callback(sensor.name, data);
+                }, function(request) {
+                    errorCallback(sensor.name);
                 }).$promise;
             });
         });
@@ -80,17 +82,17 @@ app.factory('SensorHistory', ['$q', 'sensorResourceFactory', 'divisors', 'settin
     }
 
     return {
-        get: function(queryArgs, callback) {
-            return load('get', queryArgs, callback);
+        get: function(queryArgs, callback, errorCallback) {
+            return load('get', queryArgs, callback, errorCallback);
         },
-        getMonth: function(queryArgs, callback) {
-            return load('getMonth', queryArgs, callback);
+        getMonth: function(queryArgs, callback, errorCallback) {
+            return load('getMonth', queryArgs, callback, errorCallback);
         },
-        getDay: function(queryArgs, callback) {
-            return load('getDay', queryArgs, callback);
+        getDay: function(queryArgs, callback, errorCallback) {
+            return load('getDay', queryArgs, callback, errorCallback);
         },
-        getHour: function(queryArgs, callback) {
-            return load('getHour', queryArgs, callback);
+        getHour: function(queryArgs, callback, errorCallback) {
+            return load('getHour', queryArgs, callback, errorCallback);
         }
     };
 }]);

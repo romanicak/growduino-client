@@ -126,6 +126,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         d.startOf(zoomTypes[zoom].momentUnit);
     }
 
+    //seriesOptions -- konfigurace chovani zobrazeneho grafu; neovlivnuje ziskavani dat
     function show(dataKey, resourceMethod, queryArgs, seriesOptions) {
 	//console.log("Show");
 	//console.log(resourceMethod);
@@ -133,6 +134,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         cleanCharts();
         charts.forEach(function(chart) {
             chart.showLoading('Loading…');
+            chart.numErrorSeries = 0;//pocet series, pro ktera se nepovedlo stahnout data
             chart.series.forEach(function(chartSeries) {
                 chartSeries.setData([]);
                 chartSeries.update($.extend({
@@ -144,32 +146,54 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             });
         });
 
-        SensorHistory[resourceMethod](queryArgs, function(sensor, data) {
-            var chart = null,
-                chartSeries = null;
+        SensorHistory[resourceMethod](queryArgs, 
+            function(sensor, data) {
+                var chart = null,
+                    chartSeries = null;
 
-            chloop:
-            for (var ci = 0; ci < charts.length; ci++) {
-                for (var i = 0; i < chartDefs[ci].series.length; i++) {
-                    if (chartDefs[ci].series[i].resource === sensor) {
-                        chart = charts[ci];
-                        chartSeries = chart.series[i];
-                        break chloop;
+                chloop:
+                for (var ci = 0; ci < charts.length; ci++) {
+                    for (var i = 0; i < chartDefs[ci].series.length; i++) {
+                        if (chartDefs[ci].series[i].resource === sensor) {
+                            chart = charts[ci];
+                            chartSeries = chart.series[i];
+                            break chloop;
+                        }
                     }
                 }
+                if (chartSeries === null) {
+                    console.warn('No series for ' + sensor);
+                } else {
+                    if (data) {
+		        console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
+		        console.log(data);
+                        chartSeries.setData(padValues(data[dataKey]));
+		    }
+                    chart.hideLoading();
+                    chartSeries.show();
+                }
+            },
+            function(sensorName) {
+                var chart = null,
+                    chartSeries = null;
+
+                chloop:
+                for (var ci = 0; ci < charts.length; ci++) {
+                    for (var i = 0; i < chartDefs[ci].series.length; i++) {
+                        if (chartDefs[ci].series[i].resource === sensorName) {
+                            chart = charts[ci];
+                            chartSeries = chart.series[i];
+                            break chloop;
+                        }
+                    }
+                }
+                console.log("Error downloading data for sensor " + sensorName);
+                chart.numErrorSeries++;
+                if (chart.numErrorSeries == chart.series.length){
+                    chart.showLoading("No data available");
+                }
             }
-            if (chartSeries === null) {
-                console.warn('No series for ' + sensor);
-            } else {
-                if (data) {
-		    //console.log("Data, dataKey = " + dataKey);
-		    //console.log(data);
-                    chartSeries.setData(padValues(data[dataKey]));
-		}
-                chart.hideLoading();
-                chartSeries.show();
-            }
-        });
+        );
     }
 
     function updateChart(zoom, dt) {
