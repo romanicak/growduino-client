@@ -78,6 +78,7 @@ function loadApplication() {
                 "js/services/Alert.js",
                 "js/services/Relay.js",
                 "js/controllers/NavigationController.js",
+                "js/controllers/CalibrationController.js",
                 "js/controllers/ChartController.js",
                 "js/controllers/SettingsController.js",
                 "js/controllers/RelayController.js",

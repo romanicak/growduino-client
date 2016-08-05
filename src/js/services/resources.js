@@ -2,6 +2,15 @@ app.factory('BackendConfig', ['$resource', 'requests', function($resource, reque
     return requests.adapt($resource('/config.jso'));
 }]);
 
+app.factory('CalibrationConfig', ['$resource', 'requests', function($resource, requests) {
+    return {
+      config: requests.adapt($resource('/config.jso')),//TODO: rename to calib.jso
+      EC: requests.adapt($resource('/sensors/rawdata/7.jso')),
+      pH: requests.adapt($resource('/sensors/rawdata/8.jso')),
+      CO2: requests.adapt($resource('/sensors/rawdata/9.jso'))
+    };
+}]);
+
 app.factory('ClientConfig', ['$resource', 'requests', function($resource, requests) {
     var resource = $resource('/client.jso'),
         proxy = requests.adapt(resource),

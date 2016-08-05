@@ -163,3 +163,8 @@ a[ng-click] {
     color: red;
     font-weight: bold;
 }
+
+.calibration-control {
+    width: initial;
+    display: inline-block;
+}

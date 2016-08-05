@@ -1,0 +1,84 @@
+<form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()">
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">EC 1.278 @20&#176C</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="ec_low_ion" type="text" ng-model="config.ec_low_ion" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ec_low_ion.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">EC 4.523 @20&#176C</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="ec_high_ion" type="text" ng-model="config.ec_high_ion" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ec_high_ion', 'EC')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ec_high_ion.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">EC Offset</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="ec_offset" type="text" ng-model="config.ec_offset" ng-pattern="/^-?((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|0))$/" class="form-control"/>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ec_offset.$valid">
+         Positive or negative number or zero allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">pH 4.00 @20&#176C</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="ph_4" type="text" ng-model="config.ph_4" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ph_4', 'pH')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">pH 7.03 @20&#176C</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="ph_7" type="text" ng-model="config.ph_7" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ph_7', 'pH')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">CO2 PPM 400</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="co2_400" type="text" ng-model="config.co2_400" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('co2_400', 'CO2')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="!form.co2_400.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">CO2 PPM 40k</label>
+        <div class="col-sm-10 calibration-control">
+            <input name="CO2_40k" type="text" ng-model="config.co2_40k" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+        </div>
+        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('co2_40k', 'CO2')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="!form.CO2_40k.$valid">
+         Only positive number allowed, no decimals, max 3 digits.
+        </span>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" ng-hide="saving || calibrating">Save</button>
+            <button type="button" class="btn btn-disabled" ng-hide="!saving && !calibrating">Saving...</button>
+            <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
+        </div>
+    </div>
+</form>

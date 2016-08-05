@@ -117,12 +117,13 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	    	var diff = when.diff(daytime, 'minutes');
 		if (diff < 0 || diff > 60){
 		    push = false;
-		    //console.log("Filter out datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
+		    console.log("Filtering out datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
 		    if (diff < 0 && (prevDt == undefined || prevDt.diff(when) < 0)){
 			prevDt = when;
 			prevState = data.state[ts];
 		    }
 		} else {
+		    console.log("Keeping datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
 		}
 	    }
 	    if (push){
