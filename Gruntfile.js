@@ -159,6 +159,7 @@ grunt.initConfig({
                 "src/js/services/Relay.js",
                 "src/js/services/Alert.js",
                 "src/js/controllers/NavigationController.js",
+                "src/js/controllers/CalibrationController.js",
                 "src/js/controllers/ChartController.js",
                 "src/js/controllers/SettingsController.js",
                 "src/js/controllers/RelayController.js",
