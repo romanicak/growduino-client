@@ -4,7 +4,7 @@ app.factory('BackendConfig', ['$resource', 'requests', function($resource, reque
 
 app.factory('CalibrationConfig', ['$resource', 'requests', function($resource, requests) {
     return {
-      config: requests.adapt($resource('/config.jso')),//TODO: rename to calib.jso
+      config: requests.adapt($resource('/calib.jso')),//TODO: rename to calib.jso
       EC: requests.adapt($resource('/sensors/rawdata/7.jso')),
       pH: requests.adapt($resource('/sensors/rawdata/8.jso')),
       CO2: requests.adapt($resource('/sensors/rawdata/9.jso'))

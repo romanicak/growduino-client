@@ -4,8 +4,12 @@
         <div class="col-sm-10 calibration-control">
             <input name="ec_low_ion" type="text" ng-model="config.ec_low_ion" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
-        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ec_low_ion']) || saving">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ec_low_ion']">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ec_low_ion']">
+          Save settings to set calibration values active!
+        </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ec_low_ion.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
@@ -15,8 +19,12 @@
         <div class="col-sm-10 calibration-control">
             <input name="ec_high_ion" type="text" ng-model="config.ec_high_ion" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ec_high_ion', 'EC')">Get raw data</button>
-        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ec_high_ion', 'EC')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ec_high_ion']) || saving">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ec_high_ion']">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ec_high_ion']">
+          Save settings to set calibration values active!
+        </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ec_high_ion.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
@@ -35,8 +43,12 @@
         <div class="col-sm-10 calibration-control">
             <input name="ph_4" type="text" ng-model="config.ph_4" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ph_4', 'pH')">Get raw data</button>
-        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_4', 'pH')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_4']) || saving">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_4']">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ph_4']">
+          Save settings to set calibration values active!
+        </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
@@ -46,8 +58,12 @@
         <div class="col-sm-10 calibration-control">
             <input name="ph_7" type="text" ng-model="config.ph_7" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('ph_7', 'pH')">Get raw data</button>
-        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_7', 'pH')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_7']) || saving">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_7']">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ph_7']">
+          Save settings to set calibration values active!
+        </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
@@ -57,8 +73,12 @@
         <div class="col-sm-10 calibration-control">
             <input name="co2_400" type="text" ng-model="config.co2_400" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('co2_400', 'CO2')">Get raw data</button>
-        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('co2_400', 'CO2')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['co2_400']) || saving">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="calibratingArray['co2_400']">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['co2_400']">
+          Save settings to set calibration values active!
+        </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.co2_400.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
@@ -68,16 +88,21 @@
         <div class="col-sm-10 calibration-control">
             <input name="CO2_40k" type="text" ng-model="config.co2_40k" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-hide="calibrating" ng-click="getRawData('co2_40k', 'CO2')">Get raw data</button>
-        <button type="button" class="btn btn-disabled" ng-hide="!calibrating">Getting raw data...</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('co2_40k', 'CO2')">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['co2_40k']) || saving">Get raw data</button>
+        <button type="button" class="btn btn-disabled" ng-show="calibratingArray['co2_40k']">Getting raw data...</button>
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['co2_40k']">
+          Save settings to set calibration values active!
+        </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.CO2_40k.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary" ng-hide="saving || calibrating">Save</button>
-            <button type="button" class="btn btn-disabled" ng-hide="!saving && !calibrating">Saving...</button>
+            <button type="submit" class="btn btn-primary" ng-show="!saving && !calibrating">Save</button>
+            <button type="button" class="btn btn-disabled" ng-show="calibrating">Save</button>
+            <button type="button" class="btn btn-disabled" ng-show="saving">Saving...</button>
             <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
         </div>
     </div>
