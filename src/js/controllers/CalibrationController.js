@@ -31,6 +31,7 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
       $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
       curStep++;
       curRetry = 0;
+      console.log("rawDataSuccess: ", rawValue, total, total + rawValue);
       return total + rawValue;
     }
 
