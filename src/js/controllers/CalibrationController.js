@@ -79,13 +79,13 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
              )}, curDelay);
         },
         function(){//callback
+          console.log("Calibration done", curStep, total);
           //bud se to povedlo, pak je curStep == calibrationNumSteps, anebo nepovedlo, pak je curStep < calibrationNumSteps
           if (curStep == calibrationNumSteps){//vsechna mereni se podarila, muzeme zobrazit zmerenou hodnotu
             $scope.config[valueName] = total / calibrationNumSteps;
             $scope.needsSavingArray[valueName] = true;
             $scope.lastCalibrationFailedArray[valueName] = false;
           } else {//nektera mereni se nepodarila, je treba zobrazit error
-            $scope.config[valueName] = "";
             $scope.needsSavingArray[valueName] = false;
             $scope.lastCalibrationFailedArray[valueName] = true;
           }
