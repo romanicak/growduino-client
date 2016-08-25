@@ -104,9 +104,9 @@
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">CO2 PPM 40k</label>
         <div class="col-sm-10 calibration-control">
-            <input name="CO2_40k" type="text" ng-model="config.co2_40k" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+            <input name="co2_40k" type="text" ng-model="config.co2_40k" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
         </div>
-        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('co2_40k', 'CO2')">Get raw data</button>
+        <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('co2_40k', 'co2')">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['co2_40k']) || saving">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="calibratingArray['co2_40k']">Getting raw data...</button>
         <span style="color:#B40404" class="help-block" ng-show="form.co2_40k.$valid && needsSavingArray['co2_40k']">
