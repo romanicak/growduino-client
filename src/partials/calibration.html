@@ -1,4 +1,7 @@
-<form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()">
+<div ng-include="'partials/loadingProgress.html'"></div>
+
+<form novalidate class="form-horizontal" name="form" ng-submit="save()">
+<!--form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()"-->
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">EC 1.278 @20&#176C</label>
         <div class="col-sm-10 calibration-control">
@@ -12,6 +15,9 @@
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ec_low_ion.$valid">
          Only positive number allowed, no decimals, max 3 digits.
+        </span>
+        <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ec_low_ion']">
+         Last calibration attempt of this field failed!
         </span>
     </div>
     <div class="form-group" bs-has-error>
@@ -27,6 +33,9 @@
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ec_high_ion.$valid">
          Only positive number allowed, no decimals, max 3 digits.
+        </span>
+        <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ec_high_ion']">
+         Last calibration attempt of this field failed!
         </span>
     </div>
     <div class="form-group" bs-has-error>
@@ -52,6 +61,9 @@
         <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
+        <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ph_4']">
+         Last calibration attempt of this field failed!
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">pH 7.03 @20&#176C</label>
@@ -66,6 +78,9 @@
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
          Only positive number allowed, no decimals, max 3 digits.
+        </span>
+        <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ph_7']">
+         Last calibration attempt of this field failed!
         </span>
     </div>
     <div class="form-group" bs-has-error>
@@ -82,6 +97,9 @@
         <span style="color:#B40404" class="help-block" ng-show="!form.co2_400.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
+        <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['co2_400']">
+         Last calibration attempt of this field failed!
+        </span>
     </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">CO2 PPM 40k</label>
@@ -96,6 +114,9 @@
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.CO2_40k.$valid">
          Only positive number allowed, no decimals, max 3 digits.
+        </span>
+        <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['co2_40k']">
+         Last calibration attempt of this field failed!
         </span>
     </div>
     <div class="form-group">
