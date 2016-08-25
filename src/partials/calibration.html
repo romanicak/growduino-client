@@ -28,7 +28,7 @@
         <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ec_high_ion', 'EC')">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ec_high_ion']) || saving">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ec_high_ion']">Getting raw data...</button>
-        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ec_high_ion']">
+        <span style="color:#B40404" class="help-block" ng-show="form.ec_high_ion.$valid && needsSavingArray['ec_high_ion']">
           Save settings to set calibration values active!
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ec_high_ion.$valid">
@@ -55,7 +55,7 @@
         <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_4', 'pH')">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_4']) || saving">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_4']">Getting raw data...</button>
-        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ph_4']">
+        <span style="color:#B40404" class="help-block" ng-show="form.ph_4.$valid && needsSavingArray['ph_4']">
           Save settings to set calibration values active!
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
@@ -73,7 +73,7 @@
         <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_7', 'pH')">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_7']) || saving">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_7']">Getting raw data...</button>
-        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['ph_7']">
+        <span style="color:#B40404" class="help-block" ng-show="form.ph_7.$valid && needsSavingArray['ph_7']">
           Save settings to set calibration values active!
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
@@ -91,7 +91,7 @@
         <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('co2_400', 'CO2')">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['co2_400']) || saving">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="calibratingArray['co2_400']">Getting raw data...</button>
-        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['co2_400']">
+        <span style="color:#B40404" class="help-block" ng-show="form.co2_400.$valid && needsSavingArray['co2_400']">
           Save settings to set calibration values active!
         </span>
         <span style="color:#B40404" class="help-block" ng-show="!form.co2_400.$valid">
@@ -109,10 +109,10 @@
         <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('co2_40k', 'CO2')">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['co2_40k']) || saving">Get raw data</button>
         <button type="button" class="btn btn-disabled" ng-show="calibratingArray['co2_40k']">Getting raw data...</button>
-        <span style="color:#B40404" class="help-block" ng-show="form.ec_low_ion.$valid && needsSavingArray['co2_40k']">
+        <span style="color:#B40404" class="help-block" ng-show="form.co2_40k.$valid && needsSavingArray['co2_40k']">
           Save settings to set calibration values active!
         </span>
-        <span style="color:#B40404" class="help-block" ng-show="!form.CO2_40k.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.co2_40k.$valid">
          Only positive number allowed, no decimals, max 3 digits.
         </span>
         <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['co2_40k']">
