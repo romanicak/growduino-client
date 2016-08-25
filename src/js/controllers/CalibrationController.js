@@ -20,7 +20,7 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
     });
 
     function isValueAcceptable(senzor, value){
-      if (senzor == "EC" && (value = -999 || value > ECMaxAcceptableValue)){
+      if (senzor == "EC" && (value == -999 || value > ECMaxAcceptableValue)){
         return false;
       }
       return true;
