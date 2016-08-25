@@ -63,7 +63,7 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
              CalibrationConfig[senzor].get(
                function(data){//get OK
                  //checknout, jestli je hodnota pripustna, pokud ano, udelat OK, pokud ne, udelat fail
-                 rawValue = data.raw_value;
+                 rawValue = parseInt(data.raw_value);
                  if (isValueAcceptable(senzor, rawValue)){
                    total = rawDataSuccess(rawValue, total, calibrationNumRetries + 1 - curRetry);
                  } else {
