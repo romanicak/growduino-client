@@ -23,6 +23,9 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
       if (senzor == "EC" && (value == -999 || value > ECMaxAcceptableValue)){
         return false;
       }
+      if (senzor == "pH" && value == 0){
+        return false;
+      }
       return true;
     }
 
@@ -82,7 +85,7 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
           console.log("Calibration done", curStep, total);
           //bud se to povedlo, pak je curStep == calibrationNumSteps, anebo nepovedlo, pak je curStep < calibrationNumSteps
           if (curStep == calibrationNumSteps){//vsechna mereni se podarila, muzeme zobrazit zmerenou hodnotu
-            $scope.config[valueName] = Math.round(total / calibrationNumSteps);
+            $scope.config[valueName] = Math.round(total / calibrationNumSteps);//formular ma nastaveno, ze hodnoty musi byt cela cisla; angular odmitne (silently) nastavit hodnotu, ktera podminky nesplnuje; proto je treba zaokrouhlit
             $scope.needsSavingArray[valueName] = true;
             $scope.lastCalibrationFailedArray[valueName] = false;
           } else {//nektera mereni se nepodarila, je treba zobrazit error
