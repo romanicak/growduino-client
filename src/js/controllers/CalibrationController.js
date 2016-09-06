@@ -1,4 +1,4 @@
-app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfig', function($scope, $timeout, CalibrationConfig) {
+app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'CalibrationConfig', function($scope, $http, $timeout, CalibrationConfig) {
     $scope.loading = true;
     $scope.saving = false;
     $scope.calibratingArray = [];
@@ -97,6 +97,25 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
           $scope.calibratingArray[valueName] = false;
         }
       );
+    };
+
+    $scope.save = function() {
+        if ($scope.saving) return;
+        $scope.saving = true;
+
+        //$scope.config.$save().then(function() {
+        $http.post('calib.jso', $scope.config).success(function(){
+            $scope.saving = false;
+            $scope.saveSuccess = true;
+            $scope.needsSavingArray = [];
+            $timeout(function() {
+              $scope.saveSuccess = false;
+            }, 2000);
+        }, function() {
+            alert('Oops save failed.');
+        });
+    };
+}]);
 
 
 
@@ -137,21 +156,3 @@ app.controller('CalibrationController', ['$scope', '$timeout', 'CalibrationConfi
           }
         });
       });*/
-    };
-
-    $scope.save = function() {
-        if ($scope.saving) return;
-        $scope.saving = true;
-
-        $scope.config.$save().then(function() {
-            $scope.saving = false;
-            $scope.saveSuccess = true;
-            $scope.needsSavingArray = [];
-            $timeout(function() {
-              $scope.saveSuccess = false;
-            }, 2000);
-        }, function() {
-            alert('Oops save failed.');
-        });
-    };
-}]);

@@ -1,6 +1,6 @@
 <div ng-include="'partials/loadingProgress.html'"></div>
 
-<form novalidate class="form-horizontal" name="form" ng-submit="save()">
+<form novalidate class="form-horizontal" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="save()">
 <!--form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()"-->
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">EC 1.278 @20&#176C</label>
