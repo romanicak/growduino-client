@@ -1,4 +1,6 @@
-app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger', 'BackendConfig', 'ClientConfig', function($http, $scope, Alert, Trigger, BackendConfig, ClientConfig) {
+app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger', 'BackendConfig', 'ClientConfig', 'CalibrationConfig', function($http, $scope, Alert, Trigger, BackendConfig, ClientConfig, CalibrationConfig) {
+  //********Backup settings********//
+  //Saving settings to a file
   $scope.initSaveClientJSO = function(){
     var formData = {
       fileName: "config.jso",
@@ -8,18 +10,69 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
     $scope.$parent.form1Data = formData;
   };
   $scope.saveClientJSO = function(){
-    $scope.$parent.loadingMessage = 'Loading';
-    $scope.$parent.loading = true;
-    $scope.$parent.loadingStep = 0;
-    $scope.$parent.loadingPercent = 0;
+    setupLoadingBarWithMessage('Loading');
     BackendConfig.get().then(function(cfg) {
       cfg.$promise = undefined;
       cfg.$resolved = undefined;
-      save(JSON.stringify(cfg), $scope.form1Data.fileName);
+      save2File(JSON.stringify(cfg), $scope.form1Data.fileName);
       $scope.$parent.loading = false;
     });
   };
 
+  //Loading settings from a file
+  $scope.loadConfig = function(){
+    var selector = document.getElementById("fileSelector1");
+    selector.click();
+  };
+  $scope.loadClientJSO = function(file){
+    loadFile(file, uploadClientJSO);
+  };
+  uploadClientJSO = function(data){
+    setupLoadingBarWithMessage('Saving');
+    $http.post('client.jso', data).success(function() {
+      $scope.$parent.loading = false;
+    });
+  };
+  //********End of Backup settings********//
+
+  //********Backup calibration********//
+  //Saving calibration to a file
+  $scope.initSaveCalibJSO = function(){
+    var formData = {
+      fileName: "calib.jso",
+      file: ""
+    };
+    $scope.formData = formData;
+    $scope.$parent.form6Data = formData;
+  };
+  $scope.saveCalibJSO = function(){
+    setupLoadingBarWithMessage('Loading');
+    CalibrationConfig['config'].get().then(function(cfg) {
+      cfg.$promise = undefined;
+      cfg.$resolved = undefined;
+      save2File(JSON.stringify(cfg), $scope.form6Data.fileName);
+      $scope.$parent.loading = false;
+    });
+  };
+  //Loading calibration from a file
+  $scope.loadCalib = function(){
+    var selector = document.getElementById("fileSelector3");
+    selector.click();
+  };
+  $scope.loadCalibJSO = function(file){
+    loadFile(file, uploadCalibJSO);
+  };
+  uploadCalibJSO = function(data){
+    setupLoadingBarWithMessage('Saving');
+    $http.post('calib.jso', data).success(function() {
+      $scope.$parent.loading = false;
+    });
+  };
+  //********End of Backup settings********//
+
+
+  //********Backup Outputs&Alerts********//
+  //Saving Outputs&Alerts to a file
   $scope.initBackupTriggers = function(){
     var formData = {
       fileName: "backup.txt",
@@ -29,10 +82,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
     $scope.$parent.form2Data = formData;
   };
   $scope.backupTriggers = function(){
-    $scope.$parent.loadingMessage = 'Loading';
-    $scope.$parent.loading = true;
-    $scope.$parent.loadingStep = 0;
-    $scope.$parent.loadingPercent = 0;
+    setupLoadingBarWithMessage('Loading');
     ClientConfig.get().then(function(cfg) {
       $scope.$parent.stepCount = cfg.usedAlerts ? cfg.usedAlerts.length : 0;
       $scope.$parent.stepCount += cfg.usedTriggers ? cfg.usedTriggers.length : 0;
@@ -65,17 +115,42 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
                 }, callback
               );
             }, function (err){
-              save(JSON.stringify(saveData), $scope.form2Data.fileName);
+              save2File(JSON.stringify(saveData), $scope.form2Data.fileName);
               $scope.$parent.loading = false;
           });
       });
     });
   };
+
+  //Loading Outputs&Alerts from a file
+  $scope.loadAlertsTriggers = function(){
+    var selector = document.getElementById("fileSelector2");
+    selector.click();
+  };
+  $scope.loadTriggers = function(file){
+    loadFile(file, uploadTriggers);
+  };
+  uploadTriggers = function(rawData){
+    console.log("upload triggers " + rawData);
+    setupLoadingBarWithMessage('Saving');
+    data = JSON.parse(rawData);
+    $scope.$parent.stepCount = Object.keys(data).length;
+    async.forEachSeries(Object.keys(data) || [],
+      function(datum, callback){
+        $http.post(datum + ".jso", data[datum]).success(function() {
+          $scope.$parent.loadingStep += 1;
+          $scope.$parent.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+          callback();
+        });
+      }, function (err){
+        $scope.$parent.loading = false;
+    });
+  };
+  //********End of Backup Outputs&Alerts********//
+
+  //********Delete Outputs&Alerts********//
   $scope.deleteAlertsTriggers = function(){
-    $scope.$parent.loadingMessage = 'Deleting';
-    $scope.$parent.loading = true;
-    $scope.$parent.loadingStep = 0;
-    $scope.$parent.loadingPercent = 0;
+    setupLoadingBarWithMessage('Deleting');
     ClientConfig.get().then(function(cfg){
       if (cfg.usedTriggers == undefined){
         cfg.usedTriggers = [];
@@ -116,59 +191,23 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
       });     
     });
   };
+  //********End of Delete Outputs&Alerts********//
 
-  save = function(data, fileName){
+  //********Util stuff********//
+  setupLoadingBarWithMessage = function(message) {
+    $scope.$parent.loadingMessage = message;
+    $scope.$parent.loading = true;
+    $scope.$parent.loadingStep = 0;
+    $scope.$parent.loadingPercent = 0;
+  };
+
+  //util functions for saving to disc and loading from it
+  save2File = function(data, fileName){
     var file = new Blob([data], {type: "text/plain"});
     var a = document.getElementById("a");
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
-  };
-
-  $scope.loadConfig = function(){
-    var selector = document.getElementById("fileSelector1");
-    selector.click();
-  };
-  $scope.loadClientJSO = function(file){
-    loadFile(file, uploadClientJSO);
-  };
-
-  uploadClientJSO = function(data){
-    $scope.$parent.loadingMessage = 'Saving';
-    $scope.$parent.loading = true;
-    $scope.$parent.loadingStep = 0;
-    $scope.$parent.loadingPercent = 0;
-    $http.post('client.jso', data).success(function() {
-      $scope.$parent.loading = false;
-    });
-  };
-
-  $scope.loadAlertsTriggers = function(){
-    var selector = document.getElementById("fileSelector2");
-    selector.click();
-  };
-  $scope.loadTriggers = function(file){
-    loadFile(file, uploadTriggers);
-  };
-
-  uploadTriggers = function(rawData){
-    console.log("upload triggers " + rawData);
-    $scope.$parent.loadingMessage = 'Saving';
-    $scope.$parent.loading = true;
-    $scope.$parent.loadingStep = 0;
-    $scope.$parent.loadingPercent = 0;
-    data = JSON.parse(rawData);
-    $scope.$parent.stepCount = Object.keys(data).length;
-    async.forEachSeries(Object.keys(data) || [],
-      function(datum, callback){
-        $http.post(datum + ".jso", data[datum]).success(function() {
-          $scope.$parent.loadingStep += 1;
-          $scope.$parent.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
-          callback();
-        });
-      }, function (err){
-        $scope.$parent.loading = false;
-    });
   };
 
   loadFile = function(file, callback){
@@ -180,4 +219,5 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
     };
     reader.readAsText(f);
   };
+  //********End of Util stuff********//
 }]);
