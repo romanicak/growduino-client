@@ -1,3 +1,19 @@
+<div ng-controller="TriggerController" ng-init="init(relay, 'usndHighDisallow')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        Never turn on when <b>sensor distance from water level</b> is over
+        <div class="form-group" bs-has-error>
+            <input type="text" name="usndHighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/"/> cm
+            <span ng-show="form.usndHighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+<span style="color:#B40404" class="help-block" ng-show="!form.usndHighDisallow_OffVal.$valid">
+                    Invalid! Must be number with max two digits, no decimals.
+                <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
+            </span>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+
 <div ng-controller="TriggerController" ng-init="init(relay, 'inactiveFor')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
