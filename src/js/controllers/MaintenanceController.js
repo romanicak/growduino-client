@@ -11,6 +11,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   $scope.saveClientJSO = function(){
     setupLoadingBarWithMessage('Loading');
+    $scope.$parent.loading = true;
     BackendConfig.get().then(function(cfg) {
       cfg.$promise = undefined;
       cfg.$resolved = undefined;
@@ -29,6 +30,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   uploadClientJSO = function(data){
     setupLoadingBarWithMessage('Saving');
+    $scope.$parent.loading = true;
     $http.post('client.jso', data).success(function() {
       $scope.$parent.loading = false;
     });
@@ -47,6 +49,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   $scope.saveCalibJSO = function(){
     setupLoadingBarWithMessage('Loading');
+    $scope.$parent.loading = true;
     CalibrationConfig['config'].get().then(function(cfg) {
       cfg.$promise = undefined;
       cfg.$resolved = undefined;
@@ -64,6 +67,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   uploadCalibJSO = function(data){
     setupLoadingBarWithMessage('Saving');
+    $scope.$parent.loading = true;
     $http.post('calib.jso', data).success(function() {
       $scope.$parent.loading = false;
     });
@@ -83,6 +87,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   $scope.backupTriggers = function(){
     setupLoadingBarWithMessage('Loading');
+    $scope.$parent.loading = true;
     ClientConfig.get().then(function(cfg) {
       $scope.$parent.stepCount = cfg.usedAlerts ? cfg.usedAlerts.length : 0;
       $scope.$parent.stepCount += cfg.usedTriggers ? cfg.usedTriggers.length : 0;
@@ -133,6 +138,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   uploadTriggers = function(rawData){
     console.log("upload triggers " + rawData);
     setupLoadingBarWithMessage('Saving');
+    $scope.$parent.loading = true;
     data = JSON.parse(rawData);
     $scope.$parent.stepCount = Object.keys(data).length;
     async.forEachSeries(Object.keys(data) || [],
@@ -151,6 +157,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   //********Delete Outputs&Alerts********//
   $scope.deleteAlertsTriggers = function(){
     setupLoadingBarWithMessage('Deleting');
+    $scope.$parent.loading = true;
     ClientConfig.get().then(function(cfg){
       if (cfg.usedTriggers == undefined){
         cfg.usedTriggers = [];
@@ -196,7 +203,6 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   //********Util stuff********//
   setupLoadingBarWithMessage = function(message) {
     $scope.$parent.loadingMessage = message;
-    $scope.$parent.loading = true;
     $scope.$parent.loadingStep = 0;
     $scope.$parent.loadingPercent = 0;
   };
