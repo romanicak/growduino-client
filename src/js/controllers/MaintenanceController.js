@@ -31,7 +31,7 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   uploadClientJSO = function(data){
     setupLoadingBarWithMessage('Saving');
     $scope.$parent.loading = true;
-    $http.post('client.jso', data).success(function() {
+    $http.post('config.jso', data).success(function() {
       $scope.$parent.loading = false;
     });
   };
