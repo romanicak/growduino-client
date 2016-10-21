@@ -11,7 +11,7 @@
 
 <form name="form3" ng-submit="loadConfig()">
   <button class="btn btn-primary">Upload settings from disk</button>
-  <input type="file" ng-model="formData.file" id="fileSelector1" ng-hide="true" onchange="angular.element(this).scope().loadClientJSO(this)"/>
+  <input type="file" ng-model="formData.file" id="settingsFileSelector" ng-hide="true" onchange="angular.element(this).scope().loadClientJSO(this)"/>
 </form>
 
 <form name="form6" ng-submit="saveCalibJSO()">
@@ -23,7 +23,7 @@
 
 <form name="form7" ng-submit="loadCalib()">
   <button class="btn btn-primary">Upload calibration from disk</button>
-  <input type="file" ng-model="formData.file" id="fileSelector3" ng-hide="true" onchange="angular.element(this).scope().loadCalibJSO(this)"/>
+  <input type="file" ng-model="formData.file" id="calibrationFileSelector" ng-hide="true" onchange="angular.element(this).scope().loadCalibJSO(this)"/>
 </form>
 
 <form name="form2" ng-submit="backupTriggers()">
@@ -35,7 +35,7 @@
 
 <form name="form4" ng-submit="loadAlertsTriggers()">
   <button class="btn btn-primary">Upload Outputs&Alerts</button>
-  <input type="file" ng-model="formData.file" id="fileSelector2" ng-hide="true" onchange="angular.element(this).scope().loadTriggers(this)"/>
+  <input type="file" ng-model="formData.file" id="outputsAlertsFileSelector" ng-hide="true" onchange="angular.element(this).scope().loadTriggers(this)"/>
 </form>
 
 <form name="form5" ng-submit="deleteAlertsTriggers()">

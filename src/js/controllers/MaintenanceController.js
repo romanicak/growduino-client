@@ -1,4 +1,9 @@
 app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger', 'BackendConfig', 'ClientConfig', 'CalibrationConfig', function($http, $scope, Alert, Trigger, BackendConfig, ClientConfig, CalibrationConfig) {
+
+  settingsFileSelector = document.getElementById("settingsFileSelector");
+  calibrationFileSelector = document.getElementById("calibrationFileSelector");
+  ouputsAlertsFileSelector = document.getElementById("outputsAlertsFileSelector");
+
   //********Backup settings********//
   //Saving settings to a file
   $scope.initSaveClientJSO = function(){
@@ -22,13 +27,14 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
 
   //Loading settings from a file
   $scope.loadConfig = function(){
-    var selector = document.getElementById("fileSelector1");
-    selector.click();
+    settingsFileSelector.click();
   };
   $scope.loadClientJSO = function(file){
     loadFile(file, uploadClientJSO);
+    settingsFileSelector.value = null;
   };
   uploadClientJSO = function(data){
+    //console.log("upload settings " + data);
     setupLoadingBarWithMessage('Saving');
     $scope.$parent.loading = true;
     $http.post('config.jso', data).success(function() {
@@ -59,11 +65,11 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
   //Loading calibration from a file
   $scope.loadCalib = function(){
-    var selector = document.getElementById("fileSelector3");
-    selector.click();
+    calibrationFileSelector.click();
   };
   $scope.loadCalibJSO = function(file){
     loadFile(file, uploadCalibJSO);
+    calibrationFileSelector.value = null;
   };
   uploadCalibJSO = function(data){
     setupLoadingBarWithMessage('Saving');
@@ -129,17 +135,17 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
 
   //Loading Outputs&Alerts from a file
   $scope.loadAlertsTriggers = function(){
-    var selector = document.getElementById("fileSelector2");
-    selector.click();
+    ouputsAlertsFileSelector.click();
   };
   $scope.loadTriggers = function(file){
     loadFile(file, uploadTriggers);
+    ouputsAlertsFileSelector.value = null;
   };
-  uploadTriggers = function(rawData){
-    console.log("upload triggers " + rawData);
+  uploadTriggers = function(data){
+    //console.log("upload triggers " + data);
     setupLoadingBarWithMessage('Saving');
     $scope.$parent.loading = true;
-    data = JSON.parse(rawData);
+    data = JSON.parse(data);
     $scope.$parent.stepCount = Object.keys(data).length;
     async.forEachSeries(Object.keys(data) || [],
       function(datum, callback){
@@ -217,12 +223,15 @@ app.controller('MaintenanceController', [ '$http', '$scope', 'Alert', 'Trigger',
   };
 
   loadFile = function(file, callback){
+    //console.log("loadFile called");
     var f = file.files[0];
     var reader = new FileReader();
 
     reader.onload = function(theFile) {
+      //console.log("file was read:", theFile.target.result);
       callback(theFile.target.result);
     };
+    //console.log("calling readAsText");
     reader.readAsText(f);
   };
   //********End of Util stuff********//
