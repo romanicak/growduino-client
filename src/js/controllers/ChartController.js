@@ -165,8 +165,8 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                     console.warn('No series for ' + sensor);
                 } else {
                     if (data) {
-		        console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
-		        console.log(data);
+		        //console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
+		        //console.log(data);
                         chartSeries.setData(padValues(data[dataKey]));
 		    }
                     chart.hideLoading();

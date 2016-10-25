@@ -10,6 +10,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
     }
 
     function parseRelaysData(d){
+        console.log("parseRelaysData", d);
 	var states = arrayFromMask(d.currentState);
 	$scope.relays = [];
 	settings.outputs.forEach(function(output, i) {
@@ -110,6 +111,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	//console.log("Daytime: ", daytime);
 	var prevDt = undefined;
 	var prevState = undefined;
+	//console.log(historyData);
 	for (var ts in data.state){
 	    var when = moment.unix(ts);
 	    var push = true;
@@ -133,13 +135,14 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	      });
 	    }
 	}
-	if (prevDt !== undefined){
+	/*if (prevDt !== undefined){
 	    console.log("PrevDt: " + prevDt);
 	    historyData.history.unshift({
 	        when: prevDt,
 		state: prevState
 	    });
-	}
+	    console.log("unshift " + prevDt);
+	}*/
     }
 
     function loadAndParseHistoryData(urlPrefix, daytime){
