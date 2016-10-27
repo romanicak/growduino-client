@@ -77,6 +77,13 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
     }
 
 
+    //toto je basically rekurzivni: zvenku se to vola pouze s firstFileIndex = 0
+    //pokud soubor (viz url na prvnim radku metody) je nalezen, zavola se
+    //tato metoda rekurzivne znovu s vyssim firstFileIndex; cela tato opicka
+    //je tam kvuli tomu, ze je treba vzdy pockat, az se soubor nahraje
+    //
+    //jedno volani teto metody nahraje data z jednoho souboru a zavola s nimi
+    //historyDataLoaded
     function loadHistoryData(urlPrefix, firstFileIndex, daytime, outerCallback){
 	var url = urlPrefix + firstFileIndex + ".jso";
 	$http.get(url, {headers: {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}, cache: false}).then(
@@ -107,12 +114,21 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	);
     }
 
+    //toto zpracovava data z jednoho souboru; porovnava, zda spadaji
+    //do patricneho casoveho intervalu a podle vysledku porovnani
+    //je bud prida nebo neprida do historyData, coz je vysledne pole,
+    //ktere se zobrazi
     function historyDataLoaded(data, daytime){
 	//console.log("Daytime: ", daytime);
 	var prevDt = undefined;
 	var prevState = undefined;
+        var firstItemSkipped = false;
 	//console.log(historyData);
 	for (var ts in data.state){
+            if (! firstItemSkipped){
+                firstItemSkipped = true;
+                continue;
+            }
 	    var when = moment.unix(ts);
 	    var push = true;
 	    if (daytime) { 
