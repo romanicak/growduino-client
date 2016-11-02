@@ -112,7 +112,8 @@ app.factory('RelayData', ['$resource', '$http', 'settings', 'requests', function
         for (var ts in data.state) {
             history.push({
                 when: moment.unix(ts),//.zone(settings.tzOffset),
-                state: data.state[ts]
+                state: data.state[ts],
+		show: true
             });
         }
         history.sort(function(a, b) { return b.when.valueOf() - a.when.valueOf();});

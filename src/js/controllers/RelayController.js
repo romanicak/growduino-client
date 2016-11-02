@@ -43,8 +43,12 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 
 	    var item = {
 		when: when,
-		relays: relays
+		relays: relays,
+		show: d.history[i].show
 	    };
+	    if (! d.history[i].show){
+		console.log("not showing item for ", when.format("HH:mm"));
+	    }
 
 	    if (lastDay && lastDay.when.isSame(whenDay)) {
 		console.log("no push");
@@ -93,7 +97,8 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 		if (firstFileIndex == 0 && daytime){
 			historyData.history.push({
 				when: daytime,
-				state: data.initial ? data.initial: 0
+				state: data.initial ? data.initial: 0,
+				show: false
 			});
 		}
 		historyDataLoaded(data.data, daytime);
@@ -122,13 +127,9 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	//console.log("Daytime: ", daytime);
 	var prevDt = undefined;
 	var prevState = undefined;
-        var firstItemSkipped = false;
 	//console.log(historyData);
+	var thisIsFirstItemInAFile = true;
 	for (var ts in data.state){
-            if (! firstItemSkipped){
-                firstItemSkipped = true;
-                continue;
-            }
 	    var when = moment.unix(ts);
 	    var push = true;
 	    if (daytime) { 
@@ -147,9 +148,11 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	    if (push){
 	      historyData.history.push({
 		  when: when,
-		  state: data.state[ts]
+		  state: data.state[ts],
+		  show: ! thisIsFirstItemInAFile
 	      });
 	    }
+	    thisIsFirstItemInAFile = false;
 	}
 	/*if (prevDt !== undefined){
 	    console.log("PrevDt: " + prevDt);
