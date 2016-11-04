@@ -80,6 +80,47 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	$rootScope.reloadTimer = setInterval(refreshRelays, 30000);
     }
 
+    //toto rozhoduje, zda moment when spada do hodinoveho intervalu
+    //zacinajiciho v daytime
+    function isWithinHour(when, daytime){
+	var diff = when.diff(daytime, 'minutes');
+	if (diff < 0 || diff > 60){
+	    console.log("Filtering out datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
+	    return false;
+	} else {
+	    console.log("Keeping datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
+	    return true;
+	}
+    }
+
+    //toto zpracovava jeden zaznam; porovnava, zda spadaji
+    //do patricneho casoveho intervalu a podle vysledku porovnani
+    //je bud prida nebo neprida do historyData, coz je vysledne pole,
+    //ktere se zobrazi
+    function filterHistoryDatum(when, datum, daytime, show){
+	if (! daytime || isWithinHour(when, daytime)){
+	    historyData.history.push({
+	        when: when,
+	        state: datum,
+	        show: show
+	    });
+	}
+    }
+
+    //toto zpracovava data z jednoho souboru
+     function historyDataLoaded(data, daytime){
+	//console.log("Daytime: ", daytime);
+	var prevDt = undefined;
+	var prevState = undefined;
+	//console.log(historyData);
+        var minTS = undefined;
+	for (var ts in data.state){
+	    var when = moment.unix(ts);
+            if (minTS == undefined || minTS > ts) minTS = ts;
+            filterHistoryDatum(when, data.state[ts], daytime, true);
+	}
+        filterHistoryDatum(moment.unix(minTS), data.initial, null, false);
+    }
 
     //toto je basically rekurzivni: zvenku se to vola pouze s firstFileIndex = 0
     //pokud soubor (viz url na prvnim radku metody) je nalezen, zavola se
@@ -117,51 +158,6 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 		outerCallback();
 	    }
 	);
-    }
-
-    //toto zpracovava data z jednoho souboru; porovnava, zda spadaji
-    //do patricneho casoveho intervalu a podle vysledku porovnani
-    //je bud prida nebo neprida do historyData, coz je vysledne pole,
-    //ktere se zobrazi
-    function historyDataLoaded(data, daytime){
-	//console.log("Daytime: ", daytime);
-	var prevDt = undefined;
-	var prevState = undefined;
-	//console.log(historyData);
-	var thisIsFirstItemInAFile = true;
-	for (var ts in data.state){
-	    var when = moment.unix(ts);
-	    var push = true;
-	    if (daytime) { 
-	    	var diff = when.diff(daytime, 'minutes');
-		if (diff < 0 || diff > 60){
-		    push = false;
-		    console.log("Filtering out datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
-		    if (diff < 0 && (prevDt == undefined || prevDt.diff(when) < 0)){
-			prevDt = when;
-			prevState = data.state[ts];
-		    }
-		} else {
-		    console.log("Keeping datum for " + when.format("YYYY/MM/DD HH:mm,") + "diff: " + diff + ", daytime: " + daytime.format("YYYY/MM/DD HH:mm"));
-		}
-	    }
-	    if (push){
-	      historyData.history.push({
-		  when: when,
-		  state: data.state[ts],
-		  show: ! thisIsFirstItemInAFile
-	      });
-	    }
-	    thisIsFirstItemInAFile = false;
-	}
-	/*if (prevDt !== undefined){
-	    console.log("PrevDt: " + prevDt);
-	    historyData.history.unshift({
-	        when: prevDt,
-		state: prevState
-	    });
-	    console.log("unshift " + prevDt);
-	}*/
     }
 
     function loadAndParseHistoryData(urlPrefix, daytime){
