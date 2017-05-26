@@ -52,9 +52,9 @@
                 <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
         </span>
         …<br>
-        …and <b>CO2 PPM</b> is below
+        …and <b>CO2 concentration</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" name="cO2LowTimer_OnVal" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/>
+            <input type="text" name="cO2LowTimer_OnVal" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
             <span ng-show="form.cO2LowTimer_OnVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimer_OnVal.$valid">
@@ -63,7 +63,7 @@
         </span>
         then keep it open till
         <div class="form-group" bs-has-error>
-            <input type="text" name="cO2LowTimer_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/>
+            <input type="text" name="cO2LowTimer_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
             <span ng-show="form.cO2LowTimer_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimer_OffVal.$valid">
