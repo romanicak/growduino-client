@@ -4,21 +4,21 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
     Relay.prototype.dayDisabled = function(){
 	return (!this.triggers["temp1HighTimer_day"].active 
 		&& !this.triggers["humidityHighTimer_day"].active
-		&& !this.triggers["co2HighTimer_day"].active
+		&& !this.triggers["cO2HighTimer_day"].active
 		&& !this.triggers["inactiveForTimer_day"].active);
     }
     
     Relay.prototype.nightDisabled = function(){
 	return (!this.triggers["temp1HighTimer_night"].active 
 		&& !this.triggers["humidityHighTimer_night"].active
-		&& !this.triggers["co2HighTimer_night"].active
+		&& !this.triggers["cO2HighTimer_night"].active
 		&& !this.triggers["inactiveForTimer_night"].active);
     }
 
     Relay.prototype.initTrigger = function(triggerData, triggerIndex) {
 	var trigger = Trigger.unpack(triggerData);
 	var triggerClass = trigger.triggerClass;
-	var fanDayNightTriggerClasses = ['temp1HighTimer', 'humidityHighTimer', 'co2HighTimer', 'inactiveForTimer'];
+	var fanDayNightTriggerClasses = ['temp1HighTimer', 'humidityHighTimer', 'cO2HighTimer', 'inactiveForTimer'];
 	if (this.name == 'Fan' && fanDayNightTriggerClasses.indexOf(triggerClass) != -1){//je tam schvalne vetsi nez 0, protoze triggerClass 'Timer' chci nechat beze zmeny
 	    if (trigger.since == this.day.since && trigger.until == this.day.until){
 		var timeName = 'day';
