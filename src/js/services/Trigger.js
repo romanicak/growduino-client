@@ -10,8 +10,8 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         ['LowTimer', { since: '**:**', until: '**:**', on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
         ['HighTimer', { since: '**:**', until: '**:**', on: {op: '>', val: '*'}, off: {op: '<', val: '*'}}],
         ['Low', { since: null, on: {op: '<', val: '*'}, off: {op: '>', val: '*'}}],
-        ['ManualOn', { since: '00:00', until: '24:00', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}],
-        ['Timer', { since: '**:**', until: '**:**', on: {op: '>', val: Number.NEGATIVE_INFINITY}, off: {op: '<', val: Number.NEGATIVE_INFINITY}, sensor: null}]
+        ['ManualOn', { since: '00:00', until: '24:00', on: {op: '<', val: Number.NEGATIVE_INFINITY}, off: {op: '>', val: Number.NEGATIVE_INFINITY}, sensor: null}],
+        ['Timer', { since: '**:**', until: '**:**', on: {op: '<', val: Number.NEGATIVE_INFINITY}, off: {op: '>', val: Number.NEGATIVE_INFINITY}, sensor: null}]
     ];
 
     function findPattern(triggerClass) {
@@ -105,6 +105,11 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
 
     Trigger.prototype.pack = function(strict) {
         if (!this.match(this.triggerClass.split('_')[0], strict)) return null;
+	if (this.triggerClass === 'timer') {
+	    if (this.since === "00:00" && this.until === "00:00") {
+ 		return null;
+	    }
+	}
         if (this.off.important) {
             //in ui no field for off value, it should have same value as on val
             this.on = { val: this.off.val, op: this.off.op === '<' ? '>' : '<', important: false};
