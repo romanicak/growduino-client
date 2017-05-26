@@ -90,23 +90,23 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'co2HighTimer_day')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'cO2HighTimer_day')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>CO2 concentration</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="co2HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
-            <span ng-show="form.co2HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+            <input type="text" name="cO2HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
+            <span ng-show="form.cO2HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.co2HighTimer_day.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimer_day.$valid">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="co2LowTimer_day"class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
-            <span ng-show="form.co2LowTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+            <input type="text" name="cO2LowTimer_day"class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
+            <span ng-show="form.cO2LowTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.co2LowTimer_day.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimer_day.$valid">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
@@ -218,24 +218,24 @@
     </fieldset>
 </div>
 
-<div ng-controller="TriggerController" ng-init="init(relay, 'co2HighTimer_night')">
+<div ng-controller="TriggerController" ng-init="init(relay, 'cO2HighTimer_night')">
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>CO2 concentration</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="co2HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
-            <span ng-show="form.co2HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+            <input type="text" name="cO2HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
+            <span ng-show="form.cO2HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
 
-        <span style="color:#B40404" class="help-block" ng-show="!form.co2HighTimer_night.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.cO2HighTimer_night.$valid">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="co2LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
-            <span ng-show="form.co2LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+            <input type="text" name="cO2LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> PPM
+            <span ng-show="form.cO2LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.co2LowTimer_night.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.cO2LowTimer_night.$valid">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
