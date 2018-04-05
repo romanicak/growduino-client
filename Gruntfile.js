@@ -43,6 +43,7 @@ module.exports = function(grunt) {
                 files: [
                     {dest: 'dist/js/settings.js', src: 'src/js/settings.js'},
                     {dest: 'dist/js/app.js', src: 'src/js/app.js'},
+                    {dest: 'dist/robots.txt', src: 'src/robots.txt'},
                     // {
                     //     cwd: 'src',
                     //     src: ['libs/**/*.js'],
