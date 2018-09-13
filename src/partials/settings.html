@@ -6,10 +6,17 @@
             </div>
         </div>
     </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+                <label><input type="checkbox" ng-model="config.enforce_ssl" /> HTTPS</label>
+            </div>
+        </div>
+    </div>
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">MAC address</label>
         <div class="col-sm-10">
-            <input name="mac" type="text" ng-model="config.mac" ng-pattern="/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/" class="form-control"/>
+            <input name="mac" type="text" ng-model="config.mac" ng-pattern="/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/" class="form-control" disabled/>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.mac.$valid">
          Please enter valid MAC address. Small letters only, separated by : . Example: de:ad:be:ef:55:44 .
