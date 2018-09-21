@@ -1,0 +1,15 @@
+<html>
+<head>
+    <title>GrowRoomCam</title>
+
+    <script>
+        var i=0;
+        var url="../webcam";
+        function jsUpdate() {document.image.src=url+"&"+(i++);}
+    </script>
+
+</head>
+<body onLoad="jsUpdate()">
+<img name="image" onLoad="jsUpdate()">
+</body>
+</html>
