@@ -86,6 +86,7 @@ function loadApplication() {
                 "js/controllers/AlertsController.js",
                 "js/controllers/ClientUploadController.js",
                 "js/controllers/MaintenanceController.js",
+                "js/controllers/GrowRoomController.js",
                 "js/directives/bsHasError.js",
             ],
             complete: onComplete

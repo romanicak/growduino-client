@@ -39,7 +39,7 @@ app.config(['$routeProvider', function($routeProvider) {
         }).
         when('/growroom', {
             templateUrl: 'partials/growroom.html',
-            //controller: 'ClientUploadController'
+            controller: 'GrowRoomController'
         }).
         otherwise({
            redirectTo: '/'
