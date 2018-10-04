@@ -22,21 +22,21 @@
         …<br>
         …and <b>Outdoor light</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" name="light1LowTimer_OnVal" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>
+            <input type="text" name="light1LowTimer_OnVal" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9])$/"/>
             <span ng-show="form.light1LowTimer_OnVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.light1LowTimer_OnVal.$valid">
-                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
-                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                    Invalid! Must be number with max two digits, optional decimal point(not comma).
+                <br>Correct: "3" or "23" or "2.3" . Incorrect: "232" or "23,2" or "23.25" .
             </span>
         then keep it open till
         <div class="form-group" bs-has-error>
-            <input type="text" name="light1LowTimer_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>
+            <input type="text" name="light1LowTimer_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9])$/"/>
             <span ng-show="form.light1LowTimer_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.light1LowTimer_OffVal.$valid">
-                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
-                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                    Invalid! Must be number with max two digits, optional decimal point(not comma).
+                <br>Correct: "3" or "23" or "2.3" . Incorrect: "232" or "23,2" or "23.25" .
             </span>
         is reached.
 
@@ -48,7 +48,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>Bulb temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp3HighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
+            <input type="text" name="temp3HighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/> °C
             <span ng-show="form.temp3HighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp3HighDisallow_OffVal.$valid">

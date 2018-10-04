@@ -2,7 +2,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>Air Temperature</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp1LowDisallow" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
+            <input type="text" name="temp1LowDisallow" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/> °C
             <span ng-show="form.temp1LowDisallow.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowDisallow.$valid">
@@ -42,7 +42,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp1HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;°C
+            <input type="text" name="temp1HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;°C
             <span ng-show="form.temp1HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighTimer_day.$valid">
@@ -51,7 +51,7 @@
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp1LowTimer_day" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <input type="text" name="temp1LowTimer_day" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" />&nbsp;°C
             <span ng-show="form.temp1LowTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowTimer_day.$valid">
@@ -68,7 +68,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="hum1HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="hum1HighTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.hum1HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.hum1HighTimer_day.$valid">
@@ -77,7 +77,7 @@
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="hum1LowTimer_day"class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="hum1LowTimer_day"class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.hum1LowTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.hum1LowTimer_day.$valid">
@@ -169,7 +169,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Air Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp1HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <input type="text" name="temp1HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" />&nbsp;°C
             <span ng-show="form.temp1HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighTimer_night.$valid">
@@ -178,7 +178,7 @@
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp1LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <input type="text" name="temp1LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" />&nbsp;°C
             <span ng-show="form.temp1LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowTimer_night.$valid">
@@ -195,7 +195,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         ... turn on when <b>Relative Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="hum1HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="hum1HighTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.hum1HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
 
@@ -205,7 +205,7 @@
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="hum1LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="hum1LowTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.hum1LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.hum1LowTimer_night.$valid">

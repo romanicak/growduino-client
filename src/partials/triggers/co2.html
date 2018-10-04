@@ -3,7 +3,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp1HighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/> °C
+            <input type="text" name="temp1HighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/> °C
             <span ng-show="form.temp1HighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighDisallow_OffVal.$valid">
@@ -19,7 +19,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityHighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="humidityHighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.humidityHighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.humidityHighDisallow_OffVal.$valid">

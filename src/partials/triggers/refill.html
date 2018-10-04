@@ -7,7 +7,7 @@
             <span ng-show="form.usndHighOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.usndHighOn.$valid">
-                    Invalid! Must be number with max two digits, no decimals.
+                    Invalid! Must be number with max two digits, without decimals..
                 <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
                 </span>
         then keep it open till
@@ -29,7 +29,7 @@
     <fieldset class="form-group sentinel-line" ng-init="t = relay.getTrigger('temp2High')" ng-disabled="!t.active">
         Refill when <b>Water Temperature</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp2HighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <input type="text" name="temp2HighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" />&nbsp;°C
             <span ng-show="form.temp2HighOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighOn.$valid">
@@ -38,7 +38,7 @@
         </span>
         then keep it open till
         <div class="form-group" bs-has-error>
-            <input type="text" name="temp2HighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/" />&nbsp;°C
+            <input type="text" name="temp2HighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" />&nbsp;°C
             <span ng-show="form.temp2HighOff.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.temp2HighOff.$valid">

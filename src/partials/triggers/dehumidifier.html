@@ -2,7 +2,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Turn on when  <b>Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="dehumHighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="dehumHighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.dehumHighOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.dehumHighOn.$valid">
@@ -11,7 +11,7 @@
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="dehumHighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="dehumHighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.dehumHighOff.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.dehumHighOff.$valid">

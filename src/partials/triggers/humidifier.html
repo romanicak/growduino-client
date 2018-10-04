@@ -2,7 +2,7 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Turn on when  <b>Humidity</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityLowOn" class="form-control" ng-model="t.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="humidityLowOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.humidityLowOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowOn.$valid">
@@ -11,7 +11,7 @@
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityLowOff" class="form-control" ng-model="t.off.val" ng-pattern="/^\d{1,2}(\.\d)?$/"/>&nbsp;%
+            <input type="text" name="humidityLowOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
             <span ng-show="form.humidityLowOff.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
         <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowOff.$valid">
