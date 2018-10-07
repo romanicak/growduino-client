@@ -175,7 +175,6 @@ module.exports = function(grunt) {
                         "src/js/controllers/ClientUploadController.js",
                         "src/js/controllers/GrowRoomController.js",
                         "src/js/directives/bsHasError.js",
-                        "src/js/directives/mjpeg-directives.js",
                     ],
                     '.tmp/yepnope.load.js': ["src/js/yepnope.load.js"]
                 }
