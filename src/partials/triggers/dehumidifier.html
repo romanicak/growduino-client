@@ -2,19 +2,19 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Turn on when  <b>Humidity</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="dehumHighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
+            <input type="text" name="dehumHighOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" ng-required="t.active"/>&nbsp;%
             <span ng-show="form.dehumHighOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.dehumHighOn.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.dehumHighOn.$valid && !form.dehumHighOn.$error.required">
                     Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
                 <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="dehumHighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
+            <input type="text" name="dehumHighOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" ng-required="t.active"/>&nbsp;%
             <span ng-show="form.dehumHighOff.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.dehumHighOff.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.dehumHighOff.$valid && !form.dehumHighOff.$error.required">
                     Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
                 <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
         </span>
@@ -27,19 +27,19 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
         <div class="form-group" bs-has-error>
-            <input type="text" name="dehumEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <input type="text" name="dehumEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes
             <span ng-show="form.dehumEveryMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.dehumEveryMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.dehumEveryMinute.$valid && !form.dehumEveryMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" name="dehumForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes...
+            <input type="text" name="dehumForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes...
             <span ng-show="form.dehumForMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.dehumForMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.dehumForMinute.$valid && !form.dehumForMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>

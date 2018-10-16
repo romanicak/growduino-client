@@ -2,19 +2,19 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
         <div class="form-group" bs-has-error>
-            <input type="text" name="timerEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <input type="text" name="timerEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes
             <span ng-show="form.timerEveryMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.timerEveryMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.timerEveryMinute.$valid && !form.timerEveryMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" name="timerForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes...
+            <input type="text" name="timerForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes...
             <span ng-show="form.timerForMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.timerForMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.timerForMinute.$valid && !form.timerForMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>

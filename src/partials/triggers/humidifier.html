@@ -2,19 +2,19 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Turn on when  <b>Humidity</b> is below
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityLowOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
+            <input type="text" name="humidityLowOn" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" ng-required="t.active"/>&nbsp;%
             <span ng-show="form.humidityLowOn.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowOn.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowOn.$valid && !form.humidityLowOn.$error.required">
                     Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
                 <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
         </span>
         then keep it on till
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityLowOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"/>&nbsp;%
+            <input type="text" name="humidityLowOff" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" ng-required="t.active"/>&nbsp;%
             <span ng-show="form.humidityLowOff.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowOff.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.humidityLowOff.$valid && !form.humidityLowOff.$error.required">
                     Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
                 <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
         </span>
@@ -27,19 +27,19 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <input type="text" name="humidityEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes
             <span ng-show="form.humidityEveryMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.humidityEveryMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.humidityEveryMinute.$valid && !form.humidityEveryMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" name="humidityForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes.
+            <input type="text" name="humidityForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes.
             <span ng-show="form.humidityForMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.humidityForMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.humidityForMinute.$valid && !form.humidityForMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>

@@ -2,10 +2,10 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Never turn on when <b>sensor distance from water level</b> is over
         <div class="form-group" bs-has-error>
-            <input type="text" name="usndHighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/"/> cm
+            <input type="text" name="usndHighDisallow_OffVal" class="form-control" ng-model="t.off.val" ng-pattern="/^(([1-9])|([1-9][0-9]))$/" ng-required="t.active"/> cm
             <span ng-show="form.usndHighDisallow_OffVal.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-<span style="color:#B40404" class="help-block" ng-show="!form.usndHighDisallow_OffVal.$valid">
+<span style="color:#B40404" class="help-block" ng-show="!form.usndHighDisallow_OffVal.$valid && !form.usndHighDisallow_OffVal.$error.required">
                     Invalid! Must be number with max two digits, without decimals..
                 <br>Correct: "3" or "23". Incorrect: "232" or "23,2" or "23.25" .
             </span>
@@ -18,19 +18,19 @@
     <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
         Enable every
         <div class="form-group" bs-has-error>
-            <input type="text" name="waterEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes
+            <input type="text" name="waterEveryMinute" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes
             <span ng-show="form.waterEveryMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.waterEveryMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.waterEveryMinute.$valid && !form.waterEveryMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
         of inactivity for
         <div class="form-group" bs-has-error>
-            <input type="text" name="waterForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/"/> minutes...
+            <input type="text" name="waterForMinute" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes...
             <span ng-show="form.waterForMinute.$invalid && showInvalids" class="formError">Incorrect value</span>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.waterForMinute.$valid">
+        <span style="color:#B40404" class="help-block" ng-show="!form.waterForMinute.$valid && !form.waterForMinute.$error.required">
                     Invalid! Must be number with max four digits, without decimals.
                 <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
         </span>
