@@ -785,7 +785,8 @@
 
     <div class="row">
         <div class="col-sm-offset-1 col-sm-11 form-group">
-            <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
+            <button type="submit" class="btn btn-primary" ng-hide="saving || !form.$valid">Save</button>
+            <button type="submit" class="btn btn-disabled" ng-hide="form.$valid">Save</button>
             <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
             <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
         </div>

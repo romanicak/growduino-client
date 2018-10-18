@@ -64,7 +64,8 @@
 
     <div class="row relay-save">
         <div class="col-sm-offset-3 col-sm-9 form-group">
-            <button type="submit" class="btn btn-primary" ng-hide="saving">Save</button>
+            <button type="submit" class="btn btn-primary" ng-hide="saving || !form.$valid">Save</button>
+            <button type="submit" class="btn btn-disabled" ng-hide="form.$valid">Save</button>
             <button type="button" class="btn btn-disabled" ng-hide="!saving">Saving...</button>
             <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
         </div>
