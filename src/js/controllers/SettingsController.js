@@ -1,4 +1,4 @@
-app.controller('SettingsController', ['$scope', '$timeout', 'BackendConfig', function($scope, $timeout, BackendConfig) {
+app.controller('SettingsController', ['$http', '$scope', '$timeout', 'BackendConfig', function($http, $scope, $timeout, BackendConfig) {
     $scope.loading = true;
     $scope.saving = false;
 
@@ -29,74 +29,9 @@ app.controller('SettingsController', ['$scope', '$timeout', 'BackendConfig', fun
 
     $scope.scan_for_wifis = function() {
         $scope.show_wifi_window = true;
-        known_wifis = [ { 
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: true
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "jsdal",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: true
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "dasasdaj",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: true
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        }, {
-            quality: "88%",
-            ssid: "ASBNJOS",
-            frequency: "2,457",
-            channel: "42",
-            encrypted: false
-        } ];
-        angular.copy(known_wifis, $scope.known_wifis);
+        $http.get('/wifilist.jso', {cache: false}).success(function(data) {
+            angular.copy(data.networks, $scope.known_wifis);
+        });
     };
 
     $scope.select_wifi_in_modal = function(wifi_object, wifi_index) {

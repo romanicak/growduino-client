@@ -134,11 +134,8 @@
     <div class="form-group" bs-has-error>
         <label class="col-sm-2 control-label">Wifi SSID</label>
         <div class="col-sm-6">
-            <input name="wifi_ssid" type="text" ng-model="config.wifi_ssid" ng-pattern="/^[a-zA-Z0-9]{0,16}$/" class="form-control"/>
+            <input name="wifi_ssid" type="text" ng-model="config.wifi_ssid" class="form-control"/>
         </div>
-        <span style="color:#B40404" class="help-block" ng-show="!form.wifi_ssid.$valid">
-            Please enter valid wifi SSID.
-        </span>
         <div class="col-sm-2">
             <div class="btn btn-primary" ng-click="scan_for_wifis()">
                 Scan for wifis
