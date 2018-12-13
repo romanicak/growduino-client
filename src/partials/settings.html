@@ -142,8 +142,11 @@
             </div>
         </div>
         <div class="col-sm-2">
-            <div class="btn label-success">
+            <div name="wifi_connected" class="btn label-success" ng-show="wifi_connected">
                 Connected
+            </div>
+            <div name="wifi_not_connected" class="btn label-default" ng-show="!wifi_connected">
+                Not connected
             </div>
         </div>
     </div>

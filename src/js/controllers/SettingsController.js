@@ -1,6 +1,11 @@
-app.controller('SettingsController', ['$http', '$scope', '$timeout', 'BackendConfig', function($http, $scope, $timeout, BackendConfig) {
+app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval', 'BackendConfig', function($http, $scope, $timeout, $interval, BackendConfig) {
     $scope.loading = true;
     $scope.saving = false;
+    $scope.wifi_connected = false;
+
+    $scope.$on('$destroy', function() {
+        $interval.cancel($scope.wifi_status_updater);
+    });
 
     BackendConfig.get(function(config) {
         config.use_dhcp = !!config.use_dhcp; //convert to boolean - TODO move on resource layer
@@ -26,6 +31,13 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', 'BackendCon
             alert('Oops save failed.');
         });
     };
+
+    $scope.wifi_status_updater = $interval(function() {
+        $http.get('/wifi_active.jso', {cache:false}).success(function(data) {
+            $scope.wifi_connected = (data.ssid != null);
+            console.log(data);
+        });
+    }, 1000);
 
     $scope.scan_for_wifis = function() {
         $scope.show_wifi_window = true;
