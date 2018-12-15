@@ -35,7 +35,6 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
     $scope.wifi_status_updater = $interval(function() {
         $http.get('/wifi_active.jso', {cache:false}).success(function(data) {
             $scope.wifi_connected = (data.ssid != null);
-            console.log(data);
         });
     }, 1000);
 
@@ -61,6 +60,13 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
         $scope.config.wifi_ssid = wifi_object.ssid;
         $scope.config.wifi_pwd = $scope.model.entered_password;
         $scope.close_wifi_window();
+        var wifi_connect_info = {
+          "SSID": wifi_object.ssid,
+          "password": $scope.model.entered_password
+        };
+        $http.post('/partial/config.jso', wifi_connect_info).success(function(data) {
+          console.log("Connect data succesfully POSTed to /partial/config.jso");
+        });
     };
 
     $scope.close_wifi_window = function() {
