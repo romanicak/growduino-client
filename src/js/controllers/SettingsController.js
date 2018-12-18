@@ -61,8 +61,8 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
         $scope.config.wifi_pwd = $scope.model.entered_password;
         $scope.close_wifi_window();
         var wifi_connect_info = {
-          "SSID": wifi_object.ssid,
-          "password": $scope.model.entered_password
+          "wifi_ssid": wifi_object.ssid,
+          "wifi_pwd": $scope.model.entered_password
         };
         $http.post('/partial/config.jso', wifi_connect_info).success(function(data) {
           console.log("Connect data succesfully POSTed to /partial/config.jso");
