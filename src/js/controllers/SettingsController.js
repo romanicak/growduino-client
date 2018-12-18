@@ -36,7 +36,7 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
         $http.get('/wifi_active.jso', {cache:false}).success(function(data) {
             $scope.wifi_connected = (data.ssid != null);
         });
-    }, 1000);
+    }, 5000);
 
     $scope.scan_for_wifis = function() {
         $scope.show_wifi_window = true;
