@@ -78,6 +78,7 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
     };
 
     $scope.close_test_email_window = function() {
+        $scope.test_email_error_msg = "";
         $scope.show_test_email_window = false;
     };
 
