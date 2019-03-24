@@ -85,12 +85,12 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
         //alert($scope.config.test_email);
         var req_addr = "send_test_mail?";
         var req_server = "smtp=" + $scope.config.smtp;
-        var req_port = "/" + "smtp_port=" + $scope.config.smtp_port;
-        var req_ssl = "/" + "smtp_ssl=" + $scope.config.smtp_ssl;
-        var req_user = "/" + "smtp_user=" + $scope.config.smtp_user;
-        var req_pwd = "/" + "smtp_pwd=" + $scope.config.smtp_pwd;
-        var req_mail_from = "/" + "mail_from=" + $scope.config.mail_from;
-        var req_mail_to = "/" + "to=" + $scope.config.test_email;
+        var req_port = "&" + "smtp_port=" + $scope.config.smtp_port;
+        var req_ssl = "&" + "smtp_ssl=" + $scope.config.smtp_ssl;
+        var req_user = "&" + "smtp_user=" + $scope.config.smtp_user;
+        var req_pwd = "&" + "smtp_pwd=" + $scope.config.smtp_pwd;
+        var req_mail_from = "&" + "mail_from=" + $scope.config.mail_from;
+        var req_mail_to = "&" + "to=" + $scope.config.test_email;
 
         var request = req_addr + req_server + req_port + req_ssl
             + req_user + req_pwd + req_mail_from + req_mail_to;
