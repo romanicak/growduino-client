@@ -34,10 +34,10 @@ function proxyPost(req, res) {
     });
 }
 
-app.get(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso|wifilist.jso|wifi_active.jso|partial\/config.jso)/, function(req, res) {
+app.get(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso|wifilist.jso|wifi_active.jso|partial\/config.jso|send_test_mail)/, function(req, res) {
     proxy.proxyRequest(req, res);
 });
-app.post(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso|wifilist.jso|wifi_active.jso|partial\/config.jso)/, function(req, res) {
+app.post(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso|wifilist.jso|wifi_active.jso|partial\/config.jso|send_test_mail)/, function(req, res) {
     proxyPost(req, res);
 });
 

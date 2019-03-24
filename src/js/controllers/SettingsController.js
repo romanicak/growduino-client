@@ -45,6 +45,10 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
         });
     };
 
+    $scope.close_wifi_window = function() {
+        $scope.show_wifi_window = false;
+    };
+
     $scope.select_wifi_in_modal = function(wifi_object, wifi_index) {
         if (! wifi_object.encrypted && $scope.selected_index_in_modal == wifi_index) {
             $scope.selected_index_in_modal = -1;
@@ -69,7 +73,25 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
         });
     };
 
-    $scope.close_wifi_window = function() {
-        $scope.show_wifi_window = false;
+    $scope.test_email_window = function() {
+        $scope.show_test_email_window = true;
+    };
+
+    $scope.close_test_email_window = function() {
+        $scope.show_test_email_window = false;
+    };
+
+    $scope.send_test_email = function() {
+        //alert($scope.config.test_email);
+        $http.get('/send_test_mail?to=' + $scope.config.test_email, {cache: false})
+            .success(function(data) {
+                alert("Response received"); 
+                if (data.success) {
+                    $scope.test_email_error_msg = "";
+                    $scope.close_test_email_window();
+                } else {
+                    $scope.test_email_error_msg = data.code;
+                }
+            });
     };
 }]);
