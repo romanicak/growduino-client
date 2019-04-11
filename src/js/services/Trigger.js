@@ -103,28 +103,28 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         this.origin = raw;
     };
 
-    Trigger.prototype.pack = function(strict) {
-        if (!this.match(this.triggerClass.split('_')[0], strict)) return null;
-	if (this.triggerClass === 'timer') {
+  Trigger.prototype.pack = function(strict) {
+    if (!this.match(this.triggerClass.split('_')[0], strict)) return null;
+   	if (this.triggerClass === 'timer') {
 	    if (this.since === "00:00" && this.until === "00:00") {
- 		return null;
+ 	     return null;
 	    }
-	}
-        if (this.off.important) {
-            //in ui no field for off value, it should have same value as on val
-            this.on = { val: this.off.val, op: this.off.op === '<' ? '>' : '<', important: false};
-        }
-        raw = {
-            t_since: this.since === null ? -1 : utils.timeToMinutes(this.since),
-            t_until: this.since === null ? 0 : utils.timeToMinutes(this.until),  //since === null -> no range: t_since: -1, t_until: 0
-            off_value: packCondition(this.off, this.sensor),
-            on_value: packCondition(this.on, this.sensor),
-            sensor: this.sensor === null ? -1 : this.sensor,
-            output: this.output
-        };
-        if (this.index !== null && this.index !== undefined) raw.index = this.index;
-        return raw;
+	  }
+    if (this.off.important) {
+      //in ui no field for off value, it should have same value as on val
+      this.on = { val: this.off.val, op: this.off.op === '<' ? '>' : '<', important: false};
+    }
+    raw = {
+      t_since: this.since === null ? -1 : utils.timeToMinutes(this.since),
+      t_until: this.since === null ? 0 : utils.timeToMinutes(this.until),  //since === null -> no range: t_since: -1, t_until: 0
+      off_value: packCondition(this.off, this.sensor),
+      on_value: packCondition(this.on, this.sensor),
+      sensor: this.sensor === null ? -1 : this.sensor,
+      output: this.output
     };
+    if (this.index !== null && this.index !== undefined) raw.index = this.index;
+    return raw;
+  };
 
     //strict -- refuse "" as valid value for "*" and "**:**"
     function matchPattern(obj, pattern, strict) {
@@ -169,13 +169,13 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
         }
     };
 
-    Trigger.prototype.prepareSave = function(activity) {
-	this.actualPack = this.pack(true);
-	if (this.actualPack){
+  Trigger.prototype.prepareSave = function(activity) {
+  	this.actualPack = this.pack(true);
+	  if (this.actualPack){
 	    this.actualPack.active = activity;
 	    delete this.actualPack.index;
-	}
-    };
+	  }
+  };
 
     //tohle ma vratit true, pokud trigger byl inicializovan ze souboru, ma tudiz index, ale
     //uz ho (ten index) nepotrebuje a tento muze byt recyklovan
@@ -198,41 +198,41 @@ app.factory('Trigger', ['$http', '$q', 'requests', 'settings', 'utils', function
 	return false;
     };
 
-    //pokud ( trigger neni released && zmenil se ), ulozit
-    //pokud ( neni released ) vratit jeho index, jinak -1
-    //TODO:
-    Trigger.prototype.saveTrigger = function(asyncCallback) {
-	if (this.index > -1){
+  //pokud ( trigger neni released && zmenil se ), ulozit
+  //pokud ( neni released ) vratit jeho index, jinak -1
+  //TODO:
+  Trigger.prototype.saveTrigger = function(asyncCallback) {
+	  if (this.index > -1){
 	    if (this.origin && this.origin.index){
-	        delete this.origin.index;//hack, ktery resi prave objeveny bug (loadnu stranku s alertama, nic nezmenim, dam save; vsechny triggery se preulozi)
+	      delete this.origin.index;//hack, ktery resi prave objeveny bug (loadnu stranku s alertama, nic nezmenim, dam save; vsechny triggery se preulozi)
 	    			     //zpusobeno je to tim, ze v origin je pritomen 'index', zatimco v actualPack neni. Uz netusim, jestli je v tom origin
 				     //k necemu dobry.
 	    }
 	    if (!utils.deepCompare(this.actualPack, this.origin)){
-                console.log('Saving trigger #' + this.index + ", named " + this.triggerClass);
-		console.log("Actual:");
-	        console.log(this.actualPack);
-		console.log("Origin:");
-		console.log(this.origin);
-		this.origin = this.actualPack;
-                $http.post('/triggers/' + this.index + '.jso', this.actualPack).success(function(){
-		    asyncCallback();
-		});
+        console.log('Saving trigger #' + this.index + ", named " + this.triggerClass);
+		    console.log("Actual:");
+	      console.log(this.actualPack);
+		    console.log("Origin:");
+		    console.log(this.origin);
+		    this.origin = this.actualPack;
+        $http.post('/triggers/' + this.index + '.jso', this.actualPack).success(function(){
+		      asyncCallback();
+		    });
 	    } else {
-		//console.log("No need to save trigger #" + this.index);
-		//console.log("Actual:");
-		//console.log(this.actualPack);
-		//console.log("Origin:");
-		//console.log(this.origin);
-		asyncCallback();
+		    //console.log("No need to save trigger #" + this.index);
+		    //console.log("Actual:");
+		    //console.log(this.actualPack);
+		    //console.log("Origin:");
+		    //console.log(this.origin);
+		    asyncCallback();
 	    }
 	    return this.index;
-	} else {
+	  } else {
 	    //console.log("Not saving trigger #" + this.index);
 	    asyncCallback();
 	    return -1;
-	}
-    };
+	  }
+  };
 
     Trigger.prototype.deleteTrigger = function(asyncCallback) {
 	var temp = Trigger.createDisabled(0);

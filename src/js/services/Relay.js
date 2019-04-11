@@ -46,40 +46,40 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	trigger.index = triggerIndex;
     }
 
-    Relay.prototype.getReleasedIndexes = function(){
-	var result = [];
-	this.getTriggersAndIntervals().forEach(function(trig) {
+  Relay.prototype.getReleasedIndexes = function(){
+  	var result = [];
+  	this.getTriggersAndIntervals().forEach(function(trig) {
 	    if (trig.isReleased()){
-		result.push(trig.index);
+    		result.push(trig.index);
 	    }
-	});
-	if (this.permOnTrigger != null && this.permOnTrigger.index > -1 
-		&& !this.isPermOn()){
+	  });
+	  if (this.permOnTrigger != null && this.permOnTrigger.index > -1 
+		    && !this.isPermOn()){
 	    result.push(this.permOnTrigger.index);
-	}
-	return result;
-    }
+	  }
+	  return result;
+  }
 
-    Relay.prototype.prepareSave = function() {
-	if (this.name == 'Fan'){
+  Relay.prototype.prepareSave = function() {
+  	if (this.name == 'Fan'){
 	    for (var triggerName in this.triggers){
-		if (triggerName.indexOf("_") != -1){
-		    var trig = this.triggers[triggerName];
-	            var timeName = trig.triggerClass.split("_")[1];
-	            var timeLimits = this[timeName];
-	            trig.since = timeLimits.since;
-	            trig.until = timeLimits.until;
-		}
-            }
-	}
-	this.getTriggersAndIntervals().forEach(function(trig) {
+    		if (triggerName.indexOf("_") != -1){
+	  	    var trig = this.triggers[triggerName];
+	        var timeName = trig.triggerClass.split("_")[1];
+	        var timeLimits = this[timeName];
+	        trig.since = timeLimits.since;
+	        trig.until = timeLimits.until;
+	    	}
+      }
+	  }
+	  this.getTriggersAndIntervals().forEach(function(trig) {
 	    var activity = (this.isPermOn() ? Relay.FIRM_ACTIVITY_PERM_OFF : this.getFirmwareActivityCode(trig));
 	    trig.prepareSave(activity);
-	}, this);
-	if (this.isPermOn()){
+	  }, this);
+	  if (this.isPermOn()){
 	    this.permOnTrigger.prepareSave(Relay.FIRM_ACTIVITY_PERM_ON);
-	}
-    }
+	  }
+  }
 
     Relay.prototype.useSlotIndex = function(index) {
 	var used = false;
@@ -97,45 +97,45 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	return false;
     }
 
-    //ulozi triggery a vrati indexy vsech ulozenych triggeru
-    Relay.prototype.saveTriggers = function(outerCallback) {
-	var usedIndexes = [];
-	this.getTriggersAndIntervals().forEach(
+  //ulozi triggery a vrati indexy vsech ulozenych triggeru
+  Relay.prototype.saveTriggers = function(outerCallback) {
+	  var usedIndexes = [];
+	  this.getTriggersAndIntervals().forEach(
 	    function(trig){
-		if (trig.index > -1){
-		    usedIndexes.push(trig.index);
-		}
+		    if (trig.index > -1){
+		      usedIndexes.push(trig.index);
+		    }
 	    }
-	);
-	if (this.isPermOn()){
+	  );
+	  if (this.isPermOn()){
 	    usedIndexes.push(this.permOnTrigger.index);
-	}
-	//ulozit vsechny nereleasle triggery
-	var relay = this;
-	async.series([
+	  }
+	  //ulozit vsechny nereleasle triggery
+	  var relay = this;
+	  async.series([
 	    function(callback){
-	        async.forEachSeries(relay.getTriggersAndIntervals(),
-	            function(trig, innerCallback){
-	                trig.saveTrigger(innerCallback);
-	            }, function(err){
+	      async.forEachSeries(relay.getTriggersAndIntervals(),
+	        function(trig, innerCallback){
+	          trig.saveTrigger(innerCallback);
+	        }, function(err){
 		        callback();
-		    });
-	    },
-	    function(callback){
-		if (relay.isPermOn()){
-		    relay.permOnTrigger.saveTrigger(callback);
-		} else {
-		    callback();
-		}
-	    },
-	    function(callback){
-		outerCallback();
-		callback();
-	    }
-	]);
-	this.permStatusSaved();
-	return usedIndexes;
-    }
+		      });
+	      },
+	      function(callback){
+		      if (relay.isPermOn()){
+		        relay.permOnTrigger.saveTrigger(callback);
+		      } else {
+		        callback();
+		      }
+	      },
+	      function(callback){
+		      outerCallback();
+		      callback();
+	      }
+	    ]);
+	  this.permStatusSaved();
+	  return usedIndexes;
+  }
 
     Relay.prototype.deletePermOnTrigger = function(callback){
 	this.permOnTrigger.deleteTrigger(callback);

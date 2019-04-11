@@ -78,115 +78,115 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
 
 //New Saving:
-    function findAvailableSlotIndex(){
-	var result = slots.indexOf(-1);
-	if (result != -1){
+  function findAvailableSlotIndex(){
+	  var result = slots.indexOf(-1);
+	  if (result != -1){
 	    return result;
-	}
-        alert('Too many triggers!'); throw 'Too many triggers!';
-    }
+	  }
+    alert('Too many triggers!'); throw 'Too many triggers!';
+  }
 
-    $scope.saveTriggers = function(){
-	var invalidInputs = document.getElementsByClassName("ng-invalid");
-	if (invalidInputs.length != 0){
-		var invalidInput = invalidInputs[1];//invalidInputs[0] is the save button itself
-		invalidInput.scrollIntoView(true);
-		invalidInput.focus();
-		$scope.showInvalids = true;
-		return;
-	}
+  $scope.saveTriggers = function(){
+	  var invalidInputs = document.getElementsByClassName("ng-invalid");
+	  if (invalidInputs.length != 0){
+		  var invalidInput = invalidInputs[1];//invalidInputs[0] is the save button itself
+		  invalidInput.scrollIntoView(true);
+		  invalidInput.focus();
+		  $scope.showInvalids = true;
+		  return;
+	  }
 
-	$scope.saving = true;
+	  $scope.saving = true;
 
-	$scope.relays.forEach(function(r) {
+	  $scope.relays.forEach(function(r) {
 	    r.prepareSave();
-	});
-	//vyzadat od kazdeho rele indexy uz nepouzitych triggeru
-	$scope.relays.forEach(function(r) {
+	  });
+	  //vyzadat od kazdeho rele indexy uz nepouzitych triggeru
+	  $scope.relays.forEach(function(r) {
 	    r.getReleasedIndexes().forEach(function(index) {
-		slots[index] = -1;
+		    slots[index] = -1;
 	    });
-	});
-	//pridelit kazdemu rele indexy pro nove pouzite triggery
-	$scope.relays.forEach(function(r) {
+	  });
+	  //pridelit kazdemu rele indexy pro nove pouzite triggery
+	  $scope.relays.forEach(function(r) {
 	    do {
 	    	//zjistit vhodny volny index anebo zarvat, pokud zadny neexistuje
-		var availIndex = findAvailableSlotIndex();
+		    var availIndex = findAvailableSlotIndex();
 	    	//dat ho relatku, at ho pouzije, jestli chce
-		var indexUsed = r.useSlotIndex(availIndex);
-		if (indexUsed){
-		    slots[availIndex] = r.outputIndex;
-		}
+		    var indexUsed = r.useSlotIndex(availIndex);
+		    if (indexUsed){
+		      slots[availIndex] = r.outputIndex;
+		    }
 	    } while (indexUsed);//pokud ho pouzilo, zopakovat
-	});
-	//ulozit do clientConfigu info o permaDisabled relatkach
-	var permOffRelays = [];
-	$scope.relays.forEach(function(r) {
+	  });
+	  //ulozit do clientConfigu info o permaDisabled relatkach
+	  var permOffRelays = [];
+	  $scope.relays.forEach(function(r) {
 	    if (r.isPermOff()){
-		permOffRelays.push(r.name);
+		    permOffRelays.push(r.name);
 	    }
-	});
-	//ulozit do clientConfigu info o casech relatka Fan
-	var fan = $scope.relaysHash['Fan'];
-	var fanTimesInfo = [
+	  });
+	  //ulozit do clientConfigu info o casech relatka Fan
+	  var fan = $scope.relaysHash['Fan'];
+	  var fanTimesInfo = [
 	    fan.day.since === null ? -1 : utils.timeToMinutes(fan.day.since),
 	    fan.day.since === null ? 0 : utils.timeToMinutes(fan.day.until),
 	    fan.night.since === null ? -1 : utils.timeToMinutes(fan.night.since),
 	    fan.night.since === null ? 0 : utils.timeToMinutes(fan.night.until),
-	];
-	var usedTriggers = [];
-	async.series([
+	  ];
+	  var usedTriggers = [];
+	  async.series([
 	    function(callback){
-	        //zavolat na kazdem rele save
-	        async.forEachSeries($scope.relays,
-	            function(r, innerCallback){
-	                Array.prototype.push.apply(usedTriggers, r.saveTriggers(innerCallback));
-	            }, function(err){
-			callback();
+	      //zavolat na kazdem rele save
+	      async.forEachSeries($scope.relays,
+	        function(r, innerCallback){
+	          Array.prototype.push.apply(usedTriggers, r.saveTriggers(innerCallback));
+	        }, function(err){
+			      callback();
 	        });
 	    },
 	    function(callback){
-		//je-li treba, prepsat permOn trigger prazdnym stringem
-		async.forEachSeries($scope.relays,
-		    function(r, innerCallback){
-			if (r.permOnTrigger != null){
-			    var relayPermOnTriggerIndex = r.permOnTrigger.index;
-			    if (relayPermOnTriggerIndex > -1 
-					&& slots[relayPermOnTriggerIndex] == -1){
-				r.deletePermOnTrigger(innerCallback);
-			    } else {
-				innerCallback();
-			    }
-			} else {
-			    innerCallback();
-			} 
-		    }, function(err){
-			callback();
-		});
+		    //je-li treba, prepsat permOn trigger prazdnym stringem
+		    async.forEachSeries($scope.relays,
+		      function(r, innerCallback){
+			      if (r.permOnTrigger != null){
+			        var relayPermOnTriggerIndex = r.permOnTrigger.index;
+			        if (relayPermOnTriggerIndex > -1 
+					      && slots[relayPermOnTriggerIndex] == -1){
+				        r.deletePermOnTrigger(innerCallback);
+			        } else {
+				        innerCallback();
+			        }
+			      } else {
+			        innerCallback();
+			      } 
+		      }, function(err){
+			      callback();
+		      });
 	    },
 	    function(callback){
-	        //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
-	        if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
+	      //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
+	      if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
 		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)
-			|| !utils.deepCompare(fanTimesInfo, clientConfigData.fanTimesInfo)){
+			      || !utils.deepCompare(fanTimesInfo, clientConfigData.fanTimesInfo)){
 	            clientConfigData.permOffRelays = permOffRelays;
 	            clientConfigData.usedTriggers = usedTriggers;
-		    clientConfigData.fanTimesInfo = fanTimesInfo;
-		    $http.post('client.jso', clientConfigData).success(function(){
-			callback();
-		    });
+		          clientConfigData.fanTimesInfo = fanTimesInfo;
+		          $http.post('client.jso', clientConfigData).success(function(){
+			          callback();
+		          });
 	        } else {
-		    callback();
-		}
+		        callback();
+		      }
 	    },
 	    function(callback){
-		$scope.saving = false;
-	        $scope.saveSuccess = true;
-		$timeout(function() {
-		    $scope.saveSuccess = false;
-		}, 2000);
-		callback();
+		    $scope.saving = false;
+	      $scope.saveSuccess = true;
+		    $timeout(function() {
+		      $scope.saveSuccess = false;
+		    }, 2000);
+		    callback();
 	    }
-	]);
-    };
+	  ]);
+  };
 }]);
