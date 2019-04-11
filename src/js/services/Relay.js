@@ -102,7 +102,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	  var usedIndexes = [];
 	  this.getTriggersAndIntervals().forEach(
 	    function(trig){
-		    if (trig.index > -1){
+		    if (trig.index > -1 && ! trig.isReleased()){
 		      usedIndexes.push(trig.index);
 		    }
 	    }
