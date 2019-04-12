@@ -29,7 +29,16 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 
 	    //console.log(d.history[i].when.unix(), moment(d.history[i].when).format(), d.history[i], d.history[i+1], curr, prev);
 		  //console.log(moment(d.history[i].when).format(), moment(d.history[i+1].when).format());
-
+      
+      if (i == 0) {
+        for (var j = 0; j < curr.length; j++) {
+          if (curr[j]) {
+		        var name = settings.outputs[j] ? settings.outputs[j].name : ''+j;
+		        relays.push({ name: name, on: curr[j]});
+          }
+        }
+      }
+      
 	    for (var j = 0; j < Math.max(curr.length, prev.length); j++) {
 		    if ((j < curr.length ? curr[j] : false) !== (j < prev.length ? prev[j] : false)) {
 		      var name = settings.outputs[j] ? settings.outputs[j].name : ''+j;
