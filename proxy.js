@@ -7,7 +7,8 @@ var request = require('request');
 
 //var TARGET = 'arduino.natur.cuni.cz';
 //var TARGET = '78.108.106.180';
-var TARGET = '192.168.1.44';
+//var TARGET = '192.168.1.44';
+var TARGET = '185.47.222.180:2346';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
 

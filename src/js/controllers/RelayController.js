@@ -1,4 +1,4 @@
-app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'RelayData', 'utils', '$rootScope', '$http', function($scope, $interval, settings, RelayData, utils, $rootScope, $http) {
+app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'RelayData', 'OutputsData', 'utils', '$rootScope', '$http', function($scope, $interval, settings, RelayData, OutputsData, utils, $rootScope, $http) {
 
   historyData = {};
 
@@ -7,6 +7,59 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
     if (nMask > 0x7fffffff || nMask < -0x80000000) { throw new TypeError("arrayFromMask - out of range"); }
     for (var nShifted = nMask, aFromMask = []; nShifted; aFromMask.push(Boolean(nShifted & 1)), nShifted >>>= 1);
     return aFromMask;
+  }
+
+  function parseOutputsData(d) {
+    console.log("parseOutputsData", d);
+    /* toto plni info o aktualnim stavu relatek; nevidim, jak to z OutputsData vycist, takze komentim
+	  var states = arrayFromMask(d.currentState);
+	  $scope.relays = [];
+	  settings.outputs.forEach(function(output, i) {
+	    $scope.relays.push({
+		    name: output.name,
+		    state: states.length > i ? states[i] : false
+	    });
+	  });*/
+
+	  var days = [];
+
+	  for (var i = 0; i < d.history.length; i++) {
+	    var curr = d.history[i].state,
+		  relays = [];
+
+	    for (var j = 0; j < curr.length; j++) {
+        var index = parseInt(curr[j].output);
+        var name = settings.outputs[index] ? settings.outputs[index].name : ''+index;
+        relays.push({ name: name, on: curr[j].state });
+	    }
+
+	    var when = d.history[i].when,
+		    whenDay = moment(when).startOf('day'),
+		    lastDay = days[days.length-1];
+
+	    var item = {
+		    when: when,
+		    relays: relays,
+		    show: d.history[i].show
+	    };
+	    if (! d.history[i].show){
+		    console.log("not showing item for ", when.format("HH:mm"));
+	    }
+
+	    if (lastDay && lastDay.when.isSame(whenDay)) {
+		    console.log("no push");
+		    lastDay.items.push(item);
+	    } else {
+		    console.log("push");
+		    days.push({
+		      when: whenDay,
+		      items: [item]
+	      });
+	    }
+	  }
+
+	  $scope.history = days;
+	  $scope.loadingHistory = false;
   }
 
   function parseRelaysData(d){
@@ -20,6 +73,12 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	    });
 	  });
 
+    //cela tahle metoda parseRelaysData je asi urcena ku smazani
+    //ted ji ale jeste pouziju k nacitani aktualniho stavu rele
+    //toto nacitani se deje vyse, nize se nacita historie zmen,
+    //ktera je nove v parseOutputsData
+    return;
+
 	  var days = [];
 
 	  for (var i = 0; i < d.history.length-1; i++) {
@@ -29,15 +88,6 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 
 	    //console.log(d.history[i].when.unix(), moment(d.history[i].when).format(), d.history[i], d.history[i+1], curr, prev);
 		  //console.log(moment(d.history[i].when).format(), moment(d.history[i+1].when).format());
-      
-      if (i == 0) {
-        for (var j = 0; j < curr.length; j++) {
-          if (curr[j]) {
-		        var name = settings.outputs[j] ? settings.outputs[j].name : ''+j;
-		        relays.push({ name: name, on: curr[j]});
-          }
-        }
-      }
       
 	    for (var j = 0; j < Math.max(curr.length, prev.length); j++) {
 		    if ((j < curr.length ? curr[j] : false) !== (j < prev.length ? prev[j] : false)) {
@@ -211,6 +261,9 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
       RelayData.get(function(d){
 	      parseRelaysData(d);
 	    });
+      OutputsData.get(function(d){
+        parseOutputsData(d);
+      });
 	    setReload();
 	  } else if (zoom == 'H'){
 	    //console.log("Display hour");

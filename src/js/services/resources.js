@@ -128,3 +128,26 @@ app.factory('RelayData', ['$resource', '$http', 'settings', 'requests', function
         },
     }));
 }]);
+
+app.factory('OutputsData', ['$resource', '$http', 'settings', 'requests', function($resource, $http, settings, requests) {
+    var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
+        var history = [];
+        for (var ts in data.state) {
+            history.push({
+                when: moment.unix(ts),//.zone(settings.tzOffset),
+                state: data.state[ts],
+		show: true
+            });
+        }
+        history.sort(function(a, b) { return b.when.valueOf() - a.when.valueOf();});
+        data.currentState = history.length === 0 ? 0 : history[0].state;
+        data.history = history;
+        return data;
+    }]);
+    return requests.adapt($resource('/sensors/output_changes.jso', {}, {
+        get: {
+            method: 'GET',
+            transformResponse: transformers
+        },
+    }));
+}]);
