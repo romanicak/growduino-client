@@ -11,15 +11,15 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 
   function parseOutputsData(d) {
     console.log("parseOutputsData", d);
-    /* toto plni info o aktualnim stavu relatek; nevidim, jak to z OutputsData vycist, takze komentim
-	  var states = arrayFromMask(d.currentState);
+
+	  var states = arrayFromMask(d.end_state);
 	  $scope.relays = [];
 	  settings.outputs.forEach(function(output, i) {
 	    $scope.relays.push({
 		    name: output.name,
 		    state: states.length > i ? states[i] : false
 	    });
-	  });*/
+	  });
 
 	  var days = [];
 
@@ -258,9 +258,9 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  cancelReload();
 	  if (! zoom || (isNow && zoom == 'H')){
 	    //console.log("Display now");
-      RelayData.get(function(d){
+      /*RelayData.get(function(d){
 	      parseRelaysData(d);
-	    });
+	    });*/
       OutputsData.get(function(d){
         parseOutputsData(d);
       });

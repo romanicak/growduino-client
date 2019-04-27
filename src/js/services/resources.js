@@ -140,7 +140,7 @@ app.factory('OutputsData', ['$resource', '$http', 'settings', 'requests', functi
             });
         }
         history.sort(function(a, b) { return b.when.valueOf() - a.when.valueOf();});
-        data.currentState = history.length === 0 ? 0 : history[0].state;
+        //data.currentState = history.length === 0 ? 0 : history[0].state;
         data.history = history;
         return data;
     }]);
