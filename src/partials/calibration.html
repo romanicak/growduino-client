@@ -1,5 +1,40 @@
 <div ng-include="'partials/loadingProgress.html'"></div>
 
+<form novalidate class="form-horizontal calibration-display-form" name="calibration_form">
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label-left"></label>
+        <div class="col-sm-10 calibration-control">
+            <label class="form-label control-label-top">Sensor reading&nbsp1</label>
+            <label class="form-label control-label-top">Real value&nbsp1</label>
+            <label class="form-label control-label-top">Sensor reading&nbsp2</label>
+            <label class="form-label control-label-top">Real value&nbsp2</label>
+        </div>
+        <button type="button" class="btn btn-primary invisible" ng-show="!calibrating && !saving" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
+    </div>
+    <div ng-repeat="calibSensor in twoPointCalibrationData">
+        <div class="form-group" bs-has-error>
+            <label class="col-sm-2 control-label-left">{{calibSensor.sensorId.name}}</label>
+            <div class="col-sm-10 calibration-control">
+                <input class="form-control" name="reading1" type="text" value="{{calibSensor.records[0].reading}}" disabled/>
+                <input class="form-control" name="realVal1" type="text" value="{{calibSensor.records[0].realVal}}" disabled/>
+                <input class="form-control" name="reading2" type="text" value="{{calibSensor.records[1].reading}}" disabled/>
+                <input class="form-control" name="realVal2" type="text" value="{{calibSensor.records[1].realVal}}" disabled/>
+            </div>
+            <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="open_popup_window(calibSensor.sensorId)">Get raw data</button>
+        </div>
+    </div>
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label-left"></label>
+        <div class="col-sm-10 calibration-control">
+            <label class="form-label control-label-top">Sensor reading&nbsp1</label>
+            <label class="form-label control-label-top">Real value&nbsp1</label>
+            <label class="form-label control-label-top">Sensor reading&nbsp2</label>
+            <label class="form-label control-label-top">Real value&nbsp2</label>
+        </div>
+        <button type="button" class="btn btn-primary invisible" ng-show="!calibrating && !saving" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
+    </div>
+</form>
+
 <form novalidate class="form-horizontal" ng-class="{saving: saving}" ng-hide="loading" name="form" ng-submit="save()">
 <!--form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()"-->
     <div class="form-group" bs-has-error>
@@ -128,3 +163,62 @@
         </div>
     </div>
 </form>
+<div id="get_calibration_popup_window" class="modal-window" ng-show="show_calibration_popup_window">
+    <div class="modal-content">
+        <span class="close" ng-click="close_popup_window()">&times;</span>
+        <form class="form-horizontal" name="calibration_popup>">
+            <div class="form-group">
+                <div name="label1Row">
+                    <label class="col-sm-3 control-label">Calibration pair 1</label>
+                    <label class="col-sm-5 control-label">Calibration pair 2</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div name="fields1Row">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <label class="control-label">Sensor data</label>
+                    </div>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <input class="form-control" value="{{popup_data.records[0].reading}}" disabled/>
+                    </div>
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <label class="control-label">Sensor data</label>
+                    </div>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <input class="form-control" value="{{popup_data.records[1].reading}}" disabled/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div name="fields2Row">
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <label class="control-label">Real value</label>
+                    </div>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <input class="form-control" ng-model="popup_data.records[0].realVal"/>
+                    </div>
+                    <label class="col-sm-1 control-label"></label>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <label class="control-label">Real value</label>
+                    </div>
+                    <div class="col-sm-2 calibration-popup-control">
+                        <input class="form-control" ng-model="popup_data.records[1].realVal"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary" ng-click="sendCalibrationData()">Save</button>
+                </div>
+                <div class="col-sm-4">
+                    <button class="btn btn-primary" ng-click="close_popup_window()">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

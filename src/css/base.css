@@ -206,3 +206,25 @@ a[ng-click] {
     width: initial;
     display: inline-block;
 }
+
+.calibration-display-form .form-control {
+    width: 67px;
+    display: inline-block;
+}
+
+.calibration-display-form .control-label-top {
+    width: 67px;
+    text-align: center;
+}
+
+.calibration-display-form .control-label-left {
+    width: 117px;
+    height: 34px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.calibration-popup-control {
+    width: 120px;
+    display: inline;
+}
