@@ -5,9 +5,16 @@ app.factory('BackendConfig', ['$resource', 'requests', function($resource, reque
 app.factory('CalibrationConfig', ['$resource', 'requests', function($resource, requests) {
     return {
       config: requests.adapt($resource('/calib.jso')),
-      EC: requests.adapt($resource('/sensors/rawdata/7.jso')),
-      pH: requests.adapt($resource('/sensors/rawdata/8.jso')),
-      CO2: requests.adapt($resource('/sensors/rawdata/9.jso'))
+      "DHT22-Hum": requests.adapt($resource('/sensors/rawdata/0.jso')),
+      "DHT22-Temp": requests.adapt($resource('/sensors/rawdata/1.jso')),
+      "Light-Out": requests.adapt($resource('/sensors/rawdata/2.jso')),
+      "USND": requests.adapt($resource('/sensors/rawdata/3.jso')),
+      "Temp-Water": requests.adapt($resource('/sensors/rawdata/4.jso')),
+      "Light-In": requests.adapt($resource('/sensors/rawdata/5.jso')),
+      "Temp-Bulb": requests.adapt($resource('/sensors/rawdata/6.jso')),
+      "EC": requests.adapt($resource('/sensors/rawdata/7.jso')),
+      "pH": requests.adapt($resource('/sensors/rawdata/8.jso')),
+      "CO2": requests.adapt($resource('/sensors/rawdata/9.jso'))
     };
 }]);
 

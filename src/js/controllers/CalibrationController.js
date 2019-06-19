@@ -40,9 +40,6 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         }
     }
 
-    /*function setCalibrationDataForSensor(sensorId, value1, value2) {
-    }*/
-
     function sensorDataCompare(a, b) {
         timeA = Date.parse(a.timestamp);
         timeB = Date.parse(b.timestamp);
@@ -96,17 +93,13 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         data["sensorId"] = sensorId;
         data.records = [];
         rec0 = {};
-        rec0["reading"] = calib.length > 0 ? calib[0].sensor_reading : "r1";
-        rec0["realVal"] = calib.length > 0 ? calib[0].real_value : "v1";
+        rec0["reading"] = calib.length > 0 ? calib[0].sensor_reading : "";
+        rec0["realVal"] = calib.length > 0 ? calib[0].real_value : "";
         data.records.push(rec0);
         rec1 = {};
-        rec1["reading"] = calib.length > 1 ? calib[1].sensor_reading : "r2";
-        rec1["realVal"] = calib.length > 1 ? calib[1].real_value : "v2";
+        rec1["reading"] = calib.length > 1 ? calib[1].sensor_reading : "";
+        rec1["realVal"] = calib.length > 1 ? calib[1].real_value : "";
         data.records.push(rec1);
-        /*data["reading1"] = calib.length > 0 ? calib[0].sensor_reading : "r1";
-        data["reading2"] = calib.length > 1 ? calib[1].sensor_reading : "r2";
-        data["realVal1"] = calib.length > 0 ? calib[0].real_value : "v1";
-        data["realVal2"] = calib.length > 1 ? calib[1].real_value : "v2";*/
         return data;
     }
 
@@ -138,17 +131,42 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         }
     }
 
-    $scope.sendCalibrationData = function() {
-        //je-li prvni zaznam ku zmazani, swapni ho s druhym zaznamem
-        if ($scope.popup_data.realVal1 == "") {
-            $scope.popup_data.reading1 = $scope.popup_data.reading2;
-            $scope.popup_data.realVal1 = $scope.popup_data.realVal2;
-            $scope.popup_data.realVal2 = "";
+    //realValue je neprazdne
+    //  sensor_reading neprazdne: vytvor zaznam
+    //  sensor_reading prazdne: error
+    //realValue je prazdne
+    //  smazat zaznam
+    function storeCalibrationRecord(index) {
+        recordIndex = $scope.popup_data.sensorId.id * 10 + index;
+        record = $scope.popup_data.records[index];
+        realVal = parseFloat(record["realVal"]);
+        reading = parseFloat(record["reading"]);
+        if (isNaN(realVal)) {
+            console.log($scope.config.calibration_data);
+            delete $scope.config.calibration_data[recordIndex];
+            console.log($scope.config.calibration_data);
+        } else {
+            if (isNaN(reading)) {
+                alert("Data error: Cannot save calibration pair with no Sensor data, index: '" + index + "'");
+                console.log(record);
+            } else {
+                $scope.config.calibration_data["" + recordIndex] = {
+                    "id": recordIndex,
+                    "sensor_reading": reading,
+                    "real_value": realVal,
+                    "sensor" : $scope.popup_data.sensorId.id
+                };
+            }
         }
-        //volej spravu jednotlivych recordu
-        sendCalibrationRecord($scope.popup_data, 0);
-        sendCalibrationRecord($scope.popup_data, 1);
+    }
+
+    $scope.sendCalibrationData = function() {
+        storeCalibrationRecord(0);
+        storeCalibrationRecord(1);
+        console.log($scope.config.calibration_data);
         $scope.close_popup_window();
+        $scope.save();
+        window.location.reload();
     }
 
     function isValueAcceptable(senzor, value){
@@ -176,7 +194,33 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       curRetry++;
     }
 
-    $scope.getRawData = function(valueName, senzor){
+    function postCalibSinglePoint(valueName) {
+      console.log("Calibration done", curStep, total);
+      //bud se to povedlo, pak je curStep == calibrationNumSteps, anebo nepovedlo, pak je curStep < calibrationNumSteps
+      if (curStep == calibrationNumSteps){//vsechna mereni se podarila, muzeme zobrazit zmerenou hodnotu
+        $scope.config[valueName] = "" + Math.round(total / calibrationNumSteps);//formular ma nastaveno, ze hodnoty musi byt cela cisla; angular odmitne (silently) nastavit hodnotu, ktera podminky nesplnuje; proto je treba zaokrouhlit
+        $scope.needsSavingArray[valueName] = true;
+        $scope.lastCalibrationFailedArray[valueName] = false;
+      } else {//nektera mereni se nepodarila, je treba zobrazit error
+        $scope.needsSavingArray[valueName] = false;
+        $scope.lastCalibrationFailedArray[valueName] = true;
+      }
+    }
+
+    function postCalibTwoPoint(recordIndex) {
+      //use dummy data
+      $scope.popup_data.records[recordIndex]["reading"] = 11*recordIndex;
+      return;
+      if (curStep == calibrationNumSteps){//success
+        //nastavit sensor value prislusneho kalibracniho paru (v popup_data) na 
+        Math.round(total / calibrationNumSteps);
+        //to je vsechno; mel by se zmenit obsah zobrazenych dat v popupu, ale jeste ne na strance calibration
+      } else {//cteni kalibracnich dat se nepovedlo; error
+        alert("Error occured while reading sensor data; 'sensor reading' value could not be updated");
+      }
+    }
+
+    $scope.getRawData = function(valueName, senzor, useTwoPoint = false, recordIndex = -1){
       $scope.loadingMessage = "Calibrating " + senzor;
       $scope.loading = true;
       $scope.stepCount = (calibrationNumRetries + 1) * calibrationNumSteps;
@@ -190,7 +234,14 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       curRetry = 0;
       total = 0;
 
-      async.whilst(
+      if (useTwoPoint) {
+        postCalibTwoPoint(recordIndex);
+        $scope.loading = false;
+        $scope.calibrating = false;
+        $scope.calibratingArray[valueName] = false;
+      }
+
+      /*async.whilst(
         function() {return curStep < calibrationNumSteps && curRetry <= calibrationNumRetries;},//test
         function(callback){//fn
            setTimeout(
@@ -214,21 +265,16 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
              )}, curDelay);
         },
         function(){//callback
-          console.log("Calibration done", curStep, total);
-          //bud se to povedlo, pak je curStep == calibrationNumSteps, anebo nepovedlo, pak je curStep < calibrationNumSteps
-          if (curStep == calibrationNumSteps){//vsechna mereni se podarila, muzeme zobrazit zmerenou hodnotu
-            $scope.config[valueName] = "" + Math.round(total / calibrationNumSteps);//formular ma nastaveno, ze hodnoty musi byt cela cisla; angular odmitne (silently) nastavit hodnotu, ktera podminky nesplnuje; proto je treba zaokrouhlit
-            $scope.needsSavingArray[valueName] = true;
-            $scope.lastCalibrationFailedArray[valueName] = false;
-          } else {//nektera mereni se nepodarila, je treba zobrazit error
-            $scope.needsSavingArray[valueName] = false;
-            $scope.lastCalibrationFailedArray[valueName] = true;
+          if (useTwoPoint) {
+            postCalibTwoPoint(recordIndex);
+          } else {
+            postCalibSinglePoint(valueName);
           }
           $scope.loading = false;
           $scope.calibrating = false;
           $scope.calibratingArray[valueName] = false;
         }
-      );
+      );*/
     };
 
     $scope.save = function() {
