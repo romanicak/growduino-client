@@ -40,66 +40,15 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         }
     }
 
-    function sensorDataCompare(a, b) {
-        timeA = Date.parse(a.timestamp);
-        timeB = Date.parse(b.timestamp);
-        if (timeA < timeB) {
-            return -1;
-        } else {
-            return 1;
-        }
-    }
-
-    //vim, ze availableData ma vic nez 2 prvky. chci vratit nove pole, ktere
-    //bude obsahovat prave 2 prvky, a to ty, ktere maji nevyssi hodnotu "timestamp"
-    function getLast2SensorData(availableData) {
-        availableData.sort(sensorDataCompare);
-        result = [];
-        result.push(availableData[0]);
-        result.push(availableData[1]);
-        return result;
-    }
-
-    //zde projdu vsechny hodnoty z $scope.config.calibration_data;
-    //vyignoruju ty, ktere maji v polozce "sensor" neco jineho nez sensorId.id
-    //pokud mi zbude min nez 2 vysledky, vratim null
-    //jinak setridim vysledky podle hodnot "timestamp" sestupne
-    //vratim prvni dva vysledky jako dvouprvkove pole dvouprvkovych hodnot
-    //prvky hodnot jsou "sensor_reading" a "real_value"
-    function collectCalibrationDataForSensor(sensorId) {
-        calibrationArray = Object.values($scope.config.calibration_data);
-        availableSensorData = [];
-        for (var i = 0; i < calibrationArray.length; i++) {
-            calibrationItem = calibrationArray[i];
-            if (calibrationItem["sensor"] == sensorId.id) {
-                availableSensorData.push(calibrationItem);
-            }
-        }
-        if (availableSensorData.length <= 2) {
-            return availableSensorData;
-        } else {
-            return getLast2SensorData(availableSensorData);
-        }
-    }
-
     //zde sensorId je objekt, resp. dvojice (int, str); int reprezentuje index v poli
     //calibration, ktere prislo z krabicky, str reprezentuje jmeno, ktere ma cidlo
     //ve frontendu mit
     function getCalibrationDataForSensor(sensorId) {
-        //calib = $scope.config.calibration_data[sensorId];
-        calib = collectCalibrationDataForSensor(sensorId);
         data = {};
-        data["calib"] = calib;
         data["sensorId"] = sensorId;
         data.records = [];
-        rec0 = {};
-        rec0["reading"] = calib.length > 0 ? calib[0].sensor_reading : "";
-        rec0["realVal"] = calib.length > 0 ? calib[0].real_value : "";
-        data.records.push(rec0);
-        rec1 = {};
-        rec1["reading"] = calib.length > 1 ? calib[1].sensor_reading : "";
-        rec1["realVal"] = calib.length > 1 ? calib[1].real_value : "";
-        data.records.push(rec1);
+        data.records.push(getCalibrationRecord(sensorId.id * 10));
+        data.records.push(getCalibrationRecord(sensorId.id * 10 + 1));
         return data;
     }
 
@@ -112,23 +61,12 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         $scope.show_calibration_popup_window = false;
     }
 
-    function sendCalibrationRecord(data, index) {
-        recordIndex = data.sensorId.id * 10 + index;
-        recordData = data.records[index];
-        if (recordData.realVal == "") {
-            if (data.calib.length > index) {
-                //exje-li, smazat
-                alert("smazat "  + recordIndex );
-            }
-        } else {
-            if (data.calib.length > index) {
-                //exje-li, prepsat
-                alert("prepsat "  + recordIndex );
-            } else {
-                //jinak vytvorit
-                alert("vytvorit "  + recordIndex );
-            }
-        }
+    function getCalibrationRecord(recordIndex) {
+        recordData = $scope.config.calibration_data["" + recordIndex];
+        record = {};
+        record["reading"] = recordData == undefined ? "" : recordData["sensor_reading"];
+        record["realVal"] = recordData == undefined ? "" : recordData["real_value"];
+        return record;
     }
 
     //realValue je neprazdne
@@ -208,12 +146,9 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     }
 
     function postCalibTwoPoint(recordIndex) {
-      //use dummy data
-      $scope.popup_data.records[recordIndex]["reading"] = 11*recordIndex;
-      return;
       if (curStep == calibrationNumSteps){//success
         //nastavit sensor value prislusneho kalibracniho paru (v popup_data) na 
-        Math.round(total / calibrationNumSteps);
+        $scope.popup_data.records[recordIndex]["reading"] = Math.round(total / calibrationNumSteps);
         //to je vsechno; mel by se zmenit obsah zobrazenych dat v popupu, ale jeste ne na strance calibration
       } else {//cteni kalibracnich dat se nepovedlo; error
         alert("Error occured while reading sensor data; 'sensor reading' value could not be updated");
@@ -234,18 +169,19 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       curRetry = 0;
       total = 0;
 
-      if (useTwoPoint) {
+      /*if (useTwoPoint) {
         postCalibTwoPoint(recordIndex);
         $scope.loading = false;
         $scope.calibrating = false;
         $scope.calibratingArray[valueName] = false;
-      }
+      }*/
 
-      /*async.whilst(
+      async.whilst(
         function() {return curStep < calibrationNumSteps && curRetry <= calibrationNumRetries;},//test
         function(callback){//fn
            setTimeout(
              function(){
+             console.log("Trying to read senzor '" + senzor + "'");
              CalibrationConfig[senzor].get(
                function(data){//get OK
                  //checknout, jestli je hodnota pripustna, pokud ano, udelat OK, pokud ne, udelat fail
@@ -274,7 +210,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
           $scope.calibrating = false;
           $scope.calibratingArray[valueName] = false;
         }
-      );*/
+      );
     };
 
     $scope.save = function() {
