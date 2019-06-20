@@ -155,7 +155,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       }
     }
 
-    $scope.getRawData = function(valueName, senzor, useTwoPoint = false, recordIndex = -1){
+    $scope.getRawData = function(valueName, senzor, useTwoPoint /*= false*/, recordIndex /*= -1*/){
       $scope.loadingMessage = "Calibrating " + senzor;
       $scope.loading = true;
       $scope.stepCount = (calibrationNumRetries + 1) * calibrationNumSteps;
