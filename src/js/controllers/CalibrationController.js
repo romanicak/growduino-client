@@ -12,15 +12,19 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
 
     ECMaxAcceptableValue = 1500;
 
-    CalibrationConfig['config'].get().then(function(config) {
-        $scope.config = config;
-        prepareCalibrationData();
-        $scope.loading = false;
-    }, function(err){
-        alert("Fail: " + err);
-        $scope.loading = false;
-        $scope.config = {};
-    });
+    $scope.loadCalibrationConfig = function() {
+        CalibrationConfig['config'].get().then(function(config) {
+            $scope.config = config;
+            prepareCalibrationData();
+            $scope.loading = false;
+        }, function(err){
+            alert("Fail: " + err);
+            $scope.loading = false;
+            $scope.config = {};
+        });
+    }
+
+    $scope.loadCalibrationConfig();
 
     calibrationDataConfig = [
       {"id": 2, "name": "Light-Out"},
@@ -33,6 +37,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     ];
 
     function prepareCalibrationData() {
+        $scope.twoPointCalibrationData = [];
         for (var i = 0; i < calibrationDataConfig.length; i++) {
             d = calibrationDataConfig[i];
             cd = getCalibrationDataForSensor(d);
@@ -103,8 +108,8 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         storeCalibrationRecord(1);
         console.log($scope.config.calibration_data);
         $scope.close_popup_window();
-        $scope.save();
-        window.location.reload();
+        $scope.loading = true;
+        $scope.save($scope.loadCalibrationConfig);
     }
 
     function isValueAcceptable(senzor, value){
@@ -169,13 +174,6 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       curRetry = 0;
       total = 0;
 
-      /*if (useTwoPoint) {
-        postCalibTwoPoint(recordIndex);
-        $scope.loading = false;
-        $scope.calibrating = false;
-        $scope.calibratingArray[valueName] = false;
-      }*/
-
       async.whilst(
         function() {return curStep < calibrationNumSteps && curRetry <= calibrationNumRetries;},//test
         function(callback){//fn
@@ -213,7 +211,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       );
     };
 
-    $scope.save = function() {
+    $scope.save = function(callback) {
         if ($scope.saving) return;
         $scope.saving = true;
 
@@ -222,9 +220,14 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
             $scope.saving = false;
             $scope.saveSuccess = true;
             $scope.needsSavingArray = [];
-            $timeout(function() {
-              $scope.saveSuccess = false;
-            }, 2000);
+            if (callback) {
+                $scope.saveSuccess = false;
+                callback();
+            } else {
+                $timeout(function() {
+                  $scope.saveSuccess = false;
+                }, 2000);
+            }
         }, function() {
             alert('Oops save failed.');
         });

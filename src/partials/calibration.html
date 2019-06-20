@@ -9,7 +9,7 @@
             <label class="form-label control-label-top">Sensor reading&nbsp2</label>
             <label class="form-label control-label-top">Real value&nbsp2</label>
         </div>
-        <button type="button" class="btn btn-primary invisible" ng-show="!calibrating && !saving" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
+        <button type="button" class="btn btn-primary invisible" ng-show="!calibrating && !saving">Get raw data</button>
     </div>
     <div ng-repeat="calibSensor in twoPointCalibrationData">
         <div class="form-group" bs-has-error>
@@ -20,7 +20,7 @@
                 <input class="form-control" name="reading2" type="text" value="{{calibSensor.records[1].reading}}" disabled/>
                 <input class="form-control" name="realVal2" type="text" value="{{calibSensor.records[1].realVal}}" disabled/>
             </div>
-            <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="open_popup_window(calibSensor.sensorId)">Get raw data</button>
+            <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="open_popup_window(calibSensor.sensorId)">Calibrate</button>
         </div>
     </div>
     <div class="form-group" bs-has-error>
@@ -31,7 +31,7 @@
             <label class="form-label control-label-top">Sensor reading&nbsp2</label>
             <label class="form-label control-label-top">Real value&nbsp2</label>
         </div>
-        <button type="button" class="btn btn-primary invisible" ng-show="!calibrating && !saving" ng-click="getRawData('ec_low_ion', 'EC')">Get raw data</button>
+        <button type="button" class="btn btn-primary invisible" ng-show="!calibrating && !saving">Get raw data</button>
     </div>
 </form>
 
