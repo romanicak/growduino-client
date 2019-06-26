@@ -1,5 +1,6 @@
 app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'RelayData', 'OutputsData', 'utils', '$rootScope', '$http', function($scope, $interval, settings, RelayData, OutputsData, utils, $rootScope, $http) {
 
+  useOldHistoryDataLoadingMethodUsingOutputsInsteadOfOutputChanges = false;
   historyData = {};
 
   function arrayFromMask(nMask) {
@@ -62,8 +63,8 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  $scope.loadingHistory = false;
   }
 
-  function parseRelaysData(d){
-    console.log("parseRelaysData", d);
+  function fillCurrentRelaysData(d){
+    console.log("fillCurrentRelaysData", d);
 	  var states = arrayFromMask(d.currentState);
 	  $scope.relays = [];
 	  settings.outputs.forEach(function(output, i) {
@@ -72,57 +73,6 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 		    state: states.length > i ? states[i] : false
 	    });
 	  });
-
-    //cela tahle metoda parseRelaysData je asi urcena ku smazani
-    //ted ji ale jeste pouziju k nacitani aktualniho stavu rele
-    //toto nacitani se deje vyse, nize se nacita historie zmen,
-    //ktera je nove v parseOutputsData
-    return;
-
-	  var days = [];
-
-	  for (var i = 0; i < d.history.length-1; i++) {
-	    var curr = arrayFromMask(d.history[i].state),
-		  prev = arrayFromMask(d.history[i+1].state),
-		  relays = [];
-
-	    //console.log(d.history[i].when.unix(), moment(d.history[i].when).format(), d.history[i], d.history[i+1], curr, prev);
-		  //console.log(moment(d.history[i].when).format(), moment(d.history[i+1].when).format());
-      
-	    for (var j = 0; j < Math.max(curr.length, prev.length); j++) {
-		    if ((j < curr.length ? curr[j] : false) !== (j < prev.length ? prev[j] : false)) {
-		      var name = settings.outputs[j] ? settings.outputs[j].name : ''+j;
-		      relays.push({ name: name, on: curr[j]});
-		    }
-	    }
-
-	    var when = d.history[i].when,
-		    whenDay = moment(when).startOf('day'),
-		    lastDay = days[days.length-1];
-
-	    var item = {
-		    when: when,
-		    relays: relays,
-		    show: d.history[i].show
-	    };
-	    if (! d.history[i].show){
-		    console.log("not showing item for ", when.format("HH:mm"));
-	    }
-
-	    if (lastDay && lastDay.when.isSame(whenDay)) {
-		    console.log("no push");
-		    lastDay.items.push(item);
-	    } else {
-		    console.log("push");
-		    days.push({
-		      when: whenDay,
-		      items: [item]
-	      });
-	    }
-	  }
-
-	  $scope.history = days;
-	  $scope.loadingHistory = false;
   }
 
   function cancelReload(){
@@ -188,7 +138,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
   //
   //jedno volani teto metody nahraje data z jednoho souboru a zavola s nimi
   //historyDataLoaded
-  function loadHistoryData(urlPrefix, firstFileIndex, daytime, outerCallback){
+  function loadHistoryData_Outputs(urlPrefix, firstFileIndex, daytime, outerCallback){
 	  var url = urlPrefix + firstFileIndex + ".jso";
 	  $http.get(url, {headers: {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}, cache: false}).then(
 	    function successCallback(data){
@@ -204,7 +154,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 		    historyDataLoaded(data.data, daytime);
 		    async.series([
 		      function(callback){
-			      loadHistoryData(urlPrefix, firstFileIndex + 1, daytime, callback);
+			      loadHistoryData_Outputs(urlPrefix, firstFileIndex + 1, daytime, callback);
 		      },
 		      function(callback){
 			      outerCallback();
@@ -219,34 +169,71 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  );
   }
 
-  function loadAndParseHistoryData(urlPrefix, daytime){
+  function loadAndParseHistoryData_Outputs(urlPrefix, daytime){
 	  historyData = {};
 	  historyData.history = [];
 	  async.series([
 	    function(callback){
-		    loadHistoryData(urlPrefix, 0, daytime, callback);
+		    loadHistoryData_Outputs(urlPrefix, 0, daytime, callback);
 		    //console.log("Load over");
 	    },
 	    function(callback){
-		    /*console.log("4 sorting now");
-		    console.log("!!Checking historyData.history before sorting!!");
-		    console.log("Length: " + historyData.history.length);
-		    for (var i = 0; i < historyData.history.length; i++){
-		      var hist = historyData.history[i];
-		      if (! hist.when){
-			      console.log("when udefined for index " + i);
-			      console.log(hist);
-		      }
-		    }*/
 		    historyData.history.sort(function(a, b){
 		      return b.when.valueOf() - a.when.valueOf();
 		    });
 		    //console.log("sorting over -- 4 parsing");
-		    parseRelaysData(historyData);
+		    fillCurrentRelaysData(historyData);
 		    //console.log("parse over");
 		    callback();
 	    }
 	  ]);
+  }
+
+  //data maji format
+  //timepoint: [{output: int, state:bool}]
+  function loadAndParseHistoryData_OutputChanges(dataUrl, daytime) {
+    historyData = {};
+    historyData.history = [];
+    $http.get(dataUrl, {headers: {'Cache-Control': 'no-cache', 'Pragma': 'no-cache'}, cache: false}).then(
+      function successCallback(data) {
+        //vyfiltrovat, if daytime is set
+        console.log("Loaded data");
+        console.log(data);
+        for (var ts in data.data.state) {
+          var when = moment.unix(ts);
+          if (! daytime || isWithinHour(when, daytime)) {
+            historyData.history.push({
+              when: when,
+              state: data.data.state[ts],
+              show: true
+            });
+          } else {
+            console.log("ignored");
+            console.log(when);
+            console.log(data.data.state[ts]);
+          }
+        }
+        //sesortovat
+        historyData.history.sort(function(a, b){
+          return b.when.valueOf() - a.when.valueOf();
+        });
+        //nacpat do datove struktury
+        parseOutputsData(historyData);
+      },
+      function errorCallback(data) {
+        console.log("Data from '" + dataUrl + "' could not be read: '" + data + "'");
+      }
+    );
+  }
+
+  function loadAndParseHistoryData(formattedDaytime, daytime) {
+    if (useOldHistoryDataLoadingMethodUsingOutputsInsteadOfOutputChanges) {
+      var urlPrefix = "/DATA/OUTPUTS/" + formattedDaytime;
+      loadAndParseHistoryData_Outputs(urlPrefix, daytime);
+    } else {
+      var dataUrl = "/DATA/OUTPUT_CHANGES/" + formattedDaytime + "0.jso";
+      loadAndParseHistoryData_OutputChanges(dataUrl, daytime);
+    }
   }
 
   function refreshRelays(daytime, zoom, isNow) {
@@ -258,9 +245,6 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  cancelReload();
 	  if (! zoom || (isNow && zoom == 'H')){
 	    //console.log("Display now");
-      /*RelayData.get(function(d){
-	      parseRelaysData(d);
-	    });*/
       OutputsData.get(function(d){
         parseOutputsData(d);
       });
@@ -268,13 +252,11 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  } else if (zoom == 'H'){
 	    //console.log("Display hour");
 	    var formattedDaytime = daytime.format("YYYY/MM/DD/");
-	    var urlPrefix = "/DATA/OUTPUTS/" + formattedDaytime;
-	    loadAndParseHistoryData(urlPrefix, daytime);
+	    loadAndParseHistoryData(formattedDaytime, daytime);
 	  } else if (zoom == 'D'){
 	    //console.log("Display day");
 	    var formattedDaytime = daytime.format("YYYY/MM/DD/");
-	    var urlPrefix = "/DATA/OUTPUTS/" + formattedDaytime;
-	    loadAndParseHistoryData(urlPrefix);
+	    loadAndParseHistoryData(formattedDaytime);
 	  } else {
 	    //console.log("Display nothing");
 	    $scope.showMonthMessage = true;

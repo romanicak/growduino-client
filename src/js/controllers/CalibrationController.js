@@ -152,9 +152,8 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
 
     function postCalibTwoPoint(recordIndex) {
       if (curStep == calibrationNumSteps){//success
-        //nastavit sensor value prislusneho kalibracniho paru (v popup_data) na 
-        $scope.popup_data.records[recordIndex]["reading"] = total / calibrationNumSteps;
-        //to je vsechno; mel by se zmenit obsah zobrazenych dat v popupu, ale jeste ne na strance calibration
+        //the +(..).toFixed(1) construct rounds to 1 decimal place AND removes the decimal place if it is 0
+        $scope.popup_data.records[recordIndex]["reading"] = +(total / calibrationNumSteps).toFixed(1);
       } else {//cteni kalibracnich dat se nepovedlo; error
         alert("Error occured while reading sensor data; 'sensor reading' value could not be updated");
       }
