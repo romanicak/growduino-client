@@ -27,13 +27,13 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     $scope.loadCalibrationConfig();
 
     calibrationDataConfig = [
-      {"id": 2, "name": "Light-Out"},
-      {"id": 5, "name": "Light-In"},
-      {"id": 1, "name": "DHT22-Temp"},
-      {"id": 0, "name": "DHT22-Hum"},
-      {"id": 4, "name": "Temp-Water"},
-      {"id": 6, "name": "Temp-Bulb"},
-      {"id": 3, "name": "USND"}
+      {"id": 2, "name": "Light-Out", "divisor": 10},
+      {"id": 5, "name": "Light-In", "divisor": 10},
+      {"id": 1, "name": "DHT22-Temp", "divisor": 10},
+      {"id": 0, "name": "DHT22-Hum", "divisor": 10},
+      {"id": 4, "name": "Temp-Water", "divisor": 10},
+      {"id": 6, "name": "Temp-Bulb", "divisor": 10},
+      {"id": 3, "name": "USND", "divisor": 1}
     ];
 
     function prepareCalibrationData() {
@@ -52,8 +52,8 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         data = {};
         data["sensorId"] = sensorId;
         data.records = [];
-        data.records.push(getCalibrationRecord(sensorId.id * 10));
-        data.records.push(getCalibrationRecord(sensorId.id * 10 + 1));
+        data.records.push(getCalibrationRecord(sensorId.id * 10, sensorId.divisor));
+        data.records.push(getCalibrationRecord(sensorId.id * 10 + 1, sensorId.divisor));
         return data;
     }
 
@@ -66,11 +66,11 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         $scope.show_calibration_popup_window = false;
     }
 
-    function getCalibrationRecord(recordIndex) {
+    function getCalibrationRecord(recordIndex, divisor) {
         recordData = $scope.config.calibration_data["" + recordIndex];
         record = {};
-        record["reading"] = recordData == undefined ? "" : recordData["sensor_reading"];
-        record["realVal"] = recordData == undefined ? "" : recordData["real_value"];
+        record["reading"] = recordData == undefined ? "" : recordData["sensor_reading"] / divisor;
+        record["realVal"] = recordData == undefined ? "" : recordData["real_value"] / divisor;
         return record;
     }
 
@@ -81,6 +81,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     //  smazat zaznam
     function storeCalibrationRecord(index) {
         recordIndex = $scope.popup_data.sensorId.id * 10 + index;
+        divisor = $scope.popup_data.sensorId.divisor;
         record = $scope.popup_data.records[index];
         realVal = parseFloat(record["realVal"]);
         reading = parseFloat(record["reading"]);
@@ -95,8 +96,8 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
             } else {
                 $scope.config.calibration_data["" + recordIndex] = {
                     "id": recordIndex,
-                    "sensor_reading": reading,
-                    "real_value": realVal,
+                    "sensor_reading": reading * divisor,
+                    "real_value": realVal * divisor,
                     "sensor" : $scope.popup_data.sensorId.id
                 };
             }
@@ -150,16 +151,17 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       }
     }
 
-    function postCalibTwoPoint(recordIndex) {
+    function postCalibTwoPoint(recordIndex, divisor) {
       if (curStep == calibrationNumSteps){//success
         //the +(..).toFixed(1) construct rounds to 1 decimal place AND removes the decimal place if it is 0
-        $scope.popup_data.records[recordIndex]["reading"] = +(total / calibrationNumSteps).toFixed(1);
+        var average = total / calibrationNumSteps;
+        $scope.popup_data.records[recordIndex]["reading"] = +(average / divisor).toFixed(1);
       } else {//cteni kalibracnich dat se nepovedlo; error
         alert("Error occured while reading sensor data; 'sensor reading' value could not be updated");
       }
     }
 
-    $scope.getRawData = function(valueName, senzor, useTwoPoint /*= false*/, recordIndex /*= -1*/){
+    $scope.getRawData = function(valueName, senzor, useTwoPoint, recordIndex, divisor){
       $scope.loadingMessage = "Calibrating " + senzor;
       $scope.loading = true;
       $scope.stepCount = (calibrationNumRetries + 1) * calibrationNumSteps;
@@ -199,7 +201,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         },
         function(){//callback
           if (useTwoPoint) {
-            postCalibTwoPoint(recordIndex);
+            postCalibTwoPoint(recordIndex, divisor);
           } else {
             postCalibSinglePoint(valueName);
           }
