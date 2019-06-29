@@ -245,9 +245,10 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  cancelReload();
 	  if (! zoom || (isNow && zoom == 'H')){
 	    //console.log("Display now");
-      OutputsData.get(function(d){
+      /*OutputsData.get(function(d){
         parseOutputsData(d);
-      });
+      });*/
+      loadAndParseHistoryData_OutputChanges("/sensors/output_changes.jso");
 	    setReload();
 	  } else if (zoom == 'H'){
 	    //console.log("Display hour");
@@ -269,7 +270,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  refreshRelays(datetime, zoom, isNow);
   });
 
-  cancelReload();
-  refreshRelays();
+  //cancelReload();
+  //refreshRelays();
 
 }]);
