@@ -269,5 +269,6 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 	  refreshRelays(datetime, zoom, isNow);
   });
 
-  //refreshRelays();
+  cancelReload();
+  refreshRelays();
 }]);

@@ -114,10 +114,19 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     }
 
     function isValueAcceptable(senzor, value){
-      if (senzor == "EC" && (value == -999 || value > ECMaxAcceptableValue)){
+      if (senzor == "Light-Out" || senzor == "Light-In" || senzor == "DHT22-Temp"
+            || senzor == "DHT22-Hum" || senzor == "Temp-Water" || senzor == "Temp-Bulb"
+            || senzor == "USND") {
+        if (value == -999) {
+          return false;
+        }
+      }
+      //if (senzor == "EC" && (value == -999 || value > ECMaxAcceptableValue)){
+      if (senzor == "EC" && (value < 1 || value > 1000)){
         return false;
       }
-      if (senzor == "pH" && value == 0){
+      //if (senzor == "pH" && value == 0){
+      if (senzor == "pH" && (value < 1 || value > 1000)){
         return false;
       }
       return true;
