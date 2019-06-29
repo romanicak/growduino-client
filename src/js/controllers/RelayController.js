@@ -271,4 +271,5 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 
   cancelReload();
   refreshRelays();
+
 }]);
