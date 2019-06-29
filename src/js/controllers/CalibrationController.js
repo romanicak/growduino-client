@@ -166,7 +166,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
         var average = total / calibrationNumSteps;
         $scope.popup_data.records[recordIndex]["reading"] = +(average / divisor).toFixed(1);
       } else {//cteni kalibracnich dat se nepovedlo; error
-        alert("Error occured while reading sensor data; 'sensor reading' value could not be updated");
+        alert("Error occured while reading sensor data; Sensor is disconnected or has a malfunction");
       }
     }
 
