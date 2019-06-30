@@ -199,6 +199,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
         //vyfiltrovat, if daytime is set
         console.log("Loaded data");
         console.log(data);
+        historyData.end_state = data.data.end_state;
         for (var ts in data.data.state) {
           var when = moment.unix(ts);
           if (! daytime || isWithinHour(when, daytime)) {
