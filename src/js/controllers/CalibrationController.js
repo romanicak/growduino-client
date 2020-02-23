@@ -33,7 +33,9 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       {"id": 0, "name": "DHT22-Hum", "divisor": 10},
       {"id": 4, "name": "Temp-Water", "divisor": 10},
       {"id": 6, "name": "Temp-Bulb", "divisor": 10},
-      {"id": 3, "name": "USND", "divisor": 1}
+      {"id": 3, "name": "USND", "divisor": 1},
+      {"id": 7, "name": "CO2 PPM 400", "divisor": 1},
+      {"id": 8, "name": "CO2 PPM 40k", "divisor": 1}
     ];
 
     function prepareCalibrationData() {
