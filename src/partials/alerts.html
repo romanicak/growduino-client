@@ -329,11 +329,11 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When  <b>Lighting Indoor</b> is over
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="light2HighTimer" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" ng-required="alert.active"/>
+                    <input type="text" class="form-control" name="light2HighTimer" ng-model="alert.trigger.on.val" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-9][0-9][0-9][0-9][0-9])))))$/" ng-required="alert.active"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.light2HighTimer.$valid && !form.light2HighTimer.$error.required">
-                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
-                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                    Invalid! Must be number with max five digits, not leading zero.
+                <br>Correct: "3" or "232" or "99999" . Incorrect: "23.2" or "23,2" or "023".
                 </span>
                 and time is from
                 <div class="form-group" bs-has-error>
@@ -386,11 +386,11 @@
             <fieldset class="form-group" ng-disabled="!alert.active">
                 When  <b>Lighting Indoor</b> is below
                 <div class="form-group" bs-has-error>
-                    <input type="text" class="form-control" name="light2LowTimer" ng-model="alert.trigger.on.val" ng-pattern="/^\d{1,2}(\.\d)?$/" ng-required="alert.active"/>
+                    <input type="text" class="form-control" name="light2LowTimer" ng-model="alert.trigger.on.val" ng-pattern="/^((((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9])|([1-9][0-9][0-9][0-9][0-9])))))$/" ng-required="alert.active"/>
                 </div>
                 <span style="color:#B40404" class="help-block" ng-show="!form.light2LowTimer.$valid && !form.light2LowTimer.$error.required">
-                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
-                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+                    Invalid! Must be number with max five digits, not leading zero.
+                <br>Correct: "3" or "232" or "99999" . Incorrect: "23.2" or "23,2" or "023".
                 </span>
                 and time is from 
                 <div class="form-group" bs-has-error>
