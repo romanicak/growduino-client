@@ -27,10 +27,10 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     $scope.loadCalibrationConfig();
 
     calibrationDataConfig = [
-      {"id": 2, "name": "Light-Out", "divisor": 10},
-      {"id": 5, "name": "Light-In", "divisor": 10},
-      {"id": 1, "name": "DHT22-Temp", "divisor": 10},
-      {"id": 0, "name": "DHT22-Hum", "divisor": 10},
+      {"id": 2, "name": "Light-Out", "divisor": 1},
+      {"id": 5, "name": "Light-In", "divisor": 1},
+      {"id": 1, "name": "Air-Temp", "divisor": 10},
+      {"id": 0, "name": "Air-Hum", "divisor": 10},
       {"id": 4, "name": "Temp-Water", "divisor": 10},
       {"id": 6, "name": "Temp-Bulb", "divisor": 10},
       {"id": 3, "name": "USND", "divisor": 1},
@@ -92,7 +92,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
             console.log($scope.config.calibration_data);
         } else {
             if (isNaN(reading)) {
-                alert("Data error: Cannot save calibration pair with no Sensor data, index: '" + index + "'");
+                alert("Data error: Cannot save calibration pAir with no Sensor data, index: '" + index + "'");
                 console.log(record);
             } else {
                 $scope.config.calibration_data["" + recordIndex] = {
@@ -115,8 +115,8 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     }
 
     function isValueAcceptable(senzor, value){
-      if (senzor == "Light-Out" || senzor == "Light-In" || senzor == "DHT22-Temp"
-            || senzor == "DHT22-Hum" || senzor == "Temp-Water" || senzor == "Temp-Bulb"
+      if (senzor == "Light-Out" || senzor == "Light-In" || senzor == "Air-Temp"
+            || senzor == "Air-Hum" || senzor == "Temp-Water" || senzor == "Temp-Bulb"
             || senzor == "USND") {
         if (value == -999) {
           return false;

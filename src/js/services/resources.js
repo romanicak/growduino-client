@@ -5,8 +5,8 @@ app.factory('BackendConfig', ['$resource', 'requests', function($resource, reque
 app.factory('CalibrationConfig', ['$resource', 'requests', function($resource, requests) {
     return {
       config: requests.adapt($resource('/calib.jso')),
-      "DHT22-Hum": requests.adapt($resource('/sensors/rawdata/0.jso')),
-      "DHT22-Temp": requests.adapt($resource('/sensors/rawdata/1.jso')),
+      "Air-Hum": requests.adapt($resource('/sensors/rawdata/0.jso')),
+      "Air-Temp": requests.adapt($resource('/sensors/rawdata/1.jso')),
       "Light-Out": requests.adapt($resource('/sensors/rawdata/2.jso')),
       "USND": requests.adapt($resource('/sensors/rawdata/3.jso')),
       "Temp-Water": requests.adapt($resource('/sensors/rawdata/4.jso')),
