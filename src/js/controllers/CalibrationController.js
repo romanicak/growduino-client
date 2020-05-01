@@ -10,7 +10,6 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     calibrationMeasurementDelay = 2000;//casovy rozestup mezi jednotlivymi merenimi v milisekundach
     calibrationNumRetries = 1;
 
-    ECMaxAcceptableValue = 1500;
 
     $scope.loadCalibrationConfig = function() {
         CalibrationConfig['config'].get().then(function(config) {
@@ -34,6 +33,8 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       {"id": 4, "name": "Temp-Water", "divisor": 10},
       {"id": 6, "name": "Temp-Bulb", "divisor": 10},
       {"id": 3, "name": "USND", "divisor": 1},
+      {"id": 7, "name": "EC", "divisor": 100}, //zatim je i nahore i dole, dokud prodavam i stary EC
+      //{"id": 8, "name": "pH", "divisor": 100}, //zatim je i nahore i dole, dokud prodavam i stary EC
       {"id": 9, "name": "CO2", "divisor": 1}
     ];
 
@@ -92,7 +93,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
             console.log($scope.config.calibration_data);
         } else {
             if (isNaN(reading)) {
-                alert("Data error: Cannot save calibration pAir with no Sensor data, index: '" + index + "'");
+                alert("Data error: Cannot save calibration with no Sensor data, index: '" + index + "'");
                 console.log(record);
             } else {
                 $scope.config.calibration_data["" + recordIndex] = {
@@ -117,17 +118,15 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
     function isValueAcceptable(senzor, value){
       if (senzor == "Light-Out" || senzor == "Light-In" || senzor == "Air-Temp"
             || senzor == "Air-Hum" || senzor == "Temp-Water" || senzor == "Temp-Bulb"
-            || senzor == "USND") {
+            || senzor == "USND" || senzor == "EC" || senzor == "pH") {
         if (value == -999) {
           return false;
         }
       }
-      //if (senzor == "EC" && (value == -999 || value > ECMaxAcceptableValue)){
-      if (senzor == "EC" && (value < 1 || value > 1000)){
+      if (senzor == "EC" && (value < 1 || value > 10000)){ //puvodne 1000 pro stary EC, ale aby fungovalo i seriakovy tak musim mit 10000...az budou stary EC vyprodany, tak odstranit uplne!
         return false;
       }
-      //if (senzor == "pH" && value == 0){
-      if (senzor == "pH" && (value < 1 || value > 1000)){
+      if (senzor == "pH" && (value < 1 || value > 1000)){ // zjistit kolik muze pH vratit a kdyztak odstranit uplne, je to pozustatek z doby analogove
         return false;
       }
       return true;
