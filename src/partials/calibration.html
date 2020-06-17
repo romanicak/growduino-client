@@ -82,126 +82,129 @@
              Positive or negative number or zero allowed, no decimals, max 3 digits.
             </span>
         </div>
-        <div class="form-group" bs-has-error>
-            <label class="col-sm-2 control-label">pH 4.00 @20&#176C</label>
-            <div class="col-sm-10 calibration-control">
-                <input name="ph_4" type="text" ng-model="config.ph_4" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
-            </div>
-            <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_4', 'pH')">Get raw data</button>
-            <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_4']) || saving">Get raw data</button>
-            <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_4']">Getting raw data...</button>
-            <span style="color:#B40404" class="help-block" ng-show="form.ph_4.$valid && needsSavingArray['ph_4']">
-              Save settings to set calibration values active!
-            </span>
-            <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
-             Only positive number allowed, no decimals, max 3 digits.
-            </span>
-            <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ph_4']">
-             Last calibration attempt of this field failed!
-            </span>
+    <!--zakomentovano stare pH-->
+<!--
+<div class="form-group" bs-has-error>
+    <label class="col-sm-2 control-label">pH 4.00 @20&#176C</label>
+    <div class="col-sm-10 calibration-control">
+        <input name="ph_4" type="text" ng-model="config.ph_4" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+    </div>
+    <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_4', 'pH')">Get raw data</button>
+    <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_4']) || saving">Get raw data</button>
+    <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_4']">Getting raw data...</button>
+    <span style="color:#B40404" class="help-block" ng-show="form.ph_4.$valid && needsSavingArray['ph_4']">
+      Save settings to set calibration values active!
+    </span>
+    <span style="color:#B40404" class="help-block" ng-show="!form.ph_4.$valid">
+     Only positive number allowed, no decimals, max 3 digits.
+    </span>
+    <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ph_4']">
+     Last calibration attempt of this field failed!
+    </span>
+</div>
+<div class="form-group" bs-has-error>
+    <label class="col-sm-2 control-label">pH 7.03 @20&#176C</label>
+    <div class="col-sm-10 calibration-control">
+        <input name="ph_7" type="text" ng-model="config.ph_7" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+    </div>
+    <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_7', 'pH')">Get raw data</button>
+    <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_7']) || saving">Get raw data</button>
+    <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_7']">Getting raw data...</button>
+    <span style="color:#B40404" class="help-block" ng-show="form.ph_7.$valid && needsSavingArray['ph_7']">
+      Save settings to set calibration values active!
+    </span>
+    <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
+     Only positive number allowed, no decimals, max 3 digits.
+    </span>
+    <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ph_7']">
+     Last calibration attempt of this field failed!
+    </span>
+</div>
+*-->
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" ng-show="!saving && !calibrating">Save</button>
+            <button type="button" class="btn btn-disabled" ng-show="calibrating">Save</button>
+            <button type="button" class="btn btn-disabled" ng-show="saving">Saving...</button>
+            <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
         </div>
-        <div class="form-group" bs-has-error>
-            <label class="col-sm-2 control-label">pH 7.03 @20&#176C</label>
-            <div class="col-sm-10 calibration-control">
-                <input name="ph_7" type="text" ng-model="config.ph_7" ng-pattern="/^((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])))$/" class="form-control"/>
+    </div>
+</form>
+
+<div id="get_calibration_popup_window" class="modal-window" ng-show="show_calibration_popup_window">
+<div class="modal-content">
+    <span class="close" ng-click="close_popup_window()">&times;</span>
+    <form class="form-horizontal" name="calibration_popup>">
+        <div class="form-group">
+            <div name="label1Row">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-5">
+                    <label class="control-label">Calibration pair 1</label>
+                </div>
+                <div class="col-sm-4">
+                    <label class="control-label">Calibration pair 2</label>
+                </div>
             </div>
-            <button type="button" class="btn btn-primary" ng-show="!calibrating && !saving" ng-click="getRawData('ph_7', 'pH')">Get raw data</button>
-            <button type="button" class="btn btn-disabled" ng-show="(calibrating && !calibratingArray['ph_7']) || saving">Get raw data</button>
-            <button type="button" class="btn btn-disabled" ng-show="calibratingArray['ph_7']">Getting raw data...</button>
-            <span style="color:#B40404" class="help-block" ng-show="form.ph_7.$valid && needsSavingArray['ph_7']">
-              Save settings to set calibration values active!
-            </span>
-            <span style="color:#B40404" class="help-block" ng-show="!form.ph_7.$valid">
-             Only positive number allowed, no decimals, max 3 digits.
-            </span>
-            <span style="color:#B40404" class="help-block" ng-show="lastCalibrationFailedArray['ph_7']">
-             Last calibration attempt of this field failed!
-            </span>
         </div>
         <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" ng-show="!saving && !calibrating">Save</button>
-                <button type="button" class="btn btn-disabled" ng-show="calibrating">Save</button>
-                <button type="button" class="btn btn-disabled" ng-show="saving">Saving...</button>
-                <span class="text-success" ng-show="saveSuccess" >Successfully saved.</span>
+            <div name="buttonsRow">
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-5">
+                    <button type="submit" class="btn btn-primary" ng-click="getRawData(popup_data.sensorId.name, popup_data.sensorId.name, true, 0, popup_data.sensorId.divisor)">Get raw data</button>
+                </div>
+                <div class="col-sm-4">
+                    <button type="submit" class="btn btn-primary" ng-click="getRawData(popup_data.sensorId.name, popup_data.sensorId.name, true, 1, popup_data.sensorId.divisor)">Get raw data</button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div name="fields1Row">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-2 calibration-popup-control">
+                    <label class="control-label">Sensor data</label>
+                </div>
+                <div class="col-sm-2 calibration-popup-control">
+                    <input class="form-control" value="{{popup_data.records[0].reading}}" disabled/>
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-2 calibration-popup-control">
+                    <label class="control-label">Sensor data</label>
+                </div>
+                <div class="col-sm-2 calibration-popup-control">
+                    <input class="form-control" value="{{popup_data.records[1].reading}}" disabled/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div name="fields2Row">
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-2 calibration-popup-control">
+                    <label class="control-label">Real value</label>
+                </div>
+                <div class="col-sm-2 calibration-popup-control">
+                    <input class="form-control" ng-model="popup_data.records[0].realVal"/>
+                </div>
+                <label class="col-sm-1 control-label"></label>
+                <div class="col-sm-2 calibration-popup-control">
+                    <label class="control-label">Real value</label>
+                </div>
+                <div class="col-sm-2 calibration-popup-control">
+                    <input class="form-control" ng-model="popup_data.records[1].realVal"/>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4">
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary" ng-click="sendCalibrationData()">Save</button>
+            </div>
+            <div class="col-sm-4">
+                <button class="btn btn-primary" ng-click="close_popup_window()">Cancel</button>
             </div>
         </div>
     </form>
-
-<div id="get_calibration_popup_window" class="modal-window" ng-show="show_calibration_popup_window">
-    <div class="modal-content">
-        <span class="close" ng-click="close_popup_window()">&times;</span>
-        <form class="form-horizontal" name="calibration_popup>">
-            <div class="form-group">
-                <div name="label1Row">
-                    <div class="col-sm-2">
-                    </div>
-                    <div class="col-sm-5">
-                        <label class="control-label">Calibration pair 1</label>
-                    </div>
-                    <div class="col-sm-4">
-                        <label class="control-label">Calibration pair 2</label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div name="buttonsRow">
-                    <div class="col-sm-2">
-                    </div>
-                    <div class="col-sm-5">
-                        <button type="submit" class="btn btn-primary" ng-click="getRawData(popup_data.sensorId.name, popup_data.sensorId.name, true, 0, popup_data.sensorId.divisor)">Get raw data</button>
-                    </div>
-                    <div class="col-sm-4">
-                        <button type="submit" class="btn btn-primary" ng-click="getRawData(popup_data.sensorId.name, popup_data.sensorId.name, true, 1, popup_data.sensorId.divisor)">Get raw data</button>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div name="fields1Row">
-                    <label class="col-sm-1 control-label"></label>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <label class="control-label">Sensor data</label>
-                    </div>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <input class="form-control" value="{{popup_data.records[0].reading}}" disabled/>
-                    </div>
-                    <label class="col-sm-1 control-label"></label>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <label class="control-label">Sensor data</label>
-                    </div>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <input class="form-control" value="{{popup_data.records[1].reading}}" disabled/>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div name="fields2Row">
-                    <label class="col-sm-1 control-label"></label>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <label class="control-label">Real value</label>
-                    </div>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <input class="form-control" ng-model="popup_data.records[0].realVal"/>
-                    </div>
-                    <label class="col-sm-1 control-label"></label>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <label class="control-label">Real value</label>
-                    </div>
-                    <div class="col-sm-2 calibration-popup-control">
-                        <input class="form-control" ng-model="popup_data.records[1].realVal"/>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-4">
-                </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-primary" ng-click="sendCalibrationData()">Save</button>
-                </div>
-                <div class="col-sm-4">
-                    <button class="btn btn-primary" ng-click="close_popup_window()">Cancel</button>
-                </div>
-            </div>
-        </form>
-    </div>
+</div>
 </div>

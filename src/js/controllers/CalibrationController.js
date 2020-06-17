@@ -34,7 +34,7 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
       {"id": 6, "name": "Temp-Bulb", "divisor": 10},
       {"id": 3, "name": "USND", "divisor": 1},
       {"id": 7, "name": "EC", "divisor": 100}, //zatim je i nahore i dole, dokud prodavam i stary EC
-      //{"id": 8, "name": "pH", "divisor": 100}, //zatim je i nahore i dole, dokud prodavam i stary EC
+      {"id": 8, "name": "pH", "divisor": 100}, // prehozeno nahoru, ale blbne to, nevim spravnej divisor a restartuje se logger
       {"id": 9, "name": "CO2", "divisor": 1}
     ];
 
