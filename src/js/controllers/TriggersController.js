@@ -11,8 +11,8 @@ app.controller('TriggerController', ['$scope', function($scope) {
     };
 }]);
 
-app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'Relay', 'Trigger', 'ClientConfig', 'settings',
-    function($scope, $http, $timeout, utils, Relay, Trigger, ClientConfig, settings) {
+app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'Relay', 'Trigger', 'ClientConfig', 'FanConfig', 'settings',
+    function($scope, $http, $timeout, utils, Relay, Trigger, ClientConfig, FanConfig, settings) {
 
     $scope.relays = [];
     $scope.relaysHash = {};
@@ -35,47 +35,126 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
     $scope.loadingPercent = 0;
 
     ClientConfig.get().then(function(cfg) {
-	clientConfigData = cfg;
+	    clientConfigData = cfg;
     	$scope.stepCount = clientConfigData.usedTriggers ? clientConfigData.usedTriggers.length : 0;
 
-	//prectu z configu, ktera rele jsou permOff
-	(clientConfigData.permOffRelays || []).forEach(function(relay) {
-	    $scope.relaysHash[relay].setPermOff();
-	    $scope.relaysHash[relay].permStatusSaved();
-	});
+      //prectu z configu, ktera rele jsou permOff
+      (clientConfigData.permOffRelays || []).forEach(function(relay) {
+          $scope.relaysHash[relay].setPermOff();
+          $scope.relaysHash[relay].permStatusSaved();
+      });
 
-	//prectu z configu data o casech relatka Fan
-	if (clientConfigData.fanTimesInfo != null){
-	    var fan = $scope.relaysHash['Fan'];
-	    fan.day.since = clientConfigData.fanTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[0]);
-	    fan.day.until = clientConfigData.fanTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[1]);
-	    fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
-	    fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
-	}
+      //prectu z configu data o casech relatka Fan
+      if (clientConfigData.fanTimesInfo != null){
+          var fan = $scope.relaysHash['Fan'];
+          fan.day.since = clientConfigData.fanTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[0]);
+          fan.day.until = clientConfigData.fanTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[1]);
+          fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
+          fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
+      }
 
-	//prectu z configu, ktere triggery musim cist; postupne je ctu
-	async.forEachSeries(clientConfigData.usedTriggers || [],
-	    function(triggerIndex, callback) {
-	        var triggerData = Trigger.loadRaw(triggerIndex, 
-	            function(triggerData) {
-	    	        //podle indexu poznam, ke kteremu rele patri
-	                var relay = $scope.relays[triggerData.output];
-		        if (relay){
-    	                    //reknu rele, inicializuj trigger(rawTrigger) 
-	                    relay.initTrigger(triggerData, triggerIndex);
-			    slots[triggerIndex] = relay.outputIndex;
-		        } else {
-                	    console.warn('Loaded trigger for undefined output ' + triggerData);
-		        }
-			$scope.loadingStep += 1;
-			$scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
-		    }, callback
-		);
-	    }, function (err){
-		$scope.loading = false;
-	});
+      //prectu z configu, ktere triggery musim cist; postupne je ctu
+      async.forEachSeries(clientConfigData.usedTriggers || [],
+          function(triggerIndex, callback) {
+              var triggerData = Trigger.loadRaw(triggerIndex, 
+                  function(triggerData) {
+                    //podle indexu poznam, ke kteremu rele patri
+                      var relay = $scope.relays[triggerData.output];
+                if (relay){
+                              //reknu rele, inicializuj trigger(rawTrigger) 
+                          relay.initTrigger(triggerData, triggerIndex);
+              slots[triggerIndex] = relay.outputIndex;
+                } else {
+                          console.warn('Loaded trigger for undefined output ' + triggerData);
+                }
+          $scope.loadingStep += 1;
+          $scope.loadingPercent = parseInt($scope.loadingStep / $scope.stepCount * 100, 10);
+            }, callback
+        );
+          }, function (err){
+        $scope.loading = false;
+      });
     });
 
+    FanConfig.get().then(function(fanCfg) {
+        var fan = $scope.relaysHash['Fan'];
+
+        if (fanCfg.controls != null) {
+            if (fanCfg.ec_fan_enable) {
+                fan.setPermEc();
+            }
+            fan.ec = fanCfg;
+        } else {
+            /*fan.ec = {
+                ec_fan_enable: false,
+                min_power: 0,
+                max_power: 255,
+                controls: {
+                    day: {
+                        start: 0,
+                        end: 719
+                    },
+                    night: {
+                        start: 720,
+                        end: 1439
+                    }
+                }
+            };*/
+            fan.ec = {
+                ec_fan_enable: false,
+                min_power: 0,
+                max_power: 255,
+                controls: {
+                    day: {
+                        start: 0,
+                        end: 719,
+                        temp: [ {
+                            sensor_value: 1,
+                            power_pct: 2
+                        }, {
+                            sensor_value: 3,
+                            power_pct: 4
+                        }], 
+                        humidity: [ {
+                            sensor_value: 11,
+                            power_pct: 12
+                        }, {
+                            sensor_value: 13,
+                            power_pct: 14
+                        }],
+                        co2: [ {
+                            sensor_value: 21,
+                            power_pct: 22
+                        }, {
+                            sensor_value: 23,
+                            power_pct: 24
+                        }]
+                    },
+                    night: {
+                        start: 720,
+                        end: 1439,
+                        temp: {
+                        },
+                        humidity: {
+                        },
+                        co2: {
+                        }
+                    }
+                }
+            };
+        }
+        prepareEcDisp(fan.ec);
+    });
+
+    function prepareEcDisp(ec) {
+        $scope.ecDisp = {};
+        $scope.ecDisp.max_power_pct = Math.floor( ( ec.max_power * 100 ) / 255 );
+        $scope.ecDisp.controls = {};
+        $scope.ecDisp.controls.day = {};
+        $scope.ecDisp.controls.day.temp = ec.controls.day.temp;
+        $scope.ecDisp.controls.day.humidity = ec.controls.day.humidity;
+        $scope.ecDisp.controls.day.co2 = ec.controls.day.co2;
+    }
 
 //New Saving:
   function findAvailableSlotIndex(){
@@ -189,4 +268,38 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	    }
 	  ]);
   };
+
+    $scope.editEc = function(relay){
+        relay.setPermEc();
+        $scope.showEditEcWindow = true;
+    }
+
+    $scope.addEcPair = function(array) {
+        array.push({
+            sensor_value: "",
+            power_pct: ""
+        });
+    }
+
+    $scope.close_edit_ec_window = function() {
+        $scope.showEditEcWindow = false;
+    }
+
+    $scope.submit_ec_form = function() {
+      //zkonvertit data z ecDisp do ec,
+        /*$scope.ecDisp = {};
+        $scope.ecDisp.max_power_pct = Math.floor( ( ec.max_power * 100 ) / 255 );
+        $scope.ecDisp.controls = {};
+        $scope.ecDisp.controls.day = {};
+        $scope.ecDisp.controls.day.temp = ec.controls.day.temp;
+        $scope.ecDisp.controls.day.humidity = ec.controls.day.humidity;
+        $scope.ecDisp.controls.day.co2 = ec.controls.day.co2;*/
+
+        var fan = $scope.relaysHash['Fan'];
+      //ulozit jako FanConfig
+		    $http.post('fanconfig.jso', fan.ec).success(function() {
+            $scope.close_edit_ec_window();
+        });
+    }
+
 }]);

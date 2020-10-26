@@ -138,132 +138,135 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
   }
 
     Relay.prototype.deletePermOnTrigger = function(callback){
-	this.permOnTrigger.deleteTrigger(callback);
-	this.permOnTrigger = null;
+        this.permOnTrigger.deleteTrigger(callback);
+        this.permOnTrigger = null;
     }
 
     Relay.prototype.getTriggersAndIntervals = function(){
-	var result = [];
-	Array.prototype.push.apply(result, this.intervals);
-	for (var trig in this.triggers){
-	    result.push(this.triggers[trig]);
-	}
-	return result;
+        var result = [];
+        Array.prototype.push.apply(result, this.intervals);
+        for (var trig in this.triggers){
+            result.push(this.triggers[trig]);
+        }
+        return result;
     }
 
     Relay.prototype.getTrigger = function(name){
-	if (this.triggers[name] == null){
-	    var splitName = name.split('_')[0];
-  	    var t = Trigger.create(splitName);
-	    t.triggerClass = name;
-	    t.active = false;
-	    t.output = this.outputIndex;
-	    this.triggers[name] = t;
-	}
-	return this.triggers[name];
+        if (this.triggers[name] == null){
+            var splitName = name.split('_')[0];
+              var t = Trigger.create(splitName);
+            t.triggerClass = name;
+            t.active = false;
+            t.output = this.outputIndex;
+            this.triggers[name] = t;
+        }
+        return this.triggers[name];
     }
 
     Relay.prototype.addInterval = function(){
-	var u = Trigger.create('timer');
-	u.active = true;
-	u.output = this.outputIndex;
-	this.intervals.push(u);
+        var u = Trigger.create('timer');
+        u.active = true;
+        u.output = this.outputIndex;
+        this.intervals.push(u);
     }
 
     Relay.prototype.toggleInterval = function(index){
-	var interval = this.intervals[index];
-	interval.active = !interval.active;
+        var interval = this.intervals[index];
+        interval.active = !interval.active;
     }
 
     Relay.prototype.permStatusSaved = function() {
-	this.savedPermStatus = this.permStatus;
+        this.savedPermStatus = this.permStatus;
     }
 
     Relay.prototype.permStatusSaveNeeded = function(){
-	return this.savedPermStatus != this.permStatus;
+        return this.savedPermStatus != this.permStatus;
     }
 
     Relay.prototype.setPermStatus = function(status){
-	this.permStatus = status;
-	//puvodni implementace je silene zmatena; treba poradne otestit
-	//!!!JE TREBA ZJISTIT, CO SE MA STAT S INTERVALAMA, KDYZ SE
-	//setne nejaka hodnota perm statusu (ON nebo OFF)!!!
+        this.permStatus = status;
+        //puvodni implementace je silene zmatena; treba poradne otestit
+        //!!!JE TREBA ZJISTIT, CO SE MA STAT S INTERVALAMA, KDYZ SE
+        //setne nejaka hodnota perm statusu (ON nebo OFF)!!!
     }
 
     Relay.prototype.setPermOn = function(){
-	this.setPermStatus(Relay.PERM_ON);
-	if (this.permOnTrigger == null){
-	    this.permOnTrigger = Trigger.create('manualOn');
-	    this.permOnTrigger.output = this.outputIndex;
-	    this.permOnTrigger.active = true;
-	}
+        this.setPermStatus(Relay.PERM_ON);
+        if (this.permOnTrigger == null){
+            this.permOnTrigger = Trigger.create('manualOn');
+            this.permOnTrigger.output = this.outputIndex;
+            this.permOnTrigger.active = true;
+        }
     }
 
     Relay.prototype.isPermOn = function(){
-	return this.permStatus == Relay.PERM_ON;
+        return this.permStatus == Relay.PERM_ON;
     }
 
     Relay.prototype.setPermOff = function(){
-	this.setPermStatus(Relay.PERM_OFF);
+        this.setPermStatus(Relay.PERM_OFF);
     }
 
     Relay.prototype.isPermOff = function(){
-	return this.permStatus == Relay.PERM_OFF;
+        return this.permStatus == Relay.PERM_OFF;
     }
 
     Relay.prototype.setPermAuto = function(){
-	this.setPermStatus(Relay.AUTO);
+        this.setPermStatus(Relay.AUTO);
     }
 
     Relay.prototype.isPermAuto = function(){
-	return this.permStatus == Relay.AUTO;
+        return this.permStatus == Relay.AUTO;
+    }
+
+    Relay.prototype.setPermEc = function(){
+        this.setPermStatus(Relay.EC);
+    }
+
+    Relay.prototype.isPermEc = function(){
+        return this.permStatus == Relay.EC;
     }
 
     Relay.prototype.getFirmwareActivityCode = function(trig){
-	if (this.isPermOn()){
-	    return Relay.FIRM_ACTIVITY_PERM_ON;
-	} else if (this.isPermOff()){
-	    return Relay.FIRM_ACTIVITY_PERM_OFF;
-	} else {
-	    if (trig.active){
-	        return Relay.FIRM_ACTIVITY_AUTO;
-	    } else {
-		return Relay.FIRM_ACTIVITY_PERM_OFF;
-	    }
-	}
+        if (this.isPermOn()){
+            return Relay.FIRM_ACTIVITY_PERM_ON;
+        } else if (this.isPermOff()){
+            return Relay.FIRM_ACTIVITY_PERM_OFF;
+        } else {
+            if (trig.active){
+                return Relay.FIRM_ACTIVITY_AUTO;
+            } else {
+                return Relay.FIRM_ACTIVITY_PERM_OFF;
+            }
+        }
     }
 
     $.extend(Relay, {
-	PERM_ON: 1,
-	PERM_OFF: 2,
-	AUTO: 3,
-	FIRM_ACTIVITY_PERM_ON: 2,
-	FIRM_ACTIVITY_PERM_OFF: 0,
-	FIRM_ACTIVITY_AUTO: 1,
+      PERM_ON: 1,
+      PERM_OFF: 2,
+      AUTO: 3,
+      EC: 4,
+      FIRM_ACTIVITY_PERM_ON: 2,
+      FIRM_ACTIVITY_PERM_OFF: 0,
+      FIRM_ACTIVITY_AUTO: 1,
 
-	create: function(output, i){
-	    var result = new Relay();
-	    result.name = output.name;
-	    result.partial = output.partial;
-	    result.outputIndex = i;
-	    result.permStatus = Relay.AUTO;
-	    result.savedPermStatus = Relay.AUTO;
-	    result.intervals = [];
-	    result.triggers = {};
-	    result.permOnTrigger = null;
-	    if (result.name == 'Fan'){
-		result.day = {since: null, until: null};
-		result.night = {since: null, until: null};
-	    }
+      create: function(output, i){
+          var result = new Relay();
+          result.name = output.name;
+          result.partial = output.partial;
+          result.outputIndex = i;
+          result.permStatus = Relay.AUTO;
+          result.savedPermStatus = Relay.AUTO;
+          result.intervals = [];
+          result.triggers = {};
+          result.permOnTrigger = null;
+          if (result.name == 'Fan'){
+              result.day = {since: null, until: null};
+              result.night = {since: null, until: null};
+              result.ec = {};
+          }
 
-
-	    //nasledujici property jsou provizorni
-	    /*result.manualOn = true;
-	    result.manualOnSaved = true;
-	    result.off = true;
-	    result.offSaved = true;*/
-
-	    return result;
+          return result;
         }
     });
 

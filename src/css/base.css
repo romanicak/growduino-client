@@ -17,7 +17,7 @@ a[ng-click] {
 
 .modal-window {
     position: fixed;
-    z-index: 1;
+    z-index: 3;
     left: 0;
     top: 0;
     width: 100%;
@@ -121,6 +121,7 @@ a[ng-click] {
     opacity: 0.4;
 }
 
+#edit_ec_window .form-control,
 .triggers-form .form-control {
     width: 65px;
 }
@@ -134,6 +135,7 @@ a[ng-click] {
     width: 250px;
 }
 
+#edit_ec_window .sentinel-line,
 .triggers-form .timer-line, .triggers-form .sentinel-line {
     display: block;
     margin-bottom: 4px;

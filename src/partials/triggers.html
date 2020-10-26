@@ -10,6 +10,7 @@
                 <button type="button" class="btn btn-default" ng-class="{active: relay.isPermOn()}" ng-click="relay.setPermOn()">On</button>
                 <button type="button" class="btn btn-default" ng-class="{active: relay.isPermOff()}" ng-click="relay.setPermOff()">Off</button>
                 <button type="button" class="btn btn-default" ng-class="{active: relay.isPermAuto()}" ng-click="relay.setPermAuto()">Auto</button>
+                <button type="button" class="btn btn-default" ng-show="relay.name=='Fan'" ng-class="{active: relay.isPermEc()}" ng-click="editEc(relay)">Ec</button>
             </div>
         </div>
         <div class="col-sm-9 relay-body">
@@ -72,3 +73,66 @@
     </div>
 
 </form>
+<div id="edit_ec_window" class="modal-window" ng-show="showEditEcWindow">
+  <div class="modal-content form-inline">
+    <span class="close" ng-click="close_edit_ec_window()">&times;</span>
+    <form name="edit_ec_form" ng-submit="submit_ec_form()">
+      <div class="form-group">
+      <div class="col-sm-12">
+        <div class="fanDayNightLabel">
+          <b>Day ventilation</b>
+        </div>
+        <fieldset class="form-group sentinel-line">
+          Set minimum power to
+          <div class="form-group" bs-has-error>
+            <input type="text" name="ecMinPower_day" class="form-control" ng-model="ecDisp.max_power_pct" ng-required="true"/>&nbsp;%
+            <!--span ng-show="false" class="formError">Incorrect value</span>
+            <span ng-include="'partials/triggers/toggleButton.html'"></span-->
+          </div>
+        </fieldset>
+
+        <div ng-repeat="temp in ecDisp.controls.day.temp">
+          <fieldset class="form-group sentinel-line">
+            When <b>Air Temperature</b> is over 
+            <div class="form-group" bs-has-error>
+              <input type="text" name="ecMinPower_day" class="form-control" ng-model="temp.sensor_value"/>&nbsp;°C, set power to
+            </div>
+            <div class="form-group" bs-has-error>
+              <input type="text" name="ecMinPower_day" class="form-control" ng-model="temp.power_pct"/>&nbsp;%
+            </div>
+          </fieldset>
+        </div>
+        <a ng-click="addEcPair(ecDisp.controls.day.temp)"><span class="glyphicon glyphicon-plus"></span> add interval</a>
+
+        <div ng-repeat="hum in ecDisp.controls.day.humidity">
+          <fieldset class="form-group sentinel-line">
+            When <b>Relative Humidity</b> is over
+            <div class="form-group" bs-has-error>
+              <input type="text" name="ecMinPower_day" class="form-control" ng-model="hum.sensor_value"/>&nbsp;%, set power to
+            </div>
+            <div class="form-group" bs-has-error>
+              <input type="text" name="ecMinPower_day" class="form-control" ng-model="hum.power_pct"/>&nbsp;%
+            </div>
+          </fieldset>
+        </div>
+        <a ng-click="addEcPair(ecDisp.controls.day.humidity)"><span class="glyphicon glyphicon-plus"></span> add interval</a>
+
+        <div ng-repeat="co2 in ecDisp.controls.day.co2">
+          <fieldset class="form-group sentinel-line">
+            When <b>CO2 concentration</b> is over
+            <div class="form-group" bs-has-error>
+              <input type="text" name="ecMinPower_day" class="form-control" ng-model="co2.sensor_value"/>&nbsp;PPM, set power to
+            </div>
+            <div class="form-group" bs-has-error>
+              <input type="text" name="ecMinPower_day" class="form-control" ng-model="co2.power_pct"/>&nbsp;%
+            </div>
+          </fieldset>
+        </div>
+        <a ng-click="addEcPair(ecDisp.controls.day.co2)"><span class="glyphicon glyphicon-plus"></span> add interval</a>
+        <div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

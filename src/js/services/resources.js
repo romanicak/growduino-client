@@ -32,6 +32,20 @@ app.factory('ClientConfig', ['$resource', 'requests', function($resource, reques
     return proxy;
 }]);
 
+app.factory('FanConfig', ['$resource', 'requests', function($resource, requests) {
+    var resource = $resource('/fanconfig.jso'),
+        proxy = requests.adapt(resource),
+        unsafeGet = proxy.get;
+
+    //when fanconfig doesn't exist, create new empty resource instead
+    proxy.get = function() {
+        return unsafeGet.apply(this, arguments).catch(function() {
+            return new resource();
+        });
+    };
+    return proxy;
+}]);
+
 app.factory('sensorResourceFactory', ['$resource', 'requests', '$http', 'utils', function($resource, requests, $http, utils) {
     return function(name, mapFn) {
         var transformers = $http.defaults.transformResponse.concat([function(data, headersGetter) {
