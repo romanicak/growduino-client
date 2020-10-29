@@ -221,6 +221,11 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 
     Relay.prototype.setPermEc = function(){
         this.setPermStatus(Relay.EC);
+        if (this.permOnTrigger == null){
+            this.permOnTrigger = Trigger.create('manualOn');
+            this.permOnTrigger.output = this.outputIndex;
+            this.permOnTrigger.active = true;
+        }
     }
 
     Relay.prototype.isPermEc = function(){
