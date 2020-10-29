@@ -108,37 +108,16 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
                     day: {
                         start: 0,
                         end: 719,
-                        temp: [ {
-                            sensor_value: 1,
-                            power_pct: 2
-                        }, {
-                            sensor_value: 3,
-                            power_pct: 4
-                        }], 
-                        humidity: [ {
-                            sensor_value: 11,
-                            power_pct: 12
-                        }, {
-                            sensor_value: 13,
-                            power_pct: 14
-                        }],
-                        co2: [ {
-                            sensor_value: 21,
-                            power_pct: 22
-                        }, {
-                            sensor_value: 23,
-                            power_pct: 24
-                        }]
+                        temp: [], 
+                        humidity: [],
+                        co2: []
                     },
                     night: {
                         start: 720,
                         end: 1439,
-                        temp: {
-                        },
-                        humidity: {
-                        },
-                        co2: {
-                        }
+                        temp: [],
+                        humidity: [],
+                        co2: []
                     }
                 }
             };
@@ -146,14 +125,39 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         prepareEcDisp(fan.ec);
     });
 
+    function val2pct(val) {
+        return Math.floor( ( val * 100 ) / 255 );
+    }
+
+    function pct2val(pct) {
+        return Math.floor( ( pct * 255 ) / 100 );
+    }
+
+    function prepareEcDispSensor(sensor) {
+        if ( Array.isArray(sensor) && sensor.length ) {
+            res = sensor;
+        } else {
+            res = [];
+            $scope.addEcPair( res );
+        }
+        return res;
+    }
+
+    function prepareEcDispDayOrNight(input) {
+        result = {};
+        result.temp = prepareEcDispSensor(input.temp);
+        result.humidity = prepareEcDispSensor(input.humidity);
+        result.co2 = prepareEcDispSensor(input.co2);
+        return result;
+    }
+
     function prepareEcDisp(ec) {
         $scope.ecDisp = {};
-        $scope.ecDisp.max_power_pct = Math.floor( ( ec.max_power * 100 ) / 255 );
+        $scope.ecDisp.min_power_pct = val2pct( ec.min_power );
+        $scope.ecDisp.max_power_pct = val2pct( ec.max_power );
         $scope.ecDisp.controls = {};
-        $scope.ecDisp.controls.day = {};
-        $scope.ecDisp.controls.day.temp = ec.controls.day.temp;
-        $scope.ecDisp.controls.day.humidity = ec.controls.day.humidity;
-        $scope.ecDisp.controls.day.co2 = ec.controls.day.co2;
+        $scope.ecDisp.controls.day = prepareEcDispDayOrNight( ec.controls.day );
+        $scope.ecDisp.controls.night = prepareEcDispDayOrNight( ec.controls.night );
     }
 
 //New Saving:
@@ -281,23 +285,54 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         });
     }
 
+    $scope.deleteEcPair = function(array, index) {
+        array.splice(index, 1);
+        if (array.length == 0) {
+            $scope.addEcPair(array);
+        }
+    }
+
     $scope.close_edit_ec_window = function() {
         $scope.showEditEcWindow = false;
     }
 
-    $scope.submit_ec_form = function() {
-      //zkonvertit data z ecDisp do ec,
-        /*$scope.ecDisp = {};
-        $scope.ecDisp.max_power_pct = Math.floor( ( ec.max_power * 100 ) / 255 );
-        $scope.ecDisp.controls = {};
-        $scope.ecDisp.controls.day = {};
-        $scope.ecDisp.controls.day.temp = ec.controls.day.temp;
-        $scope.ecDisp.controls.day.humidity = ec.controls.day.humidity;
-        $scope.ecDisp.controls.day.co2 = ec.controls.day.co2;*/
+    function prepareFancofigSensor(sensorEcPairsArray) {
+        fcSensor = [];
+        for (var i = 0; i < sensorEcPairsArray.length; i++) {
+            var sensorEcPair = sensorEcPairsArray[i];
+            if (sensorEcPair.sensor_value != "" && sensorEcPair.power_pct != "") {
+                fcSensor.push(sensorEcPair);
+            }
+        }
+        return fcSensor;
+    }
 
-        var fan = $scope.relaysHash['Fan'];
-      //ulozit jako FanConfig
-		    $http.post('fanconfig.jso', fan.ec).success(function() {
+    function prepareFancofigDayOrNight(input) {
+        fcDayOrNight = {};
+        fcDayOrNight.temp = prepareFancofigSensor( input.temp );
+        fcDayOrNight.humidity = prepareFancofigSensor( input.humidity );
+        fcDayOrNight.co2 = prepareFancofigSensor( input.co2 );
+        return fcDayOrNight;
+    }
+
+    function prepareFanconfigData(ecDisp) {
+        fcData = {};
+        fcData.min_power = pct2val( $scope.ecDisp.min_power_pct );
+        fcData.max_power = pct2val( $scope.ecDisp.max_power_pct );
+        fcData.controls = {};
+        fcData.controls.day = prepareFancofigDayOrNight( $scope.ecDisp.controls.day );
+        fcData.controls.night = prepareFancofigDayOrNight( $scope.ecDisp.controls.night );
+        return fcData;
+    }
+
+    $scope.submit_ec_form = function() {
+        //zkonvertit data z ecDisp do fanconfigData
+        fanconfigData = prepareFanconfigData( $scope.ecDisp );
+
+        //var fan = $scope.relaysHash['Fan'];
+        //fanconfigData = fan.ec;
+        //ulozit jako FanConfig
+		    $http.post('fanconfig.jso', fanconfigData).success(function() {
             $scope.close_edit_ec_window();
         });
     }
