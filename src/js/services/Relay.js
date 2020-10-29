@@ -54,7 +54,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	    }
 	  });
 	  if (this.permOnTrigger != null && this.permOnTrigger.index > -1 
-		    && !this.isPermOn()){
+		    && ( !this.isPermOn() && !this.isPermEc() ){
 	    result.push(this.permOnTrigger.index);
 	  }
 	  return result;
@@ -73,28 +73,28 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
       }
 	  }
 	  this.getTriggersAndIntervals().forEach(function(trig) {
-	    var activity = (this.isPermOn() ? Relay.FIRM_ACTIVITY_PERM_OFF : this.getFirmwareActivityCode(trig));
+	    var activity = (this.isPermOn() || this.isPermEc() ? Relay.FIRM_ACTIVITY_PERM_OFF : this.getFirmwareActivityCode(trig));
 	    trig.prepareSave(activity);
 	  }, this);
-	  if (this.isPermOn()){
+	  if (this.isPermOn() || this.isPermEc()){
 	    this.permOnTrigger.prepareSave(Relay.FIRM_ACTIVITY_PERM_ON);
 	  }
   }
 
     Relay.prototype.useSlotIndex = function(index) {
-	var used = false;
-	this.getTriggersAndIntervals().forEach(function(trig) {
-	    if (!used && trig.useSlotIndex(index)){
-		used = true;
-	    }
-	});
-	if (used){
-	    return true;
-	}
-	if (this.isPermOn()){
-	    return this.permOnTrigger.useSlotIndex(index);
-	}
-	return false;
+      var used = false;
+      this.getTriggersAndIntervals().forEach(function(trig) {
+          if (!used && trig.useSlotIndex(index)){
+        used = true;
+          }
+      });
+      if (used){
+          return true;
+      }
+      if (this.isPermOn() || this.isPermEc()){
+          return this.permOnTrigger.useSlotIndex(index);
+      }
+      return false;
     }
 
   //ulozi triggery a vrati indexy vsech ulozenych triggeru
@@ -107,7 +107,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 		    }
 	    }
 	  );
-	  if (this.isPermOn()){
+	  if (this.isPermOn() || this.isPermEc()){
 	    usedIndexes.push(this.permOnTrigger.index);
 	  }
 	  //ulozit vsechny nereleasle triggery
@@ -122,7 +122,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 		      });
 	      },
 	      function(callback){
-		      if (relay.isPermOn()){
+		      if (relay.isPermOn() || relay.isPermEc()){
 		        relay.permOnTrigger.saveTrigger(callback);
 		      } else {
 		        callback();
