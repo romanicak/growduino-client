@@ -346,7 +346,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
                 });
 	          },
             function(callback){
-                saveTriggers();
+                $scope.saveTriggers();
             }
         ]);
     }
