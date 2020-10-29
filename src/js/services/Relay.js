@@ -54,7 +54,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	    }
 	  });
 	  if (this.permOnTrigger != null && this.permOnTrigger.index > -1 
-		    && ( !this.isPermOn() && !this.isPermEc() ){
+		    && ( !this.isPermOn() && !this.isPermEc() )){
 	    result.push(this.permOnTrigger.index);
 	  }
 	  return result;

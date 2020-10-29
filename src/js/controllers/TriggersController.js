@@ -344,10 +344,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
                     $scope.close_edit_ec_window();
                     callback();
                 });
-	          }),
+	          },
             function(callback){
                 saveTriggers();
-            })
+            }
         ]);
     }
 
