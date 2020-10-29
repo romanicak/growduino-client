@@ -99,6 +99,16 @@
         <div class="fanDayNightLabel">
           <b>Day ventilation</b>
         </div>
+        <fieldset class="form-group sentinel-line">
+          Turn on from
+          <div class="form-group" bs-has-error>
+            <input required type="text" class="form-control" ng-model="ecDisp.controls.day.start"/>
+          </div>
+          to
+          <div class="form-group" bs-has-error>
+            <input required type="text" class="form-control" ng-model="ecDisp.controls.day.end"/>
+          </div>
+        </fieldset>
         <div ng-repeat="temp in ecDisp.controls.day.temp">
           <fieldset class="form-group sentinel-line">
             When <b>Air Temperature</b> is over 
@@ -150,6 +160,16 @@
         <div class="fanDayNightLabel">
           <b>Night ventilation</b>
         </div>
+        <fieldset class="form-group sentinel-line">
+          Turn on from
+          <div class="form-group" bs-has-error>
+            <input required type="text" class="form-control" ng-model="ecDisp.controls.night.start"/>
+          </div>
+          to
+          <div class="form-group" bs-has-error>
+            <input required type="text" class="form-control" ng-model="ecDisp.controls.night.end"/>
+          </div>
+        </fieldset>
         <div ng-repeat="temp in ecDisp.controls.night.temp">
           <fieldset class="form-group sentinel-line">
             When <b>Air Temperature</b> is over 

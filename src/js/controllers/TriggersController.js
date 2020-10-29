@@ -145,6 +145,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
     function prepareEcDispDayOrNight(input) {
         result = {};
+        result.start = input.start;
+        result.end = input.end;
         result.temp = prepareEcDispSensor(input.temp);
         result.humidity = prepareEcDispSensor(input.humidity);
         result.co2 = prepareEcDispSensor(input.co2);
@@ -309,6 +311,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
     function prepareFancofigDayOrNight(input) {
         fcDayOrNight = {};
+        fcDayOrNight.start = input.start;
+        fcDayOrNight.end = input.end;
         fcDayOrNight.temp = prepareFancofigSensor( input.temp );
         fcDayOrNight.humidity = prepareFancofigSensor( input.humidity );
         fcDayOrNight.co2 = prepareFancofigSensor( input.co2 );
@@ -317,6 +321,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
     function prepareFanconfigData(ecDisp) {
         fcData = {};
+        fcData.ec_fan_enable = true;
         fcData.min_power = pct2val( $scope.ecDisp.min_power_pct );
         fcData.max_power = pct2val( $scope.ecDisp.max_power_pct );
         fcData.controls = {};
