@@ -336,10 +336,19 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
         //var fan = $scope.relaysHash['Fan'];
         //fanconfigData = fan.ec;
-        //ulozit jako FanConfig
-		    $http.post('fanconfig.jso', fanconfigData).success(function() {
-            $scope.close_edit_ec_window();
-        });
+        //ulozit jako FanConfig a zavolat saveTriggers
+
+	      async.series([
+	          function(callback){
+                $http.post('fanconfig.jso', fanconfigData).success(function() {
+                    $scope.close_edit_ec_window();
+                    callback();
+                });
+	          }),
+            function(callback){
+                saveTriggers();
+            })
+        ]);
     }
 
 }]);
