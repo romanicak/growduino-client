@@ -109,6 +109,12 @@
             <input required type="text" class="form-control" ng-model="ecDisp.controls.day.end"/>
           </div>
         </fieldset>
+        <fieldset class="form-group sentinel-line">
+          Set stable power to
+          <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="ecDisp.controls.day.power"/>&nbsp;%
+          </div>
+        </fieldset>
         <div ng-repeat="temp in ecDisp.controls.day.temp">
           <fieldset class="form-group sentinel-line">
             When <b>Air Temperature</b> is over 
@@ -168,6 +174,12 @@
           to
           <div class="form-group" bs-has-error>
             <input required type="text" class="form-control" ng-model="ecDisp.controls.night.end"/>
+          </div>
+        </fieldset>
+        <fieldset class="form-group sentinel-line">
+          Set stable power to
+          <div class="form-group" bs-has-error>
+            <input type="text" class="form-control" ng-model="ecDisp.controls.night.power"/>&nbsp;%
           </div>
         </fieldset>
         <div ng-repeat="temp in ecDisp.controls.night.temp">

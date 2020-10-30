@@ -147,6 +147,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         result = {};
         result.start = input.start;
         result.end = input.end;
+        result.power = input.power;
         result.temp = prepareEcDispSensor(input.temp);
         result.humidity = prepareEcDispSensor(input.humidity);
         result.co2 = prepareEcDispSensor(input.co2);
@@ -313,6 +314,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         fcDayOrNight = {};
         fcDayOrNight.start = input.start;
         fcDayOrNight.end = input.end;
+        fcDayOrNight.power = input.power;
         fcDayOrNight.temp = prepareFancofigSensor( input.temp );
         fcDayOrNight.humidity = prepareFancofigSensor( input.humidity );
         fcDayOrNight.co2 = prepareFancofigSensor( input.co2 );
