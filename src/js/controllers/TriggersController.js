@@ -85,25 +85,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
             }
             fan.ec = fanCfg;
         } else {
-            /*fan.ec = {
-                ec_fan_enable: false,
-                min_power: 0,
-                max_power: 255,
-                controls: {
-                    day: {
-                        start: 0,
-                        end: 719
-                    },
-                    night: {
-                        start: 720,
-                        end: 1439
-                    }
-                }
-            };*/
             fan.ec = {
                 ec_fan_enable: false,
-                min_power: 0,
-                max_power: 255,
                 controls: {
                     day: {
                         start: 0,
@@ -145,8 +128,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
     function prepareEcDispDayOrNight(input) {
         result = {};
-        result.start = input.start;
-        result.end = input.end;
+        result.start = utils.minutesToTime( input.start ); 
+        result.end = utils.minutesToTime( input.end );
         result.power = input.power;
         result.temp = prepareEcDispSensor(input.temp);
         result.humidity = prepareEcDispSensor(input.humidity);
@@ -156,8 +139,6 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
     function prepareEcDisp(ec) {
         $scope.ecDisp = {};
-        $scope.ecDisp.min_power_pct = val2pct( ec.min_power );
-        $scope.ecDisp.max_power_pct = val2pct( ec.max_power );
         $scope.ecDisp.controls = {};
         $scope.ecDisp.controls.day = prepareEcDispDayOrNight( ec.controls.day );
         $scope.ecDisp.controls.night = prepareEcDispDayOrNight( ec.controls.night );
@@ -281,6 +262,10 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         $scope.showEditEcWindow = true;
     }
 
+    $scope.canAddEcPair = function(array) {
+        return array.length < 8;
+    }
+
     $scope.addEcPair = function(array) {
         array.push({
             sensor_value: "",
@@ -312,8 +297,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 
     function prepareFancofigDayOrNight(input) {
         fcDayOrNight = {};
-        fcDayOrNight.start = input.start;
-        fcDayOrNight.end = input.end;
+        fcDayOrNight.start = utils.timeToMinutes( input.start );
+        fcDayOrNight.end = utils.timeToMinutes( input.end );
         fcDayOrNight.power = input.power;
         fcDayOrNight.temp = prepareFancofigSensor( input.temp );
         fcDayOrNight.humidity = prepareFancofigSensor( input.humidity );
@@ -324,8 +309,6 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
     function prepareFanconfigData(ecDisp) {
         fcData = {};
         fcData.ec_fan_enable = true;
-        fcData.min_power = pct2val( $scope.ecDisp.min_power_pct );
-        fcData.max_power = pct2val( $scope.ecDisp.max_power_pct );
         fcData.controls = {};
         fcData.controls.day = prepareFancofigDayOrNight( $scope.ecDisp.controls.day );
         fcData.controls.night = prepareFancofigDayOrNight( $scope.ecDisp.controls.night );
