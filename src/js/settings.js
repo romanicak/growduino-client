@@ -34,6 +34,7 @@ window.settings = {
         'Temp1': { divisor: 10, name: 'Air Temperature'},
         'Temp2': { divisor: 10, name: 'Water Temperature'},
         'Temp3': { divisor: 10, name: 'Bulb Temperature'},
+        'ECFan': { divisor: 1, name: 'EC Fan'},
         'Light1': { divisor: 1, name: 'Lighting Outdoor'},
         'Light2': { divisor: 1, name: 'Lighting Indoor'},
         'Usnd': { divisor: 1, name: 'Water Level'},
@@ -55,6 +56,15 @@ window.settings = {
             yAxis: [
                 { title: { text: '°C' },  minRange: 5},
                 { title: { text: '%' }, opposite: true, min: 0, minRange: 5}
+            ]
+        },
+        {
+            series: [
+                {name: 'EC Fan', resource: 'ECFan', yAxis: 0}
+            ],
+            yAxis: [
+                { title: { text: '%' },  min: 0, minRange: 5},
+                { title: { text: '%' },  linkedTo: 0, opposite: true, min: 0, minRange: 5}
             ]
         },
         {
