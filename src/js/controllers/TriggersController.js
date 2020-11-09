@@ -52,18 +52,19 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
           fan.night.since = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[2]);
           fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
       }
+      
 
       //prectu z configu, ktere triggery musim cist; postupne je ctu
       async.forEachSeries(clientConfigData.usedTriggers || [],
           function(triggerIndex, callback) {
               var triggerData = Trigger.loadRaw(triggerIndex, 
                   function(triggerData) {
-                    //podle indexu poznam, ke kteremu rele patri
+                      //podle indexu poznam, ke kteremu rele patri
                       var relay = $scope.relays[triggerData.output];
                 if (relay){
-                              //reknu rele, inicializuj trigger(rawTrigger) 
-                          relay.initTrigger(triggerData, triggerIndex);
-              slots[triggerIndex] = relay.outputIndex;
+                    //reknu rele, inicializuj trigger(rawTrigger) 
+                    relay.initTrigger(triggerData, triggerIndex);
+                    slots[triggerIndex] = relay.outputIndex;
                 } else {
                           console.warn('Loaded trigger for undefined output ' + triggerData);
                 }
@@ -80,7 +81,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         var fan = $scope.relaysHash['Fan'];
 
         if (fanCfg.controls != null) {
-            if (fanCfg.ec_fan_enable) {
+            if (clientConfigData.ec_fan_enable) {
                 fan.setPermEc();
             }
             fan.ec = fanCfg;
@@ -239,6 +240,8 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	            clientConfigData.permOffRelays = permOffRelays;
 	            clientConfigData.usedTriggers = usedTriggers;
 		          clientConfigData.fanTimesInfo = fanTimesInfo;
+	            var fan = $scope.relaysHash['Fan'];
+              clientConfigData.ec_fan_enable = fan.isPermEc();
 		          $http.post('client.jso', clientConfigData).success(function(){
 			          callback();
 		          });

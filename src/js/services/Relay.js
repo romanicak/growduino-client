@@ -31,7 +31,9 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	    this.intervals.push(trigger);
 	} else if (triggerClass === 'manualOn'){
 	    this.permOnTrigger = trigger;
-	    this.setPermOn();
+      if ( ! this.isPermEc() ) {
+	        this.setPermOn();
+      }
 	    this.permStatusSaved();
 	} else {
 	    var existingTrigger = this.triggers[triggerClass];
