@@ -117,11 +117,23 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         return Math.floor( ( pct * 255 ) / 100 );
     }
 
-    function prepareEcDispSensor(sensor) {
+    divisors = {
+        "temp": 10,
+        "humidity": 10,
+        "co2": 1
+    };
+
+    function prepareEcDispSensor(sensor, divisor) {
+        res = [];
         if ( Array.isArray(sensor) && sensor.length ) {
-            res = sensor;
+            for (var i = 0; i < sensor.length; i++) {
+                var sensorPair = sensor[i];
+                res.push({
+                    sensor_value: sensorPair.sensor_value / divisor,
+                    power_pct: sensorPair.power_pct
+                });
+            }
         } else {
-            res = [];
             $scope.addEcPair( res );
         }
         return res;
@@ -132,9 +144,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         result.start = utils.minutesToTime( input.start ); 
         result.end = utils.minutesToTime( input.end );
         result.power = input.power;
-        result.temp = prepareEcDispSensor(input.temp);
-        result.humidity = prepareEcDispSensor(input.humidity);
-        result.co2 = prepareEcDispSensor(input.co2);
+        result.temp = prepareEcDispSensor(input.temp, divisors.temp);
+        result.humidity = prepareEcDispSensor(input.humidity, divisors.humidity);
+        result.co2 = prepareEcDispSensor(input.co2, divisors.co2);
         return result;
     }
 
@@ -266,7 +278,7 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
     }
 
     $scope.canAddEcPair = function(array) {
-        return array.length < 8;
+        return array && array.length < 8;
     }
 
     $scope.addEcPair = function(array) {
@@ -287,12 +299,15 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         $scope.showEditEcWindow = false;
     }
 
-    function prepareFancofigSensor(sensorEcPairsArray) {
+    function prepareFancofigSensor(sensorEcPairsArray, divisor) {
         fcSensor = [];
         for (var i = 0; i < sensorEcPairsArray.length; i++) {
             var sensorEcPair = sensorEcPairsArray[i];
             if (sensorEcPair.sensor_value != "" && sensorEcPair.power_pct != "") {
-                fcSensor.push(sensorEcPair);
+                fcSensor.push({
+                    sensor_value: sensorEcPair.sensor_value * divisor,
+                    power_pct: sensorEcPair.power_pct
+                });
             }
         }
         return fcSensor;
@@ -303,9 +318,9 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
         fcDayOrNight.start = utils.timeToMinutes( input.start );
         fcDayOrNight.end = utils.timeToMinutes( input.end );
         fcDayOrNight.power = input.power;
-        fcDayOrNight.temp = prepareFancofigSensor( input.temp );
-        fcDayOrNight.humidity = prepareFancofigSensor( input.humidity );
-        fcDayOrNight.co2 = prepareFancofigSensor( input.co2 );
+        fcDayOrNight.temp = prepareFancofigSensor( input.temp, divisors.temp );
+        fcDayOrNight.humidity = prepareFancofigSensor( input.humidity, divisors.humidity );
+        fcDayOrNight.co2 = prepareFancofigSensor( input.co2, divisors.co2 );
         return fcDayOrNight;
     }
 
