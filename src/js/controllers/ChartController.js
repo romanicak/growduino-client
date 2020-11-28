@@ -110,6 +110,21 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         });
     }
 
+    function addLabel(data) {
+        //getnout posledni hodnotu
+      //odstranit posledni hodnotu
+      //vlozit posledni hodnotu na konec ve formatu:
+      //{ y: value, dataLabels: { enabled: true } }
+        var value = data.pop();
+        data.push({
+            y: value,
+            dataLabels: {
+                enabled: true
+            }
+        });
+        return data;
+    }
+
     function padValues(data) {
         if ($scope.zoom == 'H') {
             return utils.arrayPad(data, 60, null);
@@ -167,7 +182,8 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                     if (data) {
 		        //console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
 		        //console.log(data);
-                        chartSeries.setData(padValues(data[dataKey]));
+                        var paddedData = padValues(data[dataKey]);
+                        chartSeries.setData(addLabel(paddedData));
 		    }
                     chart.hideLoading();
                     chartSeries.show();
