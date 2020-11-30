@@ -111,15 +111,18 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function addLabel(data) {
-        //getnout posledni hodnotu
-      //odstranit posledni hodnotu
-      //vlozit posledni hodnotu na konec ve formatu:
-      //{ y: value, dataLabels: { enabled: true } }
         var value = data.pop();
         data.push({
             y: value,
             dataLabels: {
-                enabled: true
+                enabled: true,
+                format: '<span style="font-weight:bold">{point.name} {point.y:,.1f}</span>',
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                softConnector: true,
+                crop: false,
+                overflow: 'none',
+                borderRadius: 5,
+                backgroundColor: 'rgba(0, 0, 0, 0.2)'
             }
         });
         return data;
