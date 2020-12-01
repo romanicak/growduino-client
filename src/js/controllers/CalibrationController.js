@@ -162,9 +162,9 @@ app.controller('CalibrationController', ['$scope', '$http', '$timeout', 'Calibra
 
     function postCalibTwoPoint(recordIndex, divisor) {
       if (curStep == calibrationNumSteps){//success
-        //the +(..).toFixed(1) construct rounds to 1 decimal place AND removes the decimal place if it is 0
+        //the +(..).toFixed(2) construct rounds to 2 decimal place AND removes the decimal place if it is 0
         var average = total / calibrationNumSteps;
-        $scope.popup_data.records[recordIndex]["reading"] = +(average / divisor).toFixed(1);
+        $scope.popup_data.records[recordIndex]["reading"] = +(average / divisor).toFixed(2);
       } else {//cteni kalibracnich dat se nepovedlo; error
         alert("Error occured while reading sensor data; Sensor is disconnected or has a malfunction");
       }
