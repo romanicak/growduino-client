@@ -111,9 +111,12 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     }
 
     function addLabel(data) {
-        var value = data.pop();
-        data.push({
-            y: value,
+        var i = data.length;
+        while (i--) {
+            if (data[i] != -999) break;
+        }
+        data[i] = {
+            y: data[i],
             dataLabels: {
                 enabled: true,
                 format: '<span style="font-weight:bold">{point.name} {point.y:,.1f}</span>',
@@ -124,7 +127,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                 borderRadius: 5,
                 backgroundColor: 'rgba(0, 0, 0, 0.2)'
             }
-        });
+        };
         return data;
     }
 
