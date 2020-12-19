@@ -113,7 +113,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     function addLabel(data) {
         var i = data.length;
         while (i--) {
-            if (data[i] != -999) break;
+            if (data[i] != null) break;
         }
         data[i] = {
             y: data[i],
