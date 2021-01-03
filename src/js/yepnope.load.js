@@ -115,7 +115,9 @@ function loadLibsOnline() {
             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-resource.min.js",
             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js",
             "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js",
-            "//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.10/highcharts.js",
+            //"//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.10/highcharts.js",
+            "//code.highcharts.com/highcharts.js",
+            "//code.highcharts.com/modules/series-label.js",
             "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js",
         ],
         complete: loadApplication
