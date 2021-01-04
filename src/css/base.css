@@ -94,6 +94,60 @@ a[ng-click] {
     visibility: hidden;
 }
 
+/* Sensors Dashboard */
+.sensors-dashboard {
+    display: grid; 
+    gap: 20px; 
+    grid-template-columns: 1fr; 
+    margin: 2rem 0;
+}
+
+.sensors-dashboard__item {
+    border-radius: 4px; 
+    padding: 1rem; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+}
+
+.sensors-dashboard__item--air-temp {
+    background: #b9d7ff;
+    color: #2f7ed8;
+}
+
+.sensors-dashboard__item--water-temp {
+    background: #2e629e;
+    color: #0d233a;
+}
+
+.sensors-dashboard__item--relative-humidity {
+    background: #cded92;
+    color: #8bbc21;
+}
+
+.sensors-dashboard__item--bulp-temp {
+    background: #ff8080;
+    color: #910000;
+}
+
+.sensors-dashboard__item strong {
+    font-size: 2rem; 
+    display: block;
+}
+
+@media only screen and (min-width: 600px) {
+    .sensors-dashboard {
+        grid-template-columns: 1fr 1fr; 
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+    .sensors-dashboard {
+        grid-template-columns: 1fr 1fr 1fr 1fr; 
+    }
+}
+
 /* Charts */
 
 .chart-controls {

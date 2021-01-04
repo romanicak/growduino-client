@@ -18,4 +18,26 @@
     <span class="selected-date">{{ formattedDate }}</span>
 </form>
 
+<div class="sensors-dashboard">
+    <div class="sensors-dashboard__item sensors-dashboard__item--air-temp">
+        <strong>{{sensorsDashboardValues["Temp1"]}} °C</strong>
+        <span>Air Temperature</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--water-temp">
+        <strong>{{sensorsDashboardValues["Temp2"]}} °C</strong>
+        <span>Water Temperature</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--relative-humidity">
+        <strong>{{sensorsDashboardValues["Humidity"]}} %</strong>
+        <span>Relative Humidity</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--bulp-temp">
+        <strong>{{sensorsDashboardValues["Temp3"]}} °C</strong>
+        <span>Bulp Temperature</span>
+    </div>
+</div>
+
 <div id="charts"></div>
