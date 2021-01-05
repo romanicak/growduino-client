@@ -18,4 +18,67 @@
     <span class="selected-date">{{ formattedDate }}</span>
 </form>
 
+<div class="sensors-dashboard">
+    <div class="sensors-dashboard__item sensors-dashboard__item--air-temp">
+        <strong>{{sensorsDashboardValues["Temp1"] !== undefined ? sensorsDashboardValues["Temp1"] + ' °C' : 'Err'}}</strong>
+        <span>Air Temperature</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--water-temp">
+        <strong>{{sensorsDashboardValues["Temp2"] !== undefined ? sensorsDashboardValues["Temp2"] + ' °C' : 'Err'}}</strong>
+        <span>Water Temperature</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--relative-humidity">
+        <strong>{{sensorsDashboardValues["Humidity"] !== undefined ? sensorsDashboardValues["Humidity"] + ' %' : 'Err'}}</strong>
+        <span>Relative Humidity</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--bulb-temp">
+        <strong>{{sensorsDashboardValues["Temp3"] > 0 ? sensorsDashboardValues["Temp3"] + ' °C' : 'Err'}}</strong>
+        <span>Bulb Temperature</span>
+    </div>
+<!--
+    <div class="sensors-dashboard__item sensors-dashboard__item--ec-fan">
+        <strong>{{sensorsDashboardValues["ECFan"] !== undefined ? sensorsDashboardValues["ECFan"] + ' %' : 'Err'}}</strong>
+        <span>EC Fan</span>
+    </div>
+-->
+    <div class="sensors-dashboard__item sensors-dashboard__item--light-out">
+        <strong>{{sensorsDashboardValues["Light1"] !== undefined ? sensorsDashboardValues["Light1"] + ' sun' : 'Err'}}</strong>
+        <span>Lighting Outdoor</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--light-in">
+        <strong>{{sensorsDashboardValues["Light2"] !== undefined ? sensorsDashboardValues["Light2"] + ' sun' : 'Err'}}</strong>
+        <span>Lighting Indoor</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--water-level">
+        <strong>{{sensorsDashboardValues["Usnd"] > 0 ? sensorsDashboardValues["Usnd"] + ' cm' : 'Err'}}</strong>
+        <span>Water Level Distance</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--ec">
+        <strong>{{sensorsDashboardValues["EC"] !== undefined ? sensorsDashboardValues["EC"] + ' %' : 'Err'}}</strong>
+        <span>EC</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--ph">
+        <strong>{{sensorsDashboardValues["pH"] !== undefined ? sensorsDashboardValues["pH"] : 'Err'}}</strong>
+        <span>pH</span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--co2">
+        <strong>{{sensorsDashboardValues["CO2"] !== undefined ? sensorsDashboardValues["CO2"] : 'Err'}}</strong>
+        <span>CO<sub>2</sub></span>
+    </div>
+
+    <div class="sensors-dashboard__item sensors-dashboard__item--battery">
+        <strong>{{sensorsDashboardValues["Battery"] !== undefined ? sensorsDashboardValues["Battery"] + ' %': 'Err'}}</strong>
+        <span>Battery</span>
+    </div>
+</div>
+
+
 <div id="charts"></div>
