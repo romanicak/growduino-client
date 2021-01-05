@@ -110,8 +110,8 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
             });
         });
     }
-
-    function addLabel(data) {
+//chart labels disabled
+  /*  function addLabel(data) {
         var i = data.length;
         while (i--) {
             if (data[i] != null) break;
@@ -131,7 +131,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
         };
         return data;
     }
-
+*/
     function padValues(data) {
         if ($scope.zoom == 'H') {
             return utils.arrayPad(data, 60, null);
@@ -189,9 +189,10 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                     if (data) {
 		        //console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
                 //console.log(data);
+                        chartSeries.setData(padValues(data[dataKey]));
                         var paddedData = padValues(data[dataKey]);
                         $scope.sensorsDashboardValues[sensor] = paddedData.filter(function(element) { return element !== null && element > -999 }).pop();
-                        chartSeries.setData(addLabel(paddedData));
+                        //chartSeries.setData(addLabel(paddedData)); //chart labels disabled
 		    }
                     chart.hideLoading();
                     chartSeries.show();
