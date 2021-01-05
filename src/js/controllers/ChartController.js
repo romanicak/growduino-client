@@ -2,6 +2,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
     function($scope, $rootScope, $location, utils, SensorHistory, settings, requests, $interval, RelayData, $http) {
     var charts = [];
     var chartDefs = settings.charts;
+    $scope.sensorsDashboardValues = {};
 
     var zoomTypes = {
         'H': {
@@ -187,8 +188,9 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
                 } else {
                     if (data) {
 		        //console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
-		        //console.log(data);
+                //console.log(data);
                         var paddedData = padValues(data[dataKey]);
+                        $scope.sensorsDashboardValues[sensor] = paddedData.filter((element) => element).pop();
                         chartSeries.setData(addLabel(paddedData));
 		    }
                     chart.hideLoading();
