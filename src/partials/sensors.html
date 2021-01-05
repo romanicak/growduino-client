@@ -34,9 +34,9 @@
         <span>Relative Humidity</span>
     </div>
 
-    <div class="sensors-dashboard__item sensors-dashboard__item--bulp-temp">
-        <strong>{{sensorsDashboardValues["Temp3"] !== undefined ? sensorsDashboardValues["Temp3"] + ' °C' : 'Err'}}</strong>
-        <span>Bulp Temperature</span>
+    <div class="sensors-dashboard__item sensors-dashboard__item--bulb-temp">
+        <strong>{{sensorsDashboardValues["Temp3"] > 0 ? sensorsDashboardValues["Temp3"] + ' °C' : 'Err'}}</strong>
+        <span>Bulb Temperature</span>
     </div>
 
     <div class="sensors-dashboard__item sensors-dashboard__item--ec-fan">
@@ -55,8 +55,8 @@
     </div>
 
     <div class="sensors-dashboard__item sensors-dashboard__item--water-level">
-        <strong>{{sensorsDashboardValues["Usnd"] !== undefined ? sensorsDashboardValues["Usnd"] + ' cm' : 'Err'}}</strong>
-        <span>Water Level</span>
+        <strong>{{sensorsDashboardValues["Usnd"] > 0 ? sensorsDashboardValues["Usnd"] + ' cm' : 'Err'}}</strong>
+        <span>Water Level Distance</span>
     </div>
 
     <div class="sensors-dashboard__item sensors-dashboard__item--ec">
