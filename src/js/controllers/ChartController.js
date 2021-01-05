@@ -190,7 +190,7 @@ app.controller('ChartController', ['$scope', '$rootScope', '$location', 'utils',
 		        //console.log("Sensor: " + sensor + "; Data, dataKey = " + dataKey);
                 //console.log(data);
                         var paddedData = padValues(data[dataKey]);
-                        $scope.sensorsDashboardValues[sensor] = paddedData.filter(function(element) { return element }).pop();
+                        $scope.sensorsDashboardValues[sensor] = paddedData.filter(function(element) { return element !== null && element > -999 }).pop();
                         chartSeries.setData(addLabel(paddedData));
 		    }
                     chart.hideLoading();
