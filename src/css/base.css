@@ -292,6 +292,11 @@ a[ng-click] {
     padding-top: 8px;
 }
 
+.heatingDayNightLabel {
+    font-size: 18px;
+    padding-top: 8px;
+}
+
 .formError {
     color: red;
     font-weight: bold;
