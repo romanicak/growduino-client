@@ -2,62 +2,54 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
     var Relay = function(){};
 
     Relay.prototype.dayDisabled = function(){
-		if (this.name != 'Fan'){return false}; //tohle je tu jen aby nepadaly upravy heating Day/Night v konzoli, az to bude hotovy tak smazat
-	return (!this.triggers["temp1HighTimer_day"].active 
-		&& !this.triggers["humidityHighTimer_day"].active
-		&& !this.triggers["cO2HighTimer_day"].active
-		&& !this.triggers["inactiveForTimer_day"].active);
+        if (this.name == 'Fan'){
+            return (!this.triggers["temp1HighTimer_day"].active 
+                && !this.triggers["humidityHighTimer_day"].active
+                && !this.triggers["cO2HighTimer_day"].active
+                && !this.triggers["inactiveForTimer_day"].active);
+        } else if (this.name == 'Heating'){
+		        return !this.triggers["temp1LowTimer_day"].active;
+        } else {
+            console.log("Relay.dayDisabled() has been inexpectedly called for relay name: '" + this.name + "'!");
+            return false;
+        }
     }
-
-/*
-    //Zkousim pro Day/Night Heating
-	Relay.prototype.heatingDayDisabled = function(){
-		//if (this.name != 'Heating'){return false}; //tohle je tu jen aby nepadaly upravy heating Day/Night v konzoli, az to bude hotovy tak smazat
-		return (!this.triggers["temp1LowTimer_day"].active;
-	}
-*/
 
     Relay.prototype.nightDisabled = function(){
-		if (this.name != 'Fan'){return false};//tohle je tu jen aby nepadaly upravy heating Day/Night v konzoli, az to bude hotovy tak smazat
-	return (!this.triggers["temp1HighTimer_night"].active 
-		&& !this.triggers["humidityHighTimer_night"].active
-		&& !this.triggers["cO2HighTimer_night"].active
-		&& !this.triggers["inactiveForTimer_night"].active);
+        if (this.name == 'Fan'){
+            return (!this.triggers["temp1HighTimer_night"].active 
+                && !this.triggers["humidityHighTimer_night"].active
+                && !this.triggers["cO2HighTimer_night"].active
+                && !this.triggers["inactiveForTimer_night"].active);
+        } else if (this.name == 'Heating'){
+		        return !this.triggers["temp1LowTimer_night"].active;
+        } else {
+            console.log("Relay.nightDisabled() has been inexpectedly called for relay name: '" + this.name + "'!");
+            return false;
+        }
     }
-
-/*
-    //Zkousim pro Day/Night Heating
-	Relay.prototype.heatingNightDisabled = function(){
-		//if (this.name != 'Heating'){return false};//tohle je tu jen aby nepadaly upravy heating Day/Night v konzoli, az to bude hotovy tak smazat
-		return (!this.triggers["temp1LowTimer_night"].active;
-	}
-*/
 
     Relay.prototype.initTrigger = function(triggerData, triggerIndex) {
 	var trigger = Trigger.unpack(triggerData);
 	var triggerClass = trigger.triggerClass;
 	var fanDayNightTriggerClasses = ['temp1HighTimer', 'humidityHighTimer', 'cO2HighTimer', 'inactiveForTimer'];
-//	var heatingDayNightTriggerClasses = ['temp1LowTimer'];//kopiruju a zkousim pro Day/Night Heating
 	if (this.name == 'Fan' && fanDayNightTriggerClasses.indexOf(triggerClass) != -1){//je tam schvalne vetsi nez 0, protoze triggerClass 'Timer' chci nechat beze zmeny
 	    if (trigger.since == this.day.since && trigger.until == this.day.until){
-		var timeName = 'day';
+		      var timeName = 'day';
 	    } else {
-		var timeName = 'night';
+		      var timeName = 'night';
 	    }
 	    triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
 	}
-
-	/*
-	//Zkousim pro Day/Night Heating
-		if (this.name == 'Heating' && heatingDayNightTriggerClasses.indexOf(triggerClass) != -1){//je tam schvalne vetsi nez 0, protoze triggerClass 'Timer' chci nechat beze zmeny
-			if (trigger.since == this.day.since && trigger.until == this.day.until){
-				var timeName = 'day';
-			} else {
-				var timeName = 'night';
-			}
-			triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
-		}
-*/
+  var heatingDayNightTriggerClasses = ['temp1LowTimer'];
+  if (this.name == 'Heating' && heatingDayNightTriggerClasses.indexOf(triggerClass) != -1){
+      if (trigger.since == this.day.since && trigger.until == this.day.until){
+		      var timeName = 'day';
+	    } else {
+		      var timeName = 'night';
+      }
+	    triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
+  }
 
 	if (triggerClass === 'timer'){
 	    this.intervals.push(trigger);
@@ -283,7 +275,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	    result.intervals = [];
 	    result.triggers = {};
 	    result.permOnTrigger = null;
-	    if (result.name == 'Fan'){
+	    if (result.name == 'Fan' || result.name == 'Heating'){
 		result.day = {since: null, until: null};
 		result.night = {since: null, until: null};
 	    }
