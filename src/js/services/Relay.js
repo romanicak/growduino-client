@@ -41,7 +41,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	    }
 	    triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
 	}
-  var heatingDayNightTriggerClasses = ['temp1LowTimer'];
+  var heatingDayNightTriggerClasses = ['temp1LowTimer', 'inactiveForTimer'];
   if (this.name == 'Heating' && heatingDayNightTriggerClasses.indexOf(triggerClass) != -1){
       if (trigger.since == this.day.since && trigger.until == this.day.until){
 		      var timeName = 'day';
