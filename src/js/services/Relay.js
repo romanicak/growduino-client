@@ -85,7 +85,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
   }
 
   Relay.prototype.prepareSave = function() {
-  	if (this.name == 'Fan'){
+  	if (this.name == 'Fan' || this.name == 'Heating'){
 	    for (var triggerName in this.triggers){
     		if (triggerName.indexOf("_") != -1){
 	  	    var trig = this.triggers[triggerName];
