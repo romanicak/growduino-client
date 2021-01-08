@@ -214,6 +214,13 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	    fan.night.since === null ? -1 : utils.timeToMinutes(fan.night.since),
 	    fan.night.since === null ? 0 : utils.timeToMinutes(fan.night.until),
 	  ];
+    var heating = $scope.relaysHash['Heating'];
+    var heatingTimesInfo = [
+      heating.day.since === null ? -1 : utils.timeToMinutes(heating.day.since),
+	    heating.day.since === null ? 0 : utils.timeToMinutes(heating.day.until),
+	    heating.night.since === null ? -1 : utils.timeToMinutes(heating.night.since),
+	    heating.night.since === null ? 0 : utils.timeToMinutes(heating.night.until),
+    ];
 	  var usedTriggers = [];
 	  async.series([
 	    function(callback){
@@ -248,12 +255,14 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
 	      //prozkoumat, jestli je treba clientConfig ukladat, a prip. ulozit
 	      if (!utils.deepCompare(permOffRelays, clientConfigData.permOffRelays)
 		        || !utils.deepCompare(usedTriggers, clientConfigData.usedTriggers)
-			      || !utils.deepCompare(fanTimesInfo, clientConfigData.fanTimesInfo)){
+		        || !utils.deepCompare(fanTimesInfo, clientConfigData.fanTimesInfo)
+			      || !utils.deepCompare(heatingTimesInfo, clientConfigData.heatingTimesInfo)){
 	            clientConfigData.permOffRelays = permOffRelays;
 	            clientConfigData.usedTriggers = usedTriggers;
 		          clientConfigData.fanTimesInfo = fanTimesInfo;
 	            var fan = $scope.relaysHash['Fan'];
               clientConfigData.ec_fan_enable = fan.isPermEc();
+		          clientConfigData.heatingTimesInfo = heatingTimesInfo;
 		          $http.post('client.jso', clientConfigData).success(function(){
 			          callback();
 		          });

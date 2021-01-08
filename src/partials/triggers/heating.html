@@ -46,3 +46,154 @@
         <span ng-include="'partials/triggers/toggleButton.html'"></span>
     </fieldset>
 </div>
+-->
+
+<!--================================================-->
+<!--Pokus o Day/Night Heating-->
+<div class="heatingDayNightLabel">
+<b>Day Heating</b>
+</div>
+<fieldset class="form-group sentinel-line" ng-disabled="relay.dayDisabled()"> <!--Tady jsem to pojmenoval stejne jako v tom Relay.js, ale puvodne tam bylo jen dayDisabled()-->
+    When time is from
+    <div class="form-group" bs-has-error>
+        <input type="text" name="heatingDay_Since" class="form-control" ng-model="relay.day.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/" ng-required="!relay.dayDisabled()"/>
+        <span ng-show="form.heatingDay_Since.$invalid && showInvalids" class="formError">Incorrect value</span>
+    </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.heatingDay_Since.$valid && !form.heatingDay_Since.$error.required">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
+    to
+    <div class="form-group" bs-has-error>
+        <input type="text" name="heatingDay_Until" class="form-control" ng-model="relay.day.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/" ng-required="!relay.dayDisabled()"/>
+        <span ng-show="form.heatingDay_Until.$invalid && showInvalids" class="formError">Incorrect value</span>
+    </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.heatingDay_Until.$valid && !form.heatingDay_Until.$error.required">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
+    ...
+</fieldset>
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1LowTimer_day')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... turn on when <b>Air Temperature</b> is under
+        <div class="form-group" bs-has-error>
+            <input type="text" name="temp1LowTimer_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/" ng-required="t.active"/>&nbsp;°C
+            <span ng-show="form.temp1HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowTimer_day.$valid && !form.temp1LowTimer_day.$error.required">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" name="temp1HighTimer_day" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"  ng-required="t.active"/>&nbsp;°C
+            <span ng-show="form.temp1HighTimer_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighTimer_day.$valid && !form.temp1HighTimer_day.$error.required">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveForTimer_day')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... enable every
+        <div class="form-group" bs-has-error>
+            <input type="text" name="heatingEveryMinute_day" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes
+            <span ng-show="form.heatingEveryMinute_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.heatingEveryMinute_day.$valid && !form.heatingEveryMinute_day.$error.required">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
+        of inactivity for
+        <div class="form-group" bs-has-error>
+            <input type="text" name="heatingForMinute_day" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes.
+            <span ng-show="form.heatingForMinute_day.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#b40404" class="help-block" ng-show="!form.heatingForMinute_day.$valid && !form.heatingForMinute_day.$error.required">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+<br>
+<div class="heatingDayNightLabel">
+    <b>Night Heating</b>
+</div>
+<fieldset class="form-group sentinel-line" ng-disabled="relay.nightDisabled()"><!--Tady jsem to pojmenoval stejne jako v tom Relay.js, ale puvodne tam bylo jen nightDisabled()-->
+    When time is from
+    <div class="form-group" bs-has-error>
+        <input type="text" name="heatingNight_Since" class="form-control" ng-model="relay.night.since" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/" ng-required="!relay.nightDisabled()"/>
+        <span ng-show="form.heatingNight_Since.$invalid && showInvalids" class="formError">Incorrect value</span>
+    </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.heatingNight_Since.$valid && !form.heatingNight_Since.$error.required">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
+    to
+    <div class="form-group" bs-has-error>
+        <input type="text" name="heatingNight_Until" class="form-control" ng-model="relay.night.until" ng-pattern="/^((([0-1][0-9]):([0-5][0-9])|([2][0-3]):([0-5][0-9])|(24:00)))$/" ng-required="!relay.nightDisabled()"/>
+        <span ng-show="form.heatingNight_Until.$invalid && showInvalids" class="formError">Incorrect value</span>
+    </div>
+    <span style="color:#B40404" class="help-block" ng-show="!form.heatingNight_Until.$valid && !form.heatingNight_Until.$error.required">
+                    Invalid! Must be in hh:mm format from 00:00 to 24:00.
+                <br>Correct: "02:23" or "23:00" or "23:23" . Incorrect: "23" or "02:3" or "2300" .
+    </span>
+    ...
+</fieldset>
+<div ng-controller="TriggerController" ng-init="init(relay, 'temp1LowTimer_night')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... turn on when <b>Air Temperature</b> is under
+        <div class="form-group" bs-has-error>
+            <input type="text" name="temp1LowTimer_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"  ng-required="t.active"/>&nbsp;°C
+            <span ng-show="form.temp1LowTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1LowTimer_night.$valid && !form.temp1LowTimer_night.$error.required">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        then keep it on till
+        <div class="form-group" bs-has-error>
+            <input type="text" name="temp1HighTimer_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(?:0\.[1-9]|[1-9]|[1-9]\.[1-9]|[1-9][0-9]|[1-9][0-9]\.[1-9])$/"  ng-required="t.active"/>&nbsp;°C
+            <span ng-show="form.temp1HighTimer_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.temp1HighTimer_night.$valid && !form.temp1HighTimer_night.$error.required">
+                    Invalid! Must be number with max two digits, optional decimal point(not comma), then max one decimal.
+                <br>Correct: "3" or "23" or "23.2" . Incorrect: "232" or "23,2" or "23.25" .
+        </span>
+        is reached.
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>
+<div ng-controller="TriggerController" ng-init="init(relay, 'inactiveForTimer_night')">
+    <fieldset class="form-group sentinel-line" ng-disabled="!t.active">
+        ... enable every
+        <div class="form-group" bs-has-error>
+            <input type="text" name="heatingEveryMinute_night" class="form-control" ng-model="t.on.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes
+            <span ng-show="form.heatingEveryMinute_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.heatingEveryMinute_night.$valid && !form.heatingEveryMinute_night.$error.required">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
+        of inactivity for
+        <div class="form-group" bs-has-error>
+            <input type="text" name="heatingForMinute_night" class="form-control" ng-model="t.off.val" ng-pattern="/^(((([1-9])|([1-9][0-9])|([1-9][0-9][0-9])|([1-9][0-9][0-9][0-9]))))$/" ng-required="t.active"/> minutes.
+            <span ng-show="form.heatingForMinute_night.$invalid && showInvalids" class="formError">Incorrect value</span>
+        </div>
+        <span style="color:#B40404" class="help-block" ng-show="!form.heatingForMinute_night.$valid && !form.heatingForMinute_night.$error.required">
+                    Invalid! Must be number with max four digits, without decimals.
+                <br>Correct: "2" or "23" or "2323" . Incorrect: "2,32" or "23.2" or "232323" .
+        </span>
+
+        <span ng-include="'partials/triggers/toggleButton.html'"></span>
+    </fieldset>
+</div>

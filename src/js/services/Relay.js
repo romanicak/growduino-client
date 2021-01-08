@@ -2,17 +2,31 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
     var Relay = function(){};
 
     Relay.prototype.dayDisabled = function(){
-	return (!this.triggers["temp1HighTimer_day"].active 
-		&& !this.triggers["humidityHighTimer_day"].active
-		&& !this.triggers["cO2HighTimer_day"].active
-		&& !this.triggers["inactiveForTimer_day"].active);
+        if (this.name == 'Fan'){
+            return (!this.triggers["temp1HighTimer_day"].active 
+                && !this.triggers["humidityHighTimer_day"].active
+                && !this.triggers["cO2HighTimer_day"].active
+                && !this.triggers["inactiveForTimer_day"].active);
+        } else if (this.name == 'Heating'){
+		        return !this.triggers["temp1LowTimer_day"].active;
+        } else {
+            console.log("Relay.dayDisabled() has been inexpectedly called for relay name: '" + this.name + "'!");
+            return false;
+        }
     }
-    
+
     Relay.prototype.nightDisabled = function(){
-	return (!this.triggers["temp1HighTimer_night"].active 
-		&& !this.triggers["humidityHighTimer_night"].active
-		&& !this.triggers["cO2HighTimer_night"].active
-		&& !this.triggers["inactiveForTimer_night"].active);
+        if (this.name == 'Fan'){
+            return (!this.triggers["temp1HighTimer_night"].active 
+                && !this.triggers["humidityHighTimer_night"].active
+                && !this.triggers["cO2HighTimer_night"].active
+                && !this.triggers["inactiveForTimer_night"].active);
+        } else if (this.name == 'Heating'){
+		        return !this.triggers["temp1LowTimer_night"].active;
+        } else {
+            console.log("Relay.nightDisabled() has been inexpectedly called for relay name: '" + this.name + "'!");
+            return false;
+        }
     }
 
     Relay.prototype.initTrigger = function(triggerData, triggerIndex) {
@@ -21,12 +35,22 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
 	var fanDayNightTriggerClasses = ['temp1HighTimer', 'humidityHighTimer', 'cO2HighTimer', 'inactiveForTimer'];
 	if (this.name == 'Fan' && fanDayNightTriggerClasses.indexOf(triggerClass) != -1){//je tam schvalne vetsi nez 0, protoze triggerClass 'Timer' chci nechat beze zmeny
 	    if (trigger.since == this.day.since && trigger.until == this.day.until){
-		var timeName = 'day';
+		      var timeName = 'day';
 	    } else {
-		var timeName = 'night';
+		      var timeName = 'night';
 	    }
 	    triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
 	}
+  var heatingDayNightTriggerClasses = ['temp1LowTimer', 'inactiveForTimer'];
+  if (this.name == 'Heating' && heatingDayNightTriggerClasses.indexOf(triggerClass) != -1){
+      if (trigger.since == this.day.since && trigger.until == this.day.until){
+		      var timeName = 'day';
+	    } else {
+		      var timeName = 'night';
+      }
+	    triggerClass = trigger.triggerClass = trigger.triggerClass + "_" + timeName;
+  }
+
 	if (triggerClass === 'timer'){
 	    this.intervals.push(trigger);
 	} else if (triggerClass === 'manualOn'){
@@ -63,7 +87,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
   }
 
   Relay.prototype.prepareSave = function() {
-  	if (this.name == 'Fan'){
+  	if (this.name == 'Fan' || this.name == 'Heating'){
 	    for (var triggerName in this.triggers){
     		if (triggerName.indexOf("_") != -1){
 	  	    var trig = this.triggers[triggerName];
@@ -233,6 +257,28 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
     Relay.prototype.isPermEc = function(){
         return this.permStatus == Relay.EC;
     }
+    $.extend(Relay, {
+	PERM_ON: 1,
+	PERM_OFF: 2,
+	AUTO: 3,
+	FIRM_ACTIVITY_PERM_ON: 2,
+	FIRM_ACTIVITY_PERM_OFF: 0,
+	FIRM_ACTIVITY_AUTO: 1,
+
+	create: function(output, i){
+	    var result = new Relay();
+	    result.name = output.name;
+	    result.partial = output.partial;
+	    result.outputIndex = i;
+	    result.permStatus = Relay.AUTO;
+	    result.savedPermStatus = Relay.AUTO;
+	    result.intervals = [];
+	    result.triggers = {};
+	    result.permOnTrigger = null;
+	    if (result.name == 'Fan' || result.name == 'Heating'){
+		result.day = {since: null, until: null};
+		result.night = {since: null, until: null};
+	    }
 
     Relay.prototype.getFirmwareActivityCode = function(trig){
         if (this.isPermOn()){
