@@ -257,28 +257,6 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
     Relay.prototype.isPermEc = function(){
         return this.permStatus == Relay.EC;
     }
-    $.extend(Relay, {
-	PERM_ON: 1,
-	PERM_OFF: 2,
-	AUTO: 3,
-	FIRM_ACTIVITY_PERM_ON: 2,
-	FIRM_ACTIVITY_PERM_OFF: 0,
-	FIRM_ACTIVITY_AUTO: 1,
-
-	create: function(output, i){
-	    var result = new Relay();
-	    result.name = output.name;
-	    result.partial = output.partial;
-	    result.outputIndex = i;
-	    result.permStatus = Relay.AUTO;
-	    result.savedPermStatus = Relay.AUTO;
-	    result.intervals = [];
-	    result.triggers = {};
-	    result.permOnTrigger = null;
-	    if (result.name == 'Fan' || result.name == 'Heating'){
-		result.day = {since: null, until: null};
-		result.night = {since: null, until: null};
-	    }
 
     Relay.prototype.getFirmwareActivityCode = function(trig){
         if (this.isPermOn()){
@@ -313,7 +291,7 @@ app.factory('Relay', ['Trigger', 'utils', function(Trigger, utils){
           result.intervals = [];
           result.triggers = {};
           result.permOnTrigger = null;
-          if (result.name == 'Fan'){
+          if (result.name == 'Fan' || result.name == 'Heating'){
               result.day = {since: null, until: null};
               result.night = {since: null, until: null};
               result.ec = {};

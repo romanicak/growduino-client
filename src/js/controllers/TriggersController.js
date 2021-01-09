@@ -53,6 +53,14 @@ app.controller('TriggersController', ['$scope', '$http', '$timeout', 'utils', 'R
           fan.night.until = clientConfigData.fanTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.fanTimesInfo[3]);
       }
       
+      //prectu z configu data o casech relatka Heating
+      if (clientConfigData.heatingTimesInfo != null){
+          var heating = $scope.relaysHash['Heating'];
+          heating.day.since = clientConfigData.heatingTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.heatingTimesInfo[0]);
+          heating.day.until = clientConfigData.heatingTimesInfo[0] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.heatingTimesInfo[1]);
+          heating.night.since = clientConfigData.heatingTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.heatingTimesInfo[2]);
+          heating.night.until = clientConfigData.heatingTimesInfo[2] == -1 ? "00:00" : utils.minutesToTime(clientConfigData.heatingTimesInfo[3]);
+      }
 
       //prectu z configu, ktere triggery musim cist; postupne je ctu
       async.forEachSeries(clientConfigData.usedTriggers || [],
