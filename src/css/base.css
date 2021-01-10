@@ -146,11 +146,11 @@ a[ng-click] {
     color: #77a1e5;
 }
 
-/*.sensors-dashboard__item--ec-fan {
+.sensors-dashboard__item--ec-fan {
     background: #a4e5f4;
     color: #1aadce;
 }
-*/
+
 .sensors-dashboard__item--ec {
     background: #efa9a9;
     color: #c42525;
