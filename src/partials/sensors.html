@@ -17,7 +17,9 @@
 
     <span class="selected-date">{{ formattedDate }}</span>
 </form>
-
+<!-- Tam kde je test na Err ve formatu "!== undefined ?" tak si to taha z nejaky procky .js kde se zkousi jestli to neni -999 a pokud ano, da tak Err.
+    Tam kde je ">0" tak nefunguje 0, zahlasi to uz Err.
+    -->
 <div class="sensors-dashboard">
     <div class="sensors-dashboard__item sensors-dashboard__item--air-temp">
         <strong>{{sensorsDashboardValues["Temp1"] !== undefined ? sensorsDashboardValues["Temp1"] + ' °C' : 'Err'}}</strong>
