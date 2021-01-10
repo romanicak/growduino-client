@@ -17,7 +17,7 @@ a[ng-click] {
 
 .modal-window {
     position: fixed;
-    z-index: 3;
+    z-index: 1;
     left: 0;
     top: 0;
     width: 100%;
@@ -96,19 +96,19 @@ a[ng-click] {
 
 /* Sensors Dashboard */
 .sensors-dashboard {
-    display: grid; 
-    gap: 20px; 
-    grid-template-columns: 1fr; 
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
     margin: 2rem 0;
 }
 
 .sensors-dashboard__item {
-    border-radius: 4px; 
-    padding: 1rem; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
-    align-items: center; 
+    border-radius: 4px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .sensors-dashboard__item--air-temp {
@@ -146,19 +146,19 @@ a[ng-click] {
     color: #77a1e5;
 }
 
-.sensors-dashboard__item--ec-fan {
+/*.sensors-dashboard__item--ec-fan {
     background: #a4e5f4;
     color: #1aadce;
 }
-
+*/
 .sensors-dashboard__item--ec {
     background: #efa9a9;
-    color: #c42525; 
+    color: #c42525;
 }
 
 .sensors-dashboard__item--ph {
     background: #deebc7;
-    color: #a6c96a; 
+    color: #a6c96a;
 }
 
 .sensors-dashboard__item--co2 {
@@ -172,21 +172,22 @@ a[ng-click] {
 }
 
 .sensors-dashboard__item strong {
-    font-size: 2rem; 
+    font-size: 2rem;
     display: block;
 }
 
 @media only screen and (min-width: 600px) {
     .sensors-dashboard {
-        grid-template-columns: 1fr 1fr; 
+        grid-template-columns: 1fr 1fr;
     }
 }
 
 @media only screen and (min-width: 1024px) {
     .sensors-dashboard {
-        grid-template-columns: 1fr 1fr 1fr 1fr; 
+        grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 }
+
 
 /* Charts */
 
@@ -215,7 +216,6 @@ a[ng-click] {
     opacity: 0.4;
 }
 
-#edit_ec_window .form-control,
 .triggers-form .form-control {
     width: 65px;
 }
@@ -229,7 +229,6 @@ a[ng-click] {
     width: 250px;
 }
 
-#edit_ec_window .sentinel-line,
 .triggers-form .timer-line, .triggers-form .sentinel-line {
     display: block;
     margin-bottom: 4px;
@@ -289,6 +288,11 @@ a[ng-click] {
 }
 
 .fanDayNightLabel {
+    font-size: 18px;
+    padding-top: 8px;
+}
+
+.heatingDayNightLabel {
     font-size: 18px;
     padding-top: 8px;
 }
