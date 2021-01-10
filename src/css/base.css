@@ -176,7 +176,7 @@ a[ng-click] {
     display: block;
 }
 
-@media only screen and (min-width: 300px) {
+@media only screen and (min-width: 480px) {
     .sensors-dashboard {
         grid-template-columns: 1fr 1fr;
     }
