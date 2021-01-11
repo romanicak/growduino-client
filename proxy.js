@@ -8,7 +8,7 @@ var request = require('request');
 //var TARGET = 'arduino.natur.cuni.cz';
 //var TARGET = '78.108.106.180';
 //var TARGET = '192.168.1.44';
-var TARGET = '185.47.222.180:2346';
+var TARGET = '192.168.1.44';
 
 var proxy = httpProxy.createProxyServer({target: "http://"+TARGET});
 
@@ -35,10 +35,10 @@ function proxyPost(req, res) {
     });
 }
 
-app.get(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso|wifilist.jso|wifi_active.jso|partial\/config.jso|send_test_mail)/, function(req, res) {
+app.get(/^\/(sensors|triggers|alerts|webcam|DATA|config.jso|client.jso|calib.jso|fanconfig.jso|wifilist.jso|wifi_active.jso|partial\/config.jso|send_test_mail)/, function(req, res) {
     proxy.proxyRequest(req, res);
 });
-app.post(/^\/(sensors|triggers|alerts|DATA|config.jso|client.jso|wifilist.jso|wifi_active.jso|partial\/config.jso|send_test_mail)/, function(req, res) {
+app.post(/^\/(sensors|triggers|alerts|webcam|DATA|config.jso|client.jso|calib.jso|fanconfig.jso|wifilist.jso|wifi_active.jso|partial\/config.jso|send_test_mail)/, function(req, res) {
     proxyPost(req, res);
 });
 
