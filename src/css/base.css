@@ -176,18 +176,18 @@ a[ng-click] {
     display: block;
 }
 
-@media only screen and (min-width: 100px) {
+@media only all and (min-width: 200px) {
     .sensors-dashboard {
         grid-template-columns: 1fr 1fr;
     }
 }
-
+/*
 @media only screen and (min-width: 720px) {
     .sensors-dashboard {
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 }
-
+*/
 
 /* Charts */
 
