@@ -9,7 +9,7 @@ app.controller('SettingsController', ['$http', '$scope', '$timeout', '$interval'
 
     BackendConfig.get(function(config) {
         config.use_dhcp = !!config.use_dhcp; //convert to boolean - TODO move on resource layer
-        config.current_time = Date(config.current_time);
+        config.current_time = moment.parseZone(config.current_time);
         $scope.config = config;
         $scope.loading = false;
         $scope.known_wifis = [];
