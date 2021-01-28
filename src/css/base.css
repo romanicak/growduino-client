@@ -328,3 +328,8 @@ a[ng-click] {
     width: 120px;
     display: inline;
 }
+
+.h1 {
+    text-align: center;
+    color: #61B958;
+}
