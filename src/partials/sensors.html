@@ -24,14 +24,14 @@
         <span>Air Temperature</span>
     </div>
 
+        <div class="sensors-dashboard__item sensors-dashboard__item--relative-humidity">
+        <strong>{{sensorsDashboardValues["Humidity"] !== undefined ? sensorsDashboardValues["Humidity"] + ' %' : 'Err'}}</strong>
+        <span>Relative Humidity</span>
+    </div>
+
     <div class="sensors-dashboard__item sensors-dashboard__item--water-temp">
         <strong>{{sensorsDashboardValues["Temp2"] !== undefined ? sensorsDashboardValues["Temp2"] + ' °C' : 'Err'}}</strong>
         <span>Water Temperature</span>
-    </div>
-
-    <div class="sensors-dashboard__item sensors-dashboard__item--relative-humidity">
-        <strong>{{sensorsDashboardValues["Humidity"] !== undefined ? sensorsDashboardValues["Humidity"] + ' %' : 'Err'}}</strong>
-        <span>Relative Humidity</span>
     </div>
 
     <div class="sensors-dashboard__item sensors-dashboard__item--bulb-temp">
