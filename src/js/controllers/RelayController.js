@@ -40,6 +40,7 @@ app.controller('RelayDataController', ['$scope', '$interval', 'settings', 'Relay
 
 	    var item = {
 		    when: when,
+				whenOffset: moment.tz(when, settings.tzOffsetString),
 		    relays: relays,
 		    show: d.history[i].show
 	    };

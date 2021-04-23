@@ -14,6 +14,7 @@ function onComplete() {
 
             $.extend(window.settings, {
                 tzOffset: -status.tz * 60,
+                tzOffsetString: status.time_zone,
                 triggerCount: status.triggers
             });
 
@@ -116,7 +117,8 @@ function loadLibsOnline() {
             "//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-route.min.js",
             "//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js",
             "//cdnjs.cloudflare.com/ajax/libs/highcharts/3.0.10/highcharts.js",
-            "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.5.1/moment.min.js",
+            "//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js",
+            "//cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js",
         ],
         complete: loadApplication
     });

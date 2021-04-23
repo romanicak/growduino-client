@@ -50,7 +50,8 @@
                         <ul ng-show="!loadingHistory">
                             <li class="relay-history-day" ng-repeat="day in history">{{ day.when.format('Do MMMM') }}
                                 <ul>
-                                    <li ng-show="item.show" ng-repeat="item in day.items">{{ item.when.format('HH:mm') }}
+                                    <li ng-show="item.show" ng-repeat="item in day.items">
+                                        {{ item.whenOffset.format('HH:mm') }}
                                         <span ng-repeat="relay in item.relays">
                                             <span ng-class="{label: true, 'label-default': !relay.on, 'label-success': relay.on }">{{ relay.name }}</span>
                                         </span>
