@@ -25,6 +25,10 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'partials/settings.html',
             controller: 'SettingsController'
         }).
+        when('/sensorbox', {
+            templateUrl: 'partials/sensorbox.html',
+            controller: 'SensorBoxController'
+        }).
         when('/maintenance', {
             templateUrl: 'partials/maintenance.html',
             controller: 'MaintenanceController'

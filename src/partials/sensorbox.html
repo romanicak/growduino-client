@@ -1,0 +1,211 @@
+<!--uprav css classu-->
+<div ng-hide="loading" class="maintenance-form">
+<form novalidate class="form-horizontal" ng-class="{loading: loading}" name="form" ng-submit="save()">
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">SensorBox</label>
+        <div class="col-sm-10">
+            <select name="sensorBoxName" ng-model="selectedSensorBox" ng-options="x.displayedName for x in sensorBoxNames" ng-init="detectSensorBox()" class="form-control">
+            </select>
+            <span style="color:#B40404" class="help-block" ng-show="sensorBoxNames.length == 0">
+                No SensorBox found.
+            </span>
+            <span style="color:#B40404" class="help-block" ng-show="sensorBoxFlashError">
+                SensorBox flash error!
+            </span>
+            <span class="text-success" class="help-block" ng-show="sensorBoxFlashOk">
+                SensorBox flashed successfully!
+            </span>
+            <span style="color:#B40404" class="help-block" ng-show="sensorBoxChangeError">
+                SensorBox empty, please flash firmware first!
+            </span>
+
+        </div>
+    </div>
+
+    <span class="form-group">
+        <button type="button" ng-click="flashFirmware()"class="btn btn-primary">Flash firmware</button>
+        <button type="button" ng-click="detectSensorBox()" class="btn btn-primary">Detect Sensor Box</button>
+        <button type="button" ng-click="changeSettings()" class="btn btn-primary">Change Settings</button>
+    </span>
+</form>
+</div>
+<div ng-hide="true">
+  <form>
+    <h2>Sensor Box settings</h2>
+
+    <!--ID boxu (read only)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Sensor Box ID</label>
+        <div class="col-sm-10">
+            <!--uprav pole, at odpovidaji modelu-->
+            <input name="mac" type="text" ng-model="config.mac" ng-pattern="/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/" class="form-control" disabled/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.mac.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--MAC adresa (read only)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">MAC address</label>
+        <div class="col-sm-10">
+            <!--uprav pole, at odpovidaji modelu-->
+            <input name="mac" type="text" ng-model="config.mac" ng-pattern="/^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$/" class="form-control" disabled/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.mac.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--Jmeno (text, regex stejny jako pole "System name" na strance Settings)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Name</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je spravne-->
+            <input name="systemName" type="text" ng-model="config.sys_name" ng-pattern="/^[a-zA-Z0-9]{0,16}$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--UseSystemWifi (bool = CheckBox, rika jestli se pouzije stejne nastaveni WiFi, 
+      jako ma aktualne MasterGrowduino) , ma dva podradky a ty budou:-->
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+        <!--uprav pole, at odpovidaji modelu-->
+                <label><input type="checkbox" ng-model="config.use_dhcp" />Use System Wifi</label>
+            </div>
+        </div>
+    </div>
+
+    <!--SSID (text, regex stejny jako pole "Wifi SSID" na strance Settings)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Wifi SSID</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern NENI spravne-->
+            <input name="systemName" type="text" ng-model="config.sys_name" ng-pattern="/^[a-zA-Z0-9]{0,16}$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--Password (text, regex stejny jako pole "Wifi Password" na strance Settings)--> 
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Wifi password</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je spravne-->
+            <input name="systemName" type="text" ng-model="config.sys_name" ng-pattern="/^[!-~]{0,63}$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+    
+    <!--IP adresa nebo HostName MasterGrowduino (text, regex stejny jako pole "NTP server" 
+      na strance Settings) (na nej bude SensorBox posilat data)--> 
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">IP address or HostName</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je spravne-->
+            <input name="systemName" type="text" ng-model="config.sys_name" ng-pattern="/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--DHCP (bool = CheckBox) pokud je DHCP=0, tak nutno vyplnit tri podradky 
+      (=nesmi se dat ulozit bez toho), pokud je DHCP=1 tak radky read only a muzou byt prazdne:-->
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+        <!--uprav pole, at odpovidaji modelu-->
+                <label><input type="checkbox" ng-model="config.use_dhcp" /> DHCP</label>
+            </div>
+        </div>
+    </div>
+
+    <!--  IP address (adresa SensorBoxu)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Sensor Box IP address</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je MOZNA spravne-->
+            <input name="ip" type="text" ng-model="config.ip" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!-- 	Netmask-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Netmask</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je MOZNA spravne-->
+            <input name="netmask" type="text" ng-model="config.netmask" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--	Gateway-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">Gateway</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je MOZNA spravne-->
+            <input name="gateway" type="text" ng-model="config.gateway" ng-pattern="/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--DNS1 (nepovinne, muze nechat prazdny)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">DNS1</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je spravne-->
+            <input name="gateway" type="text" ng-model="config.gateway" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.systemName.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <!--DNS2 (nepovinne, muze nechat prazdny)-->
+    <div class="form-group" bs-has-error>
+        <label class="col-sm-2 control-label">DNS2</label>
+        <div class="col-sm-10">
+          <!--uprav pole, at odpovidaji modelu; pattern je spravne-->
+            <input name="gateway" type="text" ng-model="config.gateway" class="form-control"/>
+        </div>
+        <!--uprav pole, at odpovidaji modelu-->
+        <span style="color:#B40404" class="help-block" ng-show="!form.gateway.$valid">
+          Error message to be defined here.
+        </span>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <button type="submit" class="btn btn-primary" ng-hide="saving || !form.$valid">Flash</button>
+            <button type="submit" class="btn btn-disabled" ng-hide="form.$valid">Flash</button>
+            <button type="button" class="btn btn-disabled" ng-hide="!saving">Flashing...</button>
+            <span class="text-success" ng-show="saveSuccess" >Successfully flashed.</span>
+        </div>
+    </div>
+</form>
+</div>

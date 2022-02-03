@@ -81,6 +81,7 @@ function loadApplication() {
                 "js/controllers/CalibrationController.js",
                 "js/controllers/ChartController.js",
                 "js/controllers/SettingsController.js",
+                "js/controllers/SensorBoxController.js",
                 "js/controllers/RelayController.js",
                 "js/controllers/TriggersController.js",
                 "js/controllers/AlertsController.js",
