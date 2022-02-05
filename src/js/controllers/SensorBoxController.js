@@ -82,13 +82,40 @@ app.controller('SensorBoxController', ['$http', '$scope', '$timeout', function($
         console.log("About to try url: " + url);
         $http.get(url, {cache: false}).success(function(data) {
             console.log("Success reading " + url + "; returned data: " + JSON.stringify(data));
+            $scope.show_change_settings_window = true;
+            $scope.config = data;
+            console.log($scope.config.mac);
         }).error(function(data, status) {
             console.log("Error reading " + url + "; returned status: " + status);
             $scope.sensorBoxChangeError = true;
         });
     };
 
-    $scope.save = function() {
-        console.log("UNIMPLEMENTED from js/controllers/SensorBoxController.js::save()");
+    $scope.closeChangeSettingsWindow = function() {
+        $scope.show_change_settings_window = false;
+    };
+
+    $scope.uploadSettings = function(config) {
+        console.log("UNIMPLEMENTED from js/controllers/SensorBoxController.js::uploadSettings()");
+        console.log("config = " + JSON.stringify(config));
+        let sensorBoxId = $scope.selectedSensorBox["dataItem"]["id"];
+        let url = '/sensorbox/box/' + sensorBoxId;
+        console.log("About to try url: " + url);
+        $http.post(url, $scope.config).success(function(data) {
+            console.log("Post successful");
+            $scope.show_save_settings_result_window = true;
+            $scope.flashSuccessful = true;
+        }).error(function(data, status) {
+            console.log("Post NOT successful");
+            $scope.show_save_settings_result_window = true;
+            $scope.flashSuccessful = false;
+        });
+    };
+
+    $scope.closeSaveSettingsResultWindow = function() {
+        $scope.show_save_settings_result_window = false;
+        if ($scope.flashSuccessful) {
+            $scope.closeChangeSettingsWindow();
+        }
     };
 }]);
