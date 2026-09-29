@@ -12,7 +12,6 @@ disteparin.bat
 disteparout.bat
 install_tools.bat
 node.exe
-node-v24.21.0-x64.msi
 nodevars.bat
 npm
 npm.cmd
